@@ -1,0 +1,37 @@
+.register-doctor-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .logo {
+    left: 20px;
+    top: 10px;
+    position: absolute;
+
+    img {
+      width: 120px;
+    }
+  }
+
+  .register-page{
+    width: 390px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    border-radius: 20px;
+    padding: 20px 20px;
+
+    .xbtn {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      cursor: pointer;
+
+      img {
+        width: 20px;
+      }
+    }
+  }
+
+}
