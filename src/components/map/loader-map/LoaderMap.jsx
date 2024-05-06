@@ -1,5 +1,5 @@
-import "./loader.scss";
-const Loader = () => {
+import "./loader-map.scss";
+const LoaderMap = () => {
 
 
     return <>
@@ -9,4 +9,4 @@ const Loader = () => {
     </>
 };
 
-export default Loader;
+export default LoaderMap;

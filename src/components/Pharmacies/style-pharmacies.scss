@@ -1,4 +1,4 @@
-.doctors-wrapper {
+.pharmacies-wrapper {
   width: 100%;
   height: 100vh;
 
@@ -142,8 +142,7 @@
     }
   }
 
-
-  .doctors-list {
+  .pharmacies-list {
     background-color: #B4C0CC29;
     height: calc(100% - 120px);
 
@@ -151,6 +150,7 @@
       width: 100%;
       display: flex;
       height: calc(100%);
+      position: relative;
 
       .left-side {
         width: 60%;
@@ -168,65 +168,100 @@
           padding-left: 20px;
 
           .dropdown-filter {
-            .dropdown {
-              .dropdown-btn {
-                position: relative;
-                width: max-content;
-                cursor: pointer;
+            .selectRegion {
+              width: 100px;
+
+              .MuiOutlinedInput-root {
                 border-radius: 20px;
-                margin-right: 20px;
-                padding: 6px 15px;
-                color: #262D33;
-                font-weight: 500;
-                transition: 0.3s;
-                font-size: 16px;
-                background-color: #B4B8CC42;
-                box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-                display: flex;
-                align-items: center;
-                z-index: 100;
+                margin-right: 10px;
+                background-color: rgba(180, 192, 204, 0.16);
 
-                img {
-                  width: 13px;
-                  margin-left: 7px;
-                  transition: 0.4s;
+                &:hover {
+                  .MuiOutlinedInput-notchedOutline {
+                    border: 1px solid rgba(0, 173, 173, 1);
+                  }
                 }
+              }
 
-                .icon-rotate {
-                  transform: rotate(180deg);
+              .MuiOutlinedInput-root.Mui-focused {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
                 }
+              }
 
-                .show-dropdown {
-                  width: 100%;
-                  border-radius: 20px;
-                  height: 100%;
-                  top: 0;
-                  left: 0;
-                  position: absolute;
-                }
+              .MuiInputLabel-root.Mui-focused {
+                color: rgba(0, 173, 173, 1);
               }
             }
 
-            .dropdown-menu {
-              position: absolute;
-              z-index: 30;
-              box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-              border-radius: 4px;
-              margin-top: 6px;
-              background-color: white;
+            .selectHospitalType {
+              width: 150px;
 
-              .dropdown-item {
-                margin-top: 3px;
-                width: 100%;
-                cursor: pointer;
-                padding: 2px 10px;
-                border-radius: 5px;
-                transition: 0.3s;
+              .MuiOutlinedInput-root {
+                border-radius: 20px;
+                margin-right: 10px;
+                background-color: rgba(180, 192, 204, 0.16);
 
                 &:hover {
-                  background-color: rgba(197, 202, 223, 0.26);
+                  .MuiOutlinedInput-notchedOutline {
+                    border: 1px solid rgba(0, 173, 173, 1);
+                  }
                 }
               }
+
+              .MuiOutlinedInput-root.Mui-focused {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+
+              .MuiInputLabel-root.Mui-focused {
+                color: rgba(0, 173, 173, 1);
+              }
+            }
+
+            .selectProfessional {
+              width: 150px;
+
+              .MuiOutlinedInput-root {
+                border-radius: 20px;
+                margin-right: 10px;
+                background-color: rgba(180, 192, 204, 0.16);
+
+                &:hover {
+                  .MuiOutlinedInput-notchedOutline {
+                    border: 1px solid rgba(0, 173, 173, 1);
+                  }
+                }
+              }
+
+              .MuiOutlinedInput-root.Mui-focused {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+
+              .MuiInputLabel-root.Mui-focused {
+                color: rgba(0, 173, 173, 1);
+              }
+            }
+
+            .button-filter {
+              border: 1px solid #bebebe;
+              width: max-content;
+              padding: 8px 15px;
+              margin-left: 10px;
+              border-radius: 20px;
+              background-color: rgba(180, 192, 204, 0.16);
+              cursor: pointer;
+              transition: 0.2s;
+              &:hover{
+                border: 1px solid rgba(0, 173, 173, 1);
+              }
+            }
+            .active-filter-btn{
+              background-color: rgba(38, 45, 51, 1);
+              color: white;
             }
           }
 
@@ -237,83 +272,126 @@
           }
         }
 
-        .doctors {
+        .pharmacies {
           width: 100%;
           height: calc(100% - 70px);
           overflow-y: auto;
 
-          .doctor {
-            margin-left: 20px;
-            margin-top: 20px;
-            width: 97%;
+          .pharmacies-box {
+            width: 100%;
             display: flex;
-            border-bottom: 1px solid #B4C0CC47;
-            padding-bottom: 20px;
-            padding-right: 15px;
+            flex-wrap: wrap;
 
-            .left-side {
-              width: 160px;
-              height: 200px;
-              border-radius: 15px;
-              overflow: hidden;
-              padding: 0;
-              position: relative;
+            .pharma {
+              width: 245px;
+              margin-left: 15px;
+              margin-top: 20px;
+              padding-bottom: 20px;
 
-              img {
+              .left-side {
                 width: 100%;
-                height: 100%;
-                object-fit: cover;
-              }
-
-              .like {
-                right: 10px;
-                top: 8px;
-                position: absolute;
+                height: 200px;
+                border-radius: 15px;
+                overflow: hidden;
+                padding: 0;
+                position: relative;
 
                 img {
-                  width: 20px;
-                  cursor: pointer;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                }
+
+                .like {
+                  right: 10px;
+                  top: 8px;
+                  position: absolute;
+
+                  img {
+                    width: 25px;
+                    cursor: pointer;
+                  }
                 }
               }
-            }
 
-            .right-side {
-              width: calc(100% - 240px);
-              height: 100%;
-              padding-left: 20px;
-
-              .header-clinic {
+              .right-side {
                 width: 100%;
-                display: flex;
 
+                .header-clinic {
+                  margin-top: 10px;
+                  width: 100%;
+                  display: flex;
+                  justify-content: space-between;
 
-                .name-clinic {
-                  color: #262D33;
-                  font-weight: 600;
-                  font-size: 18px;
+                  .name-clinic {
+                    color: #262D33;
+                    font-weight: 600;
+                    font-size: 18px;
+                  }
+
+                  .section-commit {
+                    margin-left: 20px;
+                    display: flex;
+                    align-items: center;
+
+                    .raiting {
+                      display: flex;
+                      align-items: center;
+                      margin-right: 10px;
+
+                      img {
+                        width: 15px;
+                        margin-right: 5px;
+                      }
+                    }
+
+                    .commit-count {
+                      color: rgba(133, 145, 158, 1);
+                      font-size: 14px;
+                      margin-right: 10px;
+                    }
+
+                    span {
+                      width: 3px;
+                      height: 3px;
+                      background-color: rgba(133, 145, 158, 1);
+                      margin-right: 10px;
+                      border-radius: 50%;
+                    }
+
+                    .name {
+                      color: rgba(133, 145, 158, 1);
+                      font-size: 14px;
+                    }
+                  }
                 }
 
-                .section-commit {
-                  margin-left: 20px;
+                .section-location {
+                  width: 100%;
+                  margin-top: 10px;
                   display: flex;
                   align-items: center;
 
-                  .raiting {
+                  .location {
                     display: flex;
                     align-items: center;
-                    color: rgba(253, 102, 112, 1);
-                    margin-right: 10px;
 
                     img {
-                      width: 20px;
-                      margin-right: 10px;
+                      width: 17px;
+                      margin-right: 5px;
                     }
+
+                    color: rgba(38, 45, 51, 1);
                   }
 
-                  .commit-count {
-                    color: rgba(133, 145, 158, 1);
-                    font-size: 14px;
-                    margin-right: 10px;
+                  .open {
+                    font-weight: bold;
+                    color: rgba(0, 153, 89, 1);
+                  }
+
+                  .close {
+                    font-weight: bold;
+                    color: rgba(250, 88, 70, 1);
                   }
 
                   span {
@@ -321,145 +399,113 @@
                     height: 3px;
                     background-color: rgba(133, 145, 158, 1);
                     margin-right: 10px;
+                    margin-left: 10px;
                     border-radius: 50%;
                   }
 
-                  .name {
-                    color: rgba(133, 145, 158, 1);
-                    font-size: 14px;
+                  .time-open {
+                    display: flex;
+                    align-items: center;
+
+                    img {
+                      width: 17px;
+                      margin-right: 5px;
+                    }
+
+                    color: rgba(38, 45, 51, 1);
                   }
                 }
-              }
 
-              .section-location {
-                margin-top: 10px;
-                display: flex;
-                align-items: center;
-
-                .location {
+                .services {
                   display: flex;
-                  align-items: center;
+                  flex-wrap: wrap;
 
-                  img {
-                    width: 17px;
-                    margin-right: 5px;
+                  .service {
+                    margin-top: 10px;
+                    border-radius: 20px;
+                    padding: 5px 12px;
+                    color: rgba(38, 45, 51, 1);
+                    font-size: 12px;
+                    margin-right: 6px;
+                    background-color: rgba(180, 192, 204, 0.16);
                   }
-
-                  color: rgba(38, 45, 51, 1);
                 }
 
-                span {
-                  width: 3px;
-                  height: 3px;
-                  background-color: rgba(133, 145, 158, 1);
-                  margin-right: 10px;
-                  margin-left: 10px;
-                  border-radius: 50%;
-                }
-
-                .time-open {
-                  display: flex;
-                  align-items: center;
-
-                  img {
-                    width: 17px;
-                    margin-right: 5px;
-                  }
-
-                  color: rgba(38, 45, 51, 1);
-                }
-              }
-
-              .services {
-                display: flex;
-                flex-wrap: wrap;
-
-                .service {
-                  margin-top: 10px;
-                  border-radius: 20px;
-                  padding: 5px 12px;
-                  color: rgba(38, 45, 51, 1);
-                  font-size: 12px;
-                  margin-right: 6px;
-                  background-color: rgba(180, 192, 204, 0.16);
-                }
-              }
-
-              .prices {
-                width: 100%;
-                margin-top: 10px;
-                padding-top: 5px;
-                border-top: 1px solid rgba(180, 192, 204, 0.28);
-
-                .item-price {
-                  margin-top: 8px;
+                .prices {
                   width: 100%;
+                  margin-top: 10px;
+                  padding-top: 5px;
+                  border-top: 1px solid rgba(180, 192, 204, 0.28);
+
+                  .item-price {
+                    margin-top: 8px;
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-bottom: 2px dotted rgba(133, 145, 158, 1);
+
+                    .title {
+                      background-color: white;
+                      color: rgba(133, 145, 158, 1);
+                      margin-bottom: -6px;
+                      padding-right: 5px;
+                    }
+
+                    .number {
+                      background-color: white;
+                      margin-bottom: -6px;
+                      font-weight: bold;
+                      color: rgba(38, 45, 51, 1);
+                      padding-left: 5px;
+                    }
+                  }
+                }
+
+                .buttons {
+                  margin-top: 15px;
                   display: flex;
                   justify-content: space-between;
-                  align-items: center;
-                  border-bottom: 2px dotted rgba(133, 145, 158, 1);
 
-                  .title {
-                    background-color: white;
-                    color: rgba(133, 145, 158, 1);
-                    margin-bottom: -6px;
-                    padding-right: 5px;
-                  }
-
-                  .number {
-                    background-color: white;
-                    margin-bottom: -6px;
-                    font-weight: bold;
-                    color: rgba(38, 45, 51, 1);
-                    padding-left: 5px;
-                  }
-                }
-              }
-
-              .buttons {
-                margin-top: 15px;
-                display: flex;
-                justify-content: space-between;
-
-                .left-btn {
-                  display: flex;
-
-                  .button-call {
-                    padding: 8px 15px;
-                    border-radius: 10px;
+                  .left-btn {
                     display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background-color: #EDF7F7;
-                    color: #00ADAD;
 
-                    cursor: pointer;
+                    .button-call {
+                      padding: 8px 15px;
+                      border-radius: 10px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      background-color: #EDF7F7;
+                      color: #00ADAD;
+
+                      cursor: pointer;
+                    }
+
+                    .button-send {
+                      margin-right: 10px;
+                      cursor: pointer;
+                      padding: 8px 15px;
+                      border-radius: 10px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      background-color: #00ADAD;
+                      color: white;
+                    }
                   }
 
-                  .button-send {
-                    margin-right: 10px;
+                  .more-btn {
                     cursor: pointer;
-                    padding: 8px 15px;
-                    border-radius: 10px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background-color: #00ADAD;
-                    color: white;
+                    margin-top: 10px;
+                    width: max-content;
+                    color: rgba(0, 173, 173, 1);
+                    font-size: 14px;
+                    border-bottom: 1px dashed rgba(0, 173, 173, 1);
                   }
-                }
-
-                .more-btn {
-                  cursor: pointer;
-                  margin-top: 10px;
-                  width: max-content;
-                  color: rgba(0, 173, 173, 1);
-                  font-size: 14px;
-                  border-bottom: 1px dashed rgba(0, 173, 173, 1);
                 }
               }
             }
-
           }
 
           .pagination-box {
@@ -546,6 +592,131 @@
         }
       }
 
+      .left-side-hide{
+        position: absolute;
+        top: 4px;
+        left: 200px;
+        z-index: 100;
+        .category-wrapper {
+          width: 100%;
+          margin: 0 auto;
+          height: 70px;
+          overflow-x: auto;
+          display: flex;
+          align-items: center;
+          padding-left: 20px;
+
+          .dropdown-filter {
+            .selectRegion {
+              width: 100px;
+
+              .MuiOutlinedInput-root {
+                border-radius: 20px;
+                margin-right: 10px;
+                background-color: white;
+
+                &:hover {
+                  .MuiOutlinedInput-notchedOutline {
+                    border: 1px solid rgba(0, 173, 173, 1);
+                  }
+                }
+              }
+
+              .MuiOutlinedInput-root.Mui-focused {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+
+              .MuiInputLabel-root.Mui-focused {
+                color: black;
+              }
+            }
+
+            .selectHospitalType {
+              width: 150px;
+
+              .MuiOutlinedInput-root {
+                border-radius: 20px;
+                margin-right: 10px;
+                background-color: white;
+
+                &:hover {
+                  .MuiOutlinedInput-notchedOutline {
+                    border: 1px solid rgba(0, 173, 173, 1);
+                  }
+                }
+              }
+
+              .MuiOutlinedInput-root.Mui-focused {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+
+              .MuiInputLabel-root.Mui-focused {
+                color: black;
+              }
+            }
+
+            .selectProfessional {
+              width: 150px;
+
+              .MuiOutlinedInput-root {
+                border-radius: 20px;
+                margin-right: 10px;
+                background-color: white;
+
+                &:hover {
+                  .MuiOutlinedInput-notchedOutline {
+                    border: 1px solid rgba(0, 173, 173, 1);
+                  }
+                }
+              }
+
+              .MuiOutlinedInput-root.Mui-focused {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+
+              .MuiInputLabel-root.Mui-focused {
+                color: black;
+              }
+            }
+
+            .button-filter {
+              border: 1px solid #bebebe;
+              width: max-content;
+              padding: 8px 15px;
+              margin-left: 10px;
+              border-radius: 20px;
+              background-color: white;
+              cursor: pointer;
+              transition: 0.2s;
+              &:hover{
+                border: 1px solid rgba(0, 173, 173, 1);
+              }
+            }
+
+            .active-filter-btn{
+              background-color: rgba(38, 45, 51, 1);
+              color: white;
+            }
+          }
+
+          &::-webkit-scrollbar {
+            width: 10px;
+            height: 5px;
+            border-radius: 20px;
+          }
+        }
+      }
+
+      .show-map {
+        width: 100% !important;
+      }
+
       .right-side {
         width: 40%;
         height: 100%;
@@ -564,7 +735,7 @@
           }
 
           .info-box-clinic {
-            width: 350px;
+            width: 250px;
 
             .photo-clinic {
               width: 100%;
@@ -573,7 +744,7 @@
               justify-content: center;
 
               img {
-                width: 40%;
+                width: 100%;
                 height: 100%;
                 object-fit: cover;
               }
@@ -584,8 +755,10 @@
               height: 50%;
 
               .header-clinic {
+                margin-top: 10px;
                 width: 100%;
-                display: block;
+                display: flex;
+                justify-content: space-between;
 
                 .name-clinic {
                   color: #262D33;
@@ -594,18 +767,18 @@
                 }
 
                 .section-commit {
+                  margin-left: 20px;
                   display: flex;
                   align-items: center;
 
                   .raiting {
                     display: flex;
                     align-items: center;
-                    color: rgba(253, 102, 112, 1);
                     margin-right: 10px;
 
                     img {
-                      width: 20px;
-                      margin-right: 10px;
+                      width: 15px;
+                      margin-right: 5px;
                     }
                   }
 
@@ -631,6 +804,7 @@
               }
 
               .section-location {
+                width: 100%;
                 margin-top: 10px;
                 display: flex;
                 align-items: center;
@@ -645,6 +819,16 @@
                   }
 
                   color: rgba(38, 45, 51, 1);
+                }
+
+                .open {
+                  font-weight: bold;
+                  color: rgba(0, 153, 89, 1);
+                }
+
+                .close {
+                  font-weight: bold;
+                  color: rgba(250, 88, 70, 1);
                 }
 
                 span {
@@ -757,6 +941,47 @@
                   border-bottom: 1px dashed rgba(0, 173, 173, 1);
                 }
               }
+            }
+          }
+
+          .show-hide-btn {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            width: 35px;
+            height: 35px;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+            cursor: pointer;
+
+            img {
+              transform: rotate(90deg);
+              width: 50%;
+              transition: 0.4s;
+            }
+
+            .hide-img {
+              transform: rotate(270deg);
+            }
+          }
+
+          .my-location{
+            position: absolute;
+            right: 10px;
+            bottom: 210px;
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            img{
+              width: 60%;
             }
           }
         }

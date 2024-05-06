@@ -1,4 +1,4 @@
-.about-clinic-box {
+.about-doctor-box {
 
   .alert-enter {
     opacity: 0;
@@ -287,7 +287,6 @@
     }
   }
 
-
   .about-hospital {
     padding-left: 80px;
     padding-right: 80px;
@@ -297,31 +296,199 @@
       display: flex;
       justify-content: space-between;
 
-      .title {
-        width: 50%;
-        font-size: 30px;
-        font-weight: bold;
+      .photo-doctor {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        overflow: hidden;
+
+        img {
+          object-fit: cover;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .infotmation-doctor {
+        width: 40%;
+
+        .title {
+          width: 50%;
+          font-size: 30px;
+          font-weight: bold;
+        }
+
+        .info {
+          margin-top: 10px;
+          display: flex;
+          align-items: center;
+
+          .items {
+            color: rgba(38, 45, 51, 1);
+            font-size: 16px;
+            border-right: 1px solid rgba(179, 193, 204, 1);
+            padding-right: 10px;
+            margin-right: 10px;
+          }
+        }
+
+        .section-commit {
+          margin-top: 20px;
+          display: flex;
+          align-items: center;
+
+          .raiting {
+            width: max-content;
+            background: rgb(255, 221, 140);
+            background: linear-gradient(107deg, rgba(255, 221, 140, 1) 0%, rgba(219, 157, 22, 1) 100%);
+            padding: 4px 10px;
+            color: white;
+            border-radius: 10px;
+            margin-right: 10px;
+          }
+
+          .commit-count {
+            color: rgba(133, 145, 158, 1);
+            font-size: 14px;
+            margin-right: 10px;
+          }
+
+          span {
+            width: 3px;
+            height: 3px;
+            background-color: rgba(133, 145, 158, 1);
+            margin-right: 10px;
+            border-radius: 50%;
+          }
+
+          .name {
+            color: rgba(133, 145, 158, 1);
+            font-size: 14px;
+          }
+        }
+
+        .location {
+          margin-top: 10px;
+          margin-bottom: 20px;
+          font-size: 16px;
+          color: rgba(38, 45, 51, 1);
+        }
+
+        .skills {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+
+          .skill {
+            color: rgba(38, 45, 51, 1);
+            font-size: 14px;
+            background-color: rgba(180, 192, 204, 0.16);
+            padding: 6px 10px;
+            border-radius: 15px;
+            margin-right: 10px;
+          }
+        }
+
+        .like {
+          margin-top: 10px;
+          display: flex;
+          align-items: center;
+          padding: 5px 10px;
+          border: 1px solid rgba(180, 192, 204, 0.26);
+          width: max-content;
+          border-radius: 20px;
+          img {
+            width: 17px;
+            cursor: pointer;
+            margin-right: 5px;
+          }
+
+          .name {
+
+          }
+        }
       }
 
       .buttons {
-        display: flex;
-        align-items: center;
+        width: 400px;
+        border: 1px solid rgba(180, 192, 204, 0.26);
+        padding: 15px;
+        border-radius: 15px;
+
+        .title {
+          color: rgba(38, 45, 51, 1);
+          font-size: 18px;
+          font-weight: bold;
+        }
+
+        .date {
+          margin-top: 10px;
+          font-size: 16px;
+          color: rgba(38, 45, 51, 1);
+          font-weight: 400;
+          display: flex;
+          align-items:center;
+
+          img {
+            width: 20px;
+            margin-right: 6px;
+          }
+
+        }
+
+        .line {
+          margin-top: 20px;
+          margin-bottom: 20px;
+          width: 100%;
+          height: 1px;
+          background-color: rgba(180, 192, 204, 0.28);
+        }
+
+        .prices {
+          width: 100%;
+          padding-top: 5px;
+          .item-price {
+            margin-top: 8px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dotted rgba(133, 145, 158, 1);
+
+            .title {
+              background-color: white;
+              color: rgba(133, 145, 158, 1);
+              margin-bottom: -6px;
+              padding-right: 5px;
+              font-weight: normal;
+            }
+
+            .number {
+              background-color: white;
+              margin-bottom: -6px;
+              font-weight: bold;
+              color: rgba(38, 45, 51, 1);
+              padding-left: 5px;
+            }
+          }
+        }
 
         .button-call {
-          padding: 8px 15px;
+          margin-top: 10px;
+          padding: 10px 15px;
           border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
           background-color: #EDF7F7;
           color: #00ADAD;
-          margin-right: 10px;
           cursor: pointer;
         }
 
         .button-send {
+          margin-top: 20px;
           cursor: pointer;
-          padding: 8px 15px;
+          padding: 10px 15px;
           border-radius: 10px;
           display: flex;
           align-items: center;
@@ -329,381 +496,185 @@
           background-color: #00ADAD;
           color: white;
         }
-
-        .like {
-          margin-right: 10px;
-
-          img {
-            width: 25px;
-            cursor: pointer;
-          }
-        }
       }
     }
 
     .body {
-      width: 100%;
+      width: 70%;
       margin-bottom: 60px;
 
-      .section-commit {
-        margin-top: 20px;
-        display: flex;
-        align-items: center;
-
-        .raiting {
-          width: max-content;
-          background: rgb(255, 221, 140);
-          background: linear-gradient(107deg, rgba(255, 221, 140, 1) 0%, rgba(219, 157, 22, 1) 100%);
-          padding: 4px 10px;
-          color: white;
-          border-radius: 10px;
-          margin-right: 10px;
-        }
-
-        .commit-count {
-          color: rgba(133, 145, 158, 1);
-          font-size: 14px;
-          margin-right: 10px;
-        }
-
-        span {
-          width: 3px;
-          height: 3px;
-          background-color: rgba(133, 145, 158, 1);
-          margin-right: 10px;
-          border-radius: 50%;
-        }
-
-        .name {
-          color: rgba(133, 145, 158, 1);
-          font-size: 14px;
-        }
-      }
-
-      .section-location {
-        margin-top: 20px;
-        display: flex;
-        align-items: center;
-
-        .location {
-          display: flex;
-          align-items: center;
-
-          img {
-            width: 17px;
-            margin-right: 5px;
-          }
-
+      .all-info-hospital {
+        .title {
           color: rgba(38, 45, 51, 1);
+          font-weight: 600;
+          font-size: 22px;
         }
 
-        span {
-          width: 3px;
-          height: 3px;
-          background-color: rgba(133, 145, 158, 1);
-          margin-right: 10px;
-          margin-left: 10px;
-          border-radius: 50%;
-        }
-
-        .time-open {
-          display: flex;
-          align-items: center;
-
-          img {
-            width: 17px;
-            margin-right: 5px;
-          }
-
+        .des {
+          margin-top: 10px;
           color: rgba(38, 45, 51, 1);
+          font-weight: 400;
+          font-size: 16px;
         }
       }
 
       .images-location {
-        margin-top: 20px;
-        width: 100%;
-        height: 260px;
-        display: flex;
+        .title {
+          margin-top: 40px;
+          color: rgba(38, 45, 51, 1);
+          font-weight: 600;
+          font-size: 22px;
+        }
 
-        .images-box {
-          width: 70%;
-          height: 100%;
+        .location {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          color: rgba(38, 45, 51, 1);
           display: flex;
-          overflow-x: auto;
-          padding: 10px;
+          align-items: center;
 
-          .image-hospital {
-            width: 320px;
-            height: 100%;
-            margin-right: 10px;
-
-            img {
-              object-fit: cover;
-              width: 100%;
-              height: 100%;
-              border-radius: 10px;
-            }
+          img {
+            margin-right: 8px;
+            width: 20px;
           }
         }
 
         .location-box {
-          padding: 10px;
-          width: 30%;
-          height: 100%;
+          width: 100%;
+          height: 180px;
 
           .map {
+            width: 100%;
             height: 100%;
-            width: 100%;
           }
         }
       }
 
-      .tab-hospital {
-        margin-top: 40px;
+      .comments-box {
+        margin-top: 60px;
         width: 100%;
-        display: flex;
-        align-items: center;
 
-        .tab {
-          color: rgba(133, 145, 158, 1);
-          font-size: 16px;
-          margin-right: 20px;
-          border-bottom: 3px solid transparent;
-          padding-bottom: 8px;
-          transition: 0.3s;
-          cursor: pointer;
-        }
-
-        .tab-active {
-          cursor: pointer;
-          margin-right: 20px;
-          font-size: 16px;
-          color: rgba(38, 45, 51, 1);
-          padding-bottom: 8px;
-          transition: 0.3s;
-          border-bottom: 3px solid rgba(0, 173, 173, 1);
-        }
-      }
-
-      .all-info {
-        margin-top: 30px;
-        width: 70%;
-
-        .all-info-hospital {
-          .title {
-            color: rgba(38, 45, 51, 1);
-            font-weight: 600;
-            font-size: 22px;
-          }
-
-          .des {
-            margin-top: 10px;
-            color: rgba(38, 45, 51, 1);
-            font-weight: 400;
-            font-size: 16px;
-          }
-        }
-
-        .service-hospital {
-          .title {
-            margin-top: 40px;
-            color: rgba(38, 45, 51, 1);
-            font-weight: 600;
-            font-size: 22px;
-          }
-
-          .contents {
-            margin-top: 10px;
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
-
-            .service {
-              margin-top: 10px;
-              width: 180px;
-              margin-right: 1px;
-            }
-          }
-
-          .more-btn {
-            cursor: pointer;
-            margin-top: 10px;
-            width: max-content;
-            color: rgba(0, 173, 173, 1);
-            font-size: 16px;
-            border-bottom: 1px dashed rgba(0, 173, 173, 1);
-          }
-        }
-
-        .comments-box {
-          margin-top: 60px;
+        .header-commet {
           width: 100%;
-
-          .header-commet {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            .counts {
-              display: flex;
-              align-items: center;
-
-              .raiting {
-                width: max-content;
-                background: rgb(255, 221, 140);
-                background: linear-gradient(107deg, rgba(255, 221, 140, 1) 0%, rgba(219, 157, 22, 1) 100%);
-                padding: 4px 10px;
-                color: white;
-                border-radius: 10px;
-                margin-right: 10px;
-              }
-
-              .commit-count {
-                color: rgba(38, 45, 51, 1);
-                font-size: 20px;
-                margin-right: 10px;
-                font-weight: bold;
-              }
-            }
-
-            .btn-commit {
-              padding: 7px 20px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: rgba(38, 45, 51, 1);
-              background-color: rgba(180, 192, 204, 0.16);
-              border-radius: 10px;
-              cursor: pointer;
-              transition: 0.3s;
-
-              img {
-                margin-right: 10px;
-                width: 15px;
-              }
-
-              &:hover {
-                background-color: rgba(149, 161, 173, 0.16);
-              }
-            }
-          }
-
-          .commits {
-            margin-top: 20px;
-            width: 100%;
-
-            .header-commit {
-              display: flex;
-              align-items: center;
-
-              .left-circle {
-                width: 40px;
-                height: 40px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                border-radius: 50%;
-                background-color: rgba(250, 128, 66, 1);
-                margin-right: 15px;
-              }
-
-              .right-names {
-
-                .name {
-                  color: rgba(38, 45, 51, 1);
-                  font-size: 16px;
-
-                  span {
-                    margin-left: 5px;
-                    color: rgba(133, 145, 158, 1);
-                  }
-                }
-
-                .stars {
-                  img {
-                    width: 13px;
-                    margin-right: 8px;
-                  }
-
-                }
-              }
-            }
-
-            .text-commit {
-              width: 100%;
-              margin-top: 10px;
-            }
-          }
-
-          .more-btn {
-            cursor: pointer;
-            margin-top: 10px;
-            width: max-content;
-            color: rgba(0, 173, 173, 1);
-            font-size: 16px;
-            border-bottom: 1px dashed rgba(0, 173, 173, 1);
-          }
-        }
-      }
-
-      .doctors {
-        width: 100%;
-        margin-top: 30px;
-
-        .category-wrapper {
-          width: 96%;
-          margin: 0 auto;
-          height: 70px;
-          overflow-x: auto;
           display: flex;
           align-items: center;
+          justify-content: space-between;
 
-
-          &::-webkit-scrollbar {
-            width: 10px;
-            height: 5px;
-            border-radius: 20px;
-          }
-
-          .category-name {
-            width: max-content;
-            cursor: pointer;
-            border-radius: 20px;
-            margin-right: 20px;
-            padding: 8px 15px;
-            color: #262D33;
-            font-weight: 500;
-            transition: 0.3s;
-            font-size: 16px;
-            background-color: white;
+          .counts {
             display: flex;
             align-items: center;
 
-            span {
-              width: 3px;
-              height: 3px;
-              background-color: #85919E;
-              border-radius: 50%;
-              margin-left: 5px;
-              margin-right: 5px;
+            .raiting {
+              width: max-content;
+              background: rgb(255, 221, 140);
+              background: linear-gradient(107deg, rgba(255, 221, 140, 1) 0%, rgba(219, 157, 22, 1) 100%);
+              padding: 4px 10px;
+              color: white;
+              border-radius: 10px;
+              margin-right: 10px;
+            }
+
+            .commit-count {
+              color: rgba(38, 45, 51, 1);
+              font-size: 20px;
+              margin-right: 10px;
+              font-weight: bold;
+            }
+          }
+
+          .btn-commit {
+            padding: 7px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(38, 45, 51, 1);
+            background-color: rgba(180, 192, 204, 0.16);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+
+            img {
+              margin-right: 10px;
+              width: 15px;
             }
 
             &:hover {
-              background-color: rgba(180, 192, 204, 0.16);
+              background-color: rgba(149, 161, 173, 0.16);
+            }
+          }
+        }
+
+        .commits {
+          margin-top: 20px;
+          width: 100%;
+
+          .header-commit {
+            display: flex;
+            align-items: center;
+
+            .left-circle {
+              width: 40px;
+              height: 40px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              border-radius: 50%;
+              background-color: rgba(250, 128, 66, 1);
+              margin-right: 15px;
+            }
+
+            .right-names {
+
+              .name {
+                color: rgba(38, 45, 51, 1);
+                font-size: 16px;
+
+                span {
+                  margin-left: 5px;
+                  color: rgba(133, 145, 158, 1);
+                }
+              }
+
+              .stars {
+                img {
+                  width: 13px;
+                  margin-right: 8px;
+                }
+
+              }
             }
           }
 
-          .active {
-            background-color: rgba(180, 192, 204, 0.16);
+          .text-commit {
+            width: 100%;
+            margin-top: 10px;
           }
+        }
+
+        .more-btn {
+          cursor: pointer;
+          margin-top: 10px;
+          width: max-content;
+          color: rgba(0, 173, 173, 1);
+          font-size: 16px;
+          border-bottom: 1px dashed rgba(0, 173, 173, 1);
+        }
+      }
+
+      .doctors-warapper {
+        margin-top: 40px;
+
+        .title {
+          color: rgba(38, 45, 51, 1);
+          font-weight: 600;
+          font-size: 22px;
         }
 
         .doctor {
           margin-left: 20px;
           margin-top: 25px;
-          width: 70%;
+          width: 100%;
           display: flex;
           border-bottom: 1px solid #B4C0CC47;
           padding-bottom: 20px;
@@ -743,7 +714,6 @@
             .header-clinic {
               width: 100%;
               display: flex;
-
 
               .name-clinic {
                 color: #262D33;
@@ -858,10 +828,12 @@
                 border-bottom: 2px dotted rgba(133, 145, 158, 1);
 
                 .title {
+                  font-size: 16px;
                   background-color: white;
                   color: rgba(133, 145, 158, 1);
                   margin-bottom: -6px;
                   padding-right: 5px;
+                  font-weight: normal;
                 }
 
                 .number {
@@ -918,204 +890,6 @@
             }
           }
 
-        }
-      }
-
-      .all-commits {
-        margin-top: 60px;
-        width: 70%;
-
-        .header-commet {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          .counts {
-            display: flex;
-            align-items: center;
-
-            .raiting {
-              width: max-content;
-              background: rgb(255, 221, 140);
-              background: linear-gradient(107deg, rgba(255, 221, 140, 1) 0%, rgba(219, 157, 22, 1) 100%);
-              padding: 4px 10px;
-              color: white;
-              border-radius: 10px;
-              margin-right: 10px;
-            }
-
-            .commit-count {
-              color: rgba(38, 45, 51, 1);
-              font-size: 20px;
-              margin-right: 10px;
-              font-weight: bold;
-            }
-          }
-
-          .btn-commit {
-            padding: 7px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(38, 45, 51, 1);
-            background-color: rgba(180, 192, 204, 0.16);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-
-            img {
-              margin-right: 10px;
-              width: 15px;
-            }
-
-            &:hover {
-              background-color: rgba(149, 161, 173, 0.16);
-            }
-          }
-        }
-
-        .commits {
-          margin-top: 20px;
-          width: 100%;
-
-          .header-commit {
-            display: flex;
-            align-items: center;
-
-            .left-circle {
-              width: 40px;
-              height: 40px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: white;
-              border-radius: 50%;
-              background-color: rgba(250, 128, 66, 1);
-              margin-right: 15px;
-            }
-
-            .right-names {
-
-              .name {
-                color: rgba(38, 45, 51, 1);
-                font-size: 16px;
-
-                span {
-                  margin-left: 5px;
-                  color: rgba(133, 145, 158, 1);
-                }
-              }
-
-              .stars {
-                img {
-                  width: 13px;
-                  margin-right: 8px;
-                }
-
-              }
-            }
-          }
-
-          .text-commit {
-            width: 100%;
-            margin-top: 10px;
-          }
-        }
-
-        .more-btn {
-          cursor: pointer;
-          margin-top: 10px;
-          width: max-content;
-          color: rgba(0, 173, 173, 1);
-          font-size: 16px;
-          border-bottom: 1px dashed rgba(0, 173, 173, 1);
-        }
-      }
-
-      .service-box {
-        .category-wrapper {
-          width: 96%;
-          margin: 0 auto;
-          height: 70px;
-          overflow-x: auto;
-          display: flex;
-          align-items: center;
-
-
-          &::-webkit-scrollbar {
-            width: 10px;
-            height: 5px;
-            border-radius: 20px;
-          }
-
-          .category-name {
-            width: max-content;
-            cursor: pointer;
-            border-radius: 20px;
-            margin-right: 20px;
-            padding: 8px 15px;
-            color: #262D33;
-            font-weight: 500;
-            transition: 0.3s;
-            font-size: 16px;
-            background-color: white;
-            display: flex;
-            align-items: center;
-
-            span {
-              width: 3px;
-              height: 3px;
-              background-color: #85919E;
-              border-radius: 50%;
-              margin-left: 5px;
-              margin-right: 5px;
-            }
-
-            &:hover {
-              background-color: rgba(180, 192, 204, 0.16);
-            }
-          }
-
-          .active {
-            background-color: rgba(180, 192, 204, 0.16);
-          }
-        }
-
-        .one-service {
-          margin-top: 30px;
-          width: 70%;
-
-          .title {
-            font-size: 18px;
-            font-weight: bold;
-          }
-
-          .service {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-
-            .name {
-              font-size: 16px;
-
-            }
-
-            .value {
-              font-size: 16px;
-              font-weight: 600;
-            }
-          }
-
-          .more-btn {
-            cursor: pointer;
-            margin-top: 20px;
-            width: max-content;
-            color: rgba(0, 173, 173, 1);
-            font-size: 16px;
-            border-bottom: 1px dashed rgba(0, 173, 173, 1);
-          }
         }
       }
     }

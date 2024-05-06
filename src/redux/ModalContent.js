@@ -15,7 +15,7 @@ export const ModalContent = createSlice({
             state.data = payload
         }
     }
-})
+});
 
 export const {showModals, hideModal} = ModalContent.actions
 export default ModalContent.reducer

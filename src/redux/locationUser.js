@@ -1,16 +1,16 @@
 import {createSlice} from "@reduxjs/toolkit"
 
-export const Distance = createSlice({
-    name: "Distance",
+export const LocationUser = createSlice({
+    name: "LocationUser",
     initialState: {
         data: ""
     },
     reducers: {
-        getDistance: (state, {payload}) => {
+        getLocation: (state, {payload}) => {
             state.data = payload
         },
     }
-})
+});
 
-export const {getDistance} = Distance.actions
-export default Distance.reducer
+export const {getLocation} = LocationUser.actions;
+export default LocationUser.reducer

@@ -1,0 +1,225 @@
+.login-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .logo {
+    left: 20px;
+    top: 10px;
+    position: absolute;
+    img {
+      width: 120px;
+    }
+  }
+
+  .login-card {
+    width: 500px;
+    height: 400px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    border-radius: 20px;
+    padding: 30px 50px;
+
+    .xbtn{
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      cursor: pointer;
+    }
+
+    .title-login{
+      font-size: 28px;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 600;
+      color: rgba(32, 33, 34, 1);
+    }
+
+    .des-login{
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(32, 33, 34, 1);
+      text-align: center;
+
+    }
+
+    .inputs {
+      margin-top: 15px;
+      width: 100%;
+
+      input {
+        margin-top: 15px;
+        width: 100%;
+        height: 40px;
+        border: 1px solid #EEF0F4;
+        border-radius: 6px;
+        padding-left: 10px;
+        background-color: rgba(180, 192, 204, 0.16);
+        &:focus{
+          outline: none;
+        }
+      }
+
+      .PhoneInput {
+        display: flex;
+        align-items: center;
+
+        .PhoneInputCountry {
+          display: flex;
+          align-items: center;
+
+          .PhoneInputCountrySelect {
+            width: 20px;
+            height: 20px;
+            border: none;
+            color: #002B48;
+            border-radius: 50%;
+
+            &:focus {
+              outline: none;
+            }
+          }
+
+          .PhoneInputCountryIcon {
+            width: 40px;
+            height: 40px;
+            margin-top: 22px;
+            margin-right: 10px;
+            margin-left: 10px;
+            color: white;
+          }
+        }
+      }
+
+      .label-form {
+        font-size: 14px;
+        color: #787F95;
+      }
+    }
+
+    .login-btn{
+      margin-top: 25px;
+      width: 100%;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      text-align: center;
+      border-radius: 10px;
+      background-color: rgba(0, 173, 173, 1);
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      border: none;
+      &:hover{
+        background-color: rgb(0, 133, 133);
+      }
+    }
+
+    .login-btn-disablet{
+      border: none;
+      color: rgba(179, 193, 204, 1);
+      background-color: rgba(180, 192, 204, 0.1);
+      margin-top: 25px;
+      width: 100%;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      text-align: center;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+  }
+
+  .check-code{
+    width: 500px;
+    height: 400px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    border-radius: 20px;
+    padding: 30px 50px;
+
+    .count{
+      text-align: center;
+      color: #047766;
+      font-weight: bold;
+    }
+
+    .xbtn{
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      cursor: pointer;
+    }
+
+    .title-login{
+      font-size: 28px;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 600;
+      color: rgba(32, 33, 34, 1);
+    }
+
+    .des-login{
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(32, 33, 34, 1);
+      text-align: center;
+
+    }
+
+    .inputs {
+      width: max-content;
+      padding-bottom: 20px;
+      margin: 15px auto;
+      height: 80px;
+      display: flex;
+      input {
+        border: none;
+        margin-top: 15px;
+        width: 47px;
+        height: 56px;
+        margin-right: 7px;
+        padding-left: 13px;
+        font-weight: bold;
+        font-size: 26px;
+        border-radius: 10px;
+        background-color: rgba(164, 174, 185, 0.16);
+        &:focus{
+          outline: none;
+        }
+      }
+    }
+
+    .login-btn{
+      margin-top: 25px;
+      width: 100%;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      text-align: center;
+      border-radius: 10px;
+      background-color: rgba(0, 173, 173, 1);
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      border: none;
+      &:hover{
+        background-color: rgb(0, 133, 133);
+      }
+    }
+
+    .login-btn-disablet{
+      border: none;
+      color: rgba(179, 193, 204, 1);
+      background-color: rgba(180, 192, 204, 0.1);
+      margin-top: 25px;
+      width: 100%;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      text-align: center;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+  }
+}
