@@ -26,12 +26,11 @@ const libraries = ["places"];
 const RegisterHospital = () => {
     const navigate = useNavigate();
     const {t} = useTranslation();
-
     const [hospitalType, setHospitalType] = useState('');
     const [invalidService, setInvalidService] = useState(true);
     const [workingTime24, setWorkingTime24] = useState(false);
     const [selected, setSelected] = useState(null);
-    const [pageNumber, setPageNumber] = useState(2);
+    const [pageNumber, setPageNumber] = useState(1);
     const [center, setCenter] = useState(null);
     const [socialMedias, setSocialMedias] = useState([{key: "web", url: ""}]);
     const [service, setService] = useState([
@@ -43,6 +42,7 @@ const RegisterHospital = () => {
     const [weekend, setWeekend] = useState([]);
     const [region, setRegion] = useState("");
     const [region_validate, setRegion_validate] = useState(false);
+    const [logoHospital, setLogoHospital] = useState(null);
 
     const [tg, setTg] = useState(false)
     const [ins, setIns] = useState(false)
@@ -60,6 +60,51 @@ const RegisterHospital = () => {
             },
         },
     };
+
+    const regions = [
+        {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
+        {name: "Buxoro", latitude: 39.767070, longitude: 64.455393},
+        {name: "Farg‘ona", latitude: 40.372379, longitude: 71.797770},
+        {name: "Jizzax", latitude: 40.119300, longitude: 67.880140},
+        {name: "Namangan", latitude: 41.004297, longitude: 71.642956},
+        {name: "Navoiy", latitude: 40.096634, longitude: 65.352255},
+        {name: "Qashqadaryo", latitude: 38.852124, longitude: 65.784203},
+        {name: "Samarqand", latitude: 39.649307, longitude: 66.965182},
+        {name: "Sirdaryo", latitude: 40.376986, longitude: 68.713159},
+        {name: "Surxondaryo", latitude: 37.931559, longitude: 67.564765},
+        {name: "Toshkent", latitude: 41.295695, longitude: 69.239730},
+        {name: "Xorazm", latitude: 41.522326, longitude: 60.623731},
+        {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
+    ];
+
+    const selectAddressIcon = {
+        url: "./images/address.png",
+        scaledSize: {width: 40, height: 50},
+    };
+
+    const names = [
+        'Dushanba',
+        'Seshanba',
+        'Chorshanba',
+        'Payshanba',
+        'Juma',
+        'Shanba',
+        'Yakshanba'
+    ];
+
+    const options = useMemo(
+        () => ({
+            disableDefaultUI: false,
+            clickableIcons: false,
+        }),
+        []
+    );
+
+    const {isLoaded} = useLoadScript({
+        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+        libraries: libraries,
+        language: i18next.language,
+    });
 
     const validate = (values) => {
         const errors = {};
@@ -113,8 +158,7 @@ const RegisterHospital = () => {
         },
         validate,
         onSubmit: (values) => {
-            setPageNumber(2)
-            console.log(values)
+            setPageNumber(2);
         },
     });
 
@@ -138,33 +182,23 @@ const RegisterHospital = () => {
         formOne.handleChange(event)
     };
 
-    const names = [
-        'Dushanba',
-        'Seshanba',
-        'Chorshanba',
-        'Payshanba',
-        'Juma',
-        'Shanba',
-        'Yakshanba'
-    ];
+    const getInputPhoto = (event) => {
+        const {target: {files}} = event;
+        const file = files[0];
 
-    const {isLoaded} = useLoadScript({
-        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-        libraries: libraries,
-        language: i18next.language,
-    });
+        function getBase64(file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                setLogoHospital(reader.result);
+            };
+            reader.onerror = function () {
+                setLogoHospital(null);
+            };
 
-    const options = useMemo(
-        () => ({
-            disableDefaultUI: false,
-            clickableIcons: false,
-        }),
-        []
-    );
+        }
 
-    const selectAddressIcon = {
-        url: "./images/address.png",
-        scaledSize: {width: 40, height: 50},
+        getBase64(file);
     };
 
     const ClicklLocation = (e) => {
@@ -295,22 +329,6 @@ const RegisterHospital = () => {
         );
     };
 
-    const regions = [
-        {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
-        {name: "Buxoro", latitude: 39.767070, longitude: 64.455393},
-        {name: "Farg‘ona", latitude: 40.372379, longitude: 71.797770},
-        {name: "Jizzax", latitude: 40.119300, longitude: 67.880140},
-        {name: "Namangan", latitude: 41.004297, longitude: 71.642956},
-        {name: "Navoiy", latitude: 40.096634, longitude: 65.352255},
-        {name: "Qashqadaryo", latitude: 38.852124, longitude: 65.784203},
-        {name: "Samarqand", latitude: 39.649307, longitude: 66.965182},
-        {name: "Sirdaryo", latitude: 40.376986, longitude: 68.713159},
-        {name: "Surxondaryo", latitude: 37.931559, longitude: 67.564765},
-        {name: "Toshkent", latitude: 41.295695, longitude: 69.239730},
-        {name: "Xorazm", latitude: 41.522326, longitude: 60.623731},
-        {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
-    ];
-
     const addSocialMedia = (key) => {
         if (key === "telegram") {
             setTg(true)
@@ -377,7 +395,7 @@ const RegisterHospital = () => {
                     address: addressLocationRu
                 }
             },
-            base64_image: "",
+            base64_image: logoHospital,
             disabled: invalidService,
             phone1: formOne.values.phone1,
             phone2: formOne.values.phone2,
@@ -447,11 +465,19 @@ const RegisterHospital = () => {
                 </div>
                 <div className="logo-hospital">
                     <div className="logo-image">
-                        <img className="logo-camera" src="./images/Exclude.png" alt=""/>
-                        {/*<img className="logo-clinic" src="./images/Logo-pharma.png" alt=""/>*/}
+                        {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
+                            <img className="logo-camera" src="./images/Exclude.png" alt=""/>
+                        }
+
                     </div>
+
+                    {logoHospital && <div className="cancel-logo">
+                        <img onClick={() => setLogoHospital(null)} src="./images/cancel.png" alt=""/>
+                    </div>}
+
                     <div className="label">
                         Logo qo‘shish
+                        <input onChange={getInputPhoto} type="file"/>
                     </div>
                 </div>
 
@@ -545,7 +571,7 @@ const RegisterHospital = () => {
                                 MenuProps={MenuProps}
                             >
                                 {names.map((name, index) => (
-                                    <MenuItem key={name} value={index}>
+                                    <MenuItem key={name} value={name}>
                                         <Checkbox checked={weekend.indexOf(name) > -1}/>
                                         <ListItemText primary={name}/>
                                     </MenuItem>
