@@ -292,6 +292,32 @@
               }
             }
 
+            .price {
+              width: max-content;
+              margin-right: 20px;
+              .MuiOutlinedInput-root {
+                border-radius: 20px;
+                margin-right: 10px;
+                background-color: rgba(180, 192, 204, 0.16);
+
+                &:hover {
+                  .MuiOutlinedInput-notchedOutline {
+                    border: 1px solid rgba(0, 173, 173, 1);
+                  }
+                }
+              }
+
+              .MuiOutlinedInput-root.Mui-focused {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+
+              .MuiInputLabel-root.Mui-focused {
+                color: rgba(0, 173, 173, 1);
+              }
+            }
+
             .button-filter {
               border: 1px solid #bebebe;
               width: max-content;
@@ -629,17 +655,16 @@
 
       .left-side-hide{
         position: absolute;
-        top: -7px;
+        top: -3px;
         left: 200px;
         z-index: 100;
         .category-wrapper {
           width: 100%;
           margin: 0 auto;
           height: 70px;
-          overflow-x: auto;
           display: flex;
           align-items: center;
-          padding-left: 20px;
+
 
           .dropdown-filter {
             .selectRegion {
@@ -717,6 +742,32 @@
 
               .MuiInputLabel-root.Mui-focused {
                 color: black;
+              }
+            }
+
+            .price {
+              width: max-content;
+              margin-right: 20px;
+              .MuiOutlinedInput-root {
+                border-radius: 20px;
+                margin-right: 10px;
+                background-color: white;
+
+                &:hover {
+                  .MuiOutlinedInput-notchedOutline {
+                    border: 1px solid rgba(0, 173, 173, 1);
+                  }
+                }
+              }
+
+              .MuiOutlinedInput-root.Mui-focused {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+
+              .MuiInputLabel-root.Mui-focused {
+                color: rgba(0, 173, 173, 1);
               }
             }
 

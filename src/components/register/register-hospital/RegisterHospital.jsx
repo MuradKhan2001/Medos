@@ -2,6 +2,7 @@ import "./style.scss";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useMemo, useState} from "react";
 import axios from "axios";
+import {useFormik} from "formik";
 import {
     TextField, MenuItem, InputLabel, FormControl, Select, Checkbox, OutlinedInput,
     ListItemText
@@ -23,44 +24,31 @@ const libraries = ["places"];
 
 
 const RegisterHospital = () => {
+    const navigate = useNavigate();
+    const {t} = useTranslation();
+
     const [hospitalType, setHospitalType] = useState('');
     const [invalidService, setInvalidService] = useState(true);
     const [workingTime24, setWorkingTime24] = useState(false);
     const [selected, setSelected] = useState(null);
-    const [pageNumber, setPageNumber] = useState(1);
+    const [pageNumber, setPageNumber] = useState(2);
     const [center, setCenter] = useState(null);
-    const [socialMedias, setSocialMedias] = useState([{id: Date.now(), link: ""}]);
-
+    const [socialMedias, setSocialMedias] = useState([{key: "web", url: ""}]);
     const [service, setService] = useState([
-        {id: Date.now(), name: "", service: [{id: Date.now(), name: "", price: ""}]}
+        {service: "", sub_services_list: [{sub_service: "", price: ""}]}
     ]);
-
     const [addressLocation, setAddressLocation] = useState("");
-    const {t} = useTranslation();
-
+    const [addressLocationRu, setAddressLocationRu] = useState("");
+    const [address_validate, setAddress_validate] = useState(false);
     const [weekend, setWeekend] = useState([]);
-    const navigate = useNavigate();
+    const [region, setRegion] = useState("");
+    const [region_validate, setRegion_validate] = useState(false);
 
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const {latitude, longitude} = position.coords;
-            let locMy = {lat: latitude, lng: longitude};
-            setCenter(locMy);
-        });
-    }, []);
-
-    const handleChange = (event) => {
-        setHospitalType(event.target.value);
-    };
-
-    const handleChangeMore = (event) => {
-        const {
-            target: {value},
-        } = event;
-        setWeekend(
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    };
+    const [tg, setTg] = useState(false)
+    const [ins, setIns] = useState(false)
+    const [face, setFace] = useState(false)
+    const [you, setYou] = useState(false)
+    const [tik, setTik] = useState(false)
 
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -71,6 +59,83 @@ const RegisterHospital = () => {
                 width: 250,
             },
         },
+    };
+
+    const validate = (values) => {
+        const errors = {};
+
+        if (!values.hospital_type) {
+            errors.hospital_type = "Required";
+        }
+
+        if (!values.nameUz) {
+            errors.nameUz = "Required";
+        }
+
+        if (!values.nameRu) {
+            errors.nameRu = "Required";
+        }
+
+        if (!values.phone1) {
+            errors.phone1 = "Required";
+        }
+
+        if (!values.phone2) {
+            errors.phone2 = "Required";
+        }
+
+        if (!values.working_days.length > 0) {
+            errors.working_days = "Required";
+        }
+
+        if (!workingTime24 && !values.start_time) {
+            errors.start_time = "Required";
+        }
+
+        if (!workingTime24 && !values.end_time) {
+            errors.end_time = "Required";
+        }
+
+
+        return errors;
+    };
+
+    const formOne = useFormik({
+        initialValues: {
+            nameUz: "",
+            nameRu: "",
+            hospital_type: "",
+            phone1: "",
+            phone2: "",
+            start_time: "",
+            end_time: "",
+            working_days: [],
+        },
+        validate,
+        onSubmit: (values) => {
+            setPageNumber(2)
+            console.log(values)
+        },
+    });
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const {latitude, longitude} = position.coords;
+            let locMy = {lat: latitude, lng: longitude};
+            setCenter(locMy);
+        });
+    }, []);
+
+    const handleChangeMore = (event) => {
+        const {
+            target: {value},
+        } = event;
+
+        setWeekend(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+
+        formOne.handleChange(event)
     };
 
     const names = [
@@ -112,7 +177,7 @@ const RegisterHospital = () => {
 
         axios.get(`${url}`, {
             headers: {
-                "Accept-Language": i18next.language,
+                "Accept-Language": "uz",
             },
         }).then((res) => {
             let city = res.data.address.city;
@@ -129,7 +194,27 @@ const RegisterHospital = () => {
 
             setSelected(locMy);
             setAddressLocation(fullAddress)
+            setAddress_validate(false)
+        });
 
+        axios.get(`${url}`, {
+            headers: {
+                "Accept-Language": "ru",
+            },
+        }).then((res) => {
+            let city = res.data.address.city;
+            let country = res.data.address.country;
+            let suburb = res.data.address.suburb;
+            let neighbourhood = res.data.address.neighbourhood;
+            let county = res.data.address.county;
+            let road = res.data.address.road;
+            let fullAddress = `${country ? country + "," : ""} ${city ? city + "," : ""
+            } ${suburb ? suburb + "," : ""} 
+            ${neighbourhood ? neighbourhood + "," : ""} ${
+                county ? county + "," : ""
+            } ${road ? road : ""}`;
+
+            setAddressLocationRu(fullAddress);
         });
     };
 
@@ -152,7 +237,7 @@ const RegisterHospital = () => {
             let locMy = {lat, lng};
             const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&lan=en`;
 
-            axios.get(`${url}`, {headers: {"Accept-Language": i18next.language},}).then((res) => {
+            axios.get(`${url}`, {headers: {"Accept-Language": "uz"},}).then((res) => {
                 let city = res.data.address.city;
                 let country = res.data.address.country;
                 let suburb = res.data.address.suburb;
@@ -169,7 +254,22 @@ const RegisterHospital = () => {
                 setSelected(locMy);
                 setCenter({lat, lng});
                 setAddressLocation(fullAddress)
-
+                setAddress_validate(false)
+            });
+            axios.get(`${url}`, {headers: {"Accept-Language": "ru"},}).then((res) => {
+                let city = res.data.address.city;
+                let country = res.data.address.country;
+                let suburb = res.data.address.suburb;
+                let neighbourhood = res.data.address.neighbourhood;
+                let county = res.data.address.county;
+                let road = res.data.address.road;
+                let fullAddress = `${country ? country + "," : ""} ${
+                    city ? city + "," : ""
+                } ${suburb ? suburb + "," : ""} 
+            ${neighbourhood ? neighbourhood + "," : ""} ${
+                    county ? county + "," : ""
+                } ${road ? road : ""}`;
+                setAddressLocationRu(fullAddress);
             });
         };
 
@@ -211,28 +311,86 @@ const RegisterHospital = () => {
         {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
     ];
 
-    const addSocialMedia = () => {
-        if (socialMedias.length < 5) {
-            let newMedia = {id: Date.now(), link: ""};
-            let newArr = socialMedias.concat(newMedia);
-            setSocialMedias(newArr)
-        } else alert("5 tagacha ijtimoiy tarmoq qo'sha olasiz")
+    const addSocialMedia = (key) => {
+        if (key === "telegram") {
+            setTg(true)
+        }
+        if (key === "instagram") {
+            setIns(true)
+        }
+        if (key === "facebook") {
+            setFace(true)
+        }
+        if (key === "tiktok") {
+            setTik(true)
+        }
+        if (key === "youtube") {
+            setYou(true)
+        }
+        let newMedia = {key, url: ""};
+        let newArr = socialMedias.concat(newMedia);
+        setSocialMedias(newArr)
     };
 
-    const delSocialMedia = (id) => {
-        let newArr = socialMedias.filter((item) => item.id !== id);
+    const delSocialMedia = (ind, key) => {
+        if (key === "telegram") {
+            setTg(false)
+        }
+        if (key === "instagram") {
+            setIns(false)
+        }
+        if (key === "facebook") {
+            setFace(false)
+        }
+        if (key === "tiktok") {
+            setTik(false)
+        }
+        if (key === "youtube") {
+            setYou(false)
+        }
+
+        let newArr = socialMedias.filter((item, index) => index !== ind);
         setSocialMedias(newArr)
     };
 
     const addService = () => {
-        let newService = {id: Date.now(), name: "", service: [{id: Date.now(), name: "", price: ""}]};
+        let newService = {service: "", sub_services_list: [{sub_service: "", price: ""}]}
         let newArr = service.concat(newService);
         setService(newArr)
     };
 
-    const delService = (id) => {
-        let newArr = service.filter((item) => item.id !== id);
+    const delService = (ind) => {
+        let newArr = service.filter((item, index) => index !== ind);
         setService(newArr)
+    };
+
+    const sendAllInfo = () => {
+        let loc = `${center.lat},${center.lng}`
+        let allInfoHospital = {
+            translations: {
+                uz: {
+                    name: formOne.values.nameUz,
+                    address: addressLocation
+                },
+                ru: {
+                    name: formOne.values.nameRu,
+                    address: addressLocationRu
+                }
+            },
+            base64_image: "",
+            disabled: invalidService,
+            phone1: formOne.values.phone1,
+            phone2: formOne.values.phone2,
+            start_time: formOne.values.start_time,
+            end_time: formOne.values.end_time,
+            open_24: workingTime24,
+            location: loc,
+            working_days: formOne.values.working_days,
+            services: service,
+            socials: socialMedias,
+            region: region
+        }
+        console.log(allInfoHospital)
     };
 
     if (!isLoaded) return <Loader/>;
@@ -279,8 +437,8 @@ const RegisterHospital = () => {
                 </div>
             </div>
 
-            {pageNumber === 1 &&
-            <div className="register-page-one">
+            {pageNumber === 1 && <div className="register-page-one">
+
                 <div className="title">
                     Shifoxona haqida aytib bering
                 </div>
@@ -298,9 +456,27 @@ const RegisterHospital = () => {
                 </div>
 
                 <div className="inputs-box">
-                    <TextField sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                               label="Shifoxona nomini kiriting " variant="outlined" className="textField"/>
+                    <TextField error={formOne.errors.nameUz === "Required"}
+                               value={formOne.nameUz}
+                               onChange={formOne.handleChange}
+                               name="nameUz"
+                               sx={{m: 1, minWidth: "100%"}} size="small"
+                               id="outlined-basic"
+                               label="Shifoxona nomini kiriting (uz) " variant="outlined" className="textField"/>
                 </div>
+
+                <div className="inputs-box">
+                    <TextField error={formOne.errors.nameRu === "Required"} value={formOne.nameRu}
+                               onChange={formOne.handleChange}
+                               name="nameRu" sx={{m: 1, minWidth: "100%"}} size="small"
+                               id="outlined-basic"
+                               label="Введите название больницы (ru) " variant="outlined" className="textField"/>
+                </div>
+
+                <div className="des-input">
+                    Iltimos, shifoxona nomini rus tili va o'zbek tilida kiritng
+                </div>
+
                 <div className="label-text">
                     <div className="sides"></div>
                     <div className="sides"> Nogironlar uchun imkoniyatlar</div>
@@ -308,25 +484,33 @@ const RegisterHospital = () => {
 
                 <div className="select-box">
                     <div className="select-sides">
-                        <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
+                        <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
+                                     className="selectMui">
                             <InputLabel id="demo-select-large-label">Shifoxona turi</InputLabel>
                             <Select
+                                error={formOne.errors.hospital_type === "Required"}
+                                name="hospital_type"
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
                                 value={hospitalType}
                                 label="Shifoxona turi"
-                                onChange={handleChange}
+                                onChange={(e) => {
+                                    formOne.handleChange(e)
+                                    setHospitalType(e.target.value)
+                                }}
                             >
-                                <MenuItem value={10}>TTB</MenuItem>
-                                <MenuItem value={20}>Xususiy</MenuItem>
-                                <MenuItem value={30}>Poliklinika</MenuItem>
-                                <MenuItem value={30}>Stomotologiya</MenuItem>
+                                <MenuItem value={1}>TTB</MenuItem>
+                                <MenuItem value={2}>Xususiy</MenuItem>
+                                <MenuItem value={3}>Poliklinika</MenuItem>
+                                <MenuItem value={4}>Stomotologiya</MenuItem>
                             </Select>
                         </FormControl>
                     </div>
+
                     <div className="select-sides">
                         <div className="on-of">
-                            <div onClick={() => setInvalidService(true)} className={`of ${invalidService ? "on" : ""}`}>
+                            <div onClick={() => setInvalidService(true)}
+                                 className={`of ${invalidService ? "on" : ""}`}>
                                 Mavjud
                             </div>
                             <div onClick={() => setInvalidService(false)}
@@ -349,6 +533,8 @@ const RegisterHospital = () => {
                         <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
                             <InputLabel id="demo-multiple-checkbox-label">Ish kunlarini belgilang</InputLabel>
                             <Select
+                                error={formOne.errors.working_days === "Required"}
+                                name="working_days"
                                 labelId="demo-multiple-checkbox-label"
                                 id="demo-multiple-checkbox"
                                 multiple
@@ -358,8 +544,8 @@ const RegisterHospital = () => {
                                 renderValue={(selected) => selected.join(', ')}
                                 MenuProps={MenuProps}
                             >
-                                {names.map((name) => (
-                                    <MenuItem key={name} value={name}>
+                                {names.map((name, index) => (
+                                    <MenuItem key={name} value={index}>
                                         <Checkbox checked={weekend.indexOf(name) > -1}/>
                                         <ListItemText primary={name}/>
                                     </MenuItem>
@@ -388,11 +574,16 @@ const RegisterHospital = () => {
                 {workingTime24 ? "" : <div className="select-box-working-time">
                     <div className="select-sides">
                         <label htmlFor="">Ish vaqti boshlanishi</label>
-                        <input type="time"/>
+                        <input
+                            className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
+                            name="start_time" onChange={formOne.handleChange} value={formOne.start_time}
+                            type="time"/>
                     </div>
                     <div className="select-sides">
                         <label htmlFor="">Ish vaqti boshlanishi</label>
-                        <input type="time"/>
+                        <input
+                            className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
+                            name="end_time" onChange={formOne.handleChange} value={formOne.end_time} type="time"/>
                     </div>
                 </div>}
 
@@ -405,12 +596,22 @@ const RegisterHospital = () => {
 
                 <div className="select-box">
                     <div className="select-sides">
-                        <TextField sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                                   label="Telefon raqam 1" variant="outlined" className="textField"/>
+                        <TextField
+                            error={formOne.errors.phone1 === "Required"}
+                            value={formOne.phone1}
+                            onChange={formOne.handleChange}
+                            name="phone1"
+                            sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
+                            label="Telefon raqam 1" variant="outlined" className="textField"/>
                     </div>
                     <div className="select-sides">
-                        <TextField sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                                   label="Telefon raqam 2" variant="outlined" className="textField"/>
+                        <TextField
+                            error={formOne.errors.phone2 === "Required"}
+                            value={formOne.phone2}
+                            onChange={formOne.handleChange}
+                            name="phone2"
+                            sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
+                            label="Telefon raqam 2" variant="outlined" className="textField"/>
                     </div>
                 </div>
 
@@ -422,42 +623,81 @@ const RegisterHospital = () => {
                 </div>
 
                 <div className="inputs-box-link">
-                    <label htmlFor=""></label>
+
 
                     {socialMedias.map((item, index) => {
                         return <div key={index} className="inputs-social-media">
-                            <TextField onChange={(e) => item.link = e.target.value} sx={{m: 1, minWidth: "50%"}}
+
+                            {item.key === "telegram" && <img src="./images/social-media/telegram.png" alt=""/>}
+                            {item.key === "web" && <img src="./images/social-media/web.png" alt=""/>}
+                            {item.key === "instagram" && <img src="./images/social-media/instagram.png" alt=""/>}
+                            {item.key === "facebook" && <img src="./images/social-media/facebook.png" alt=""/>}
+                            {item.key === "youtube" && <img src="./images/social-media/youtube.png" alt=""/>}
+                            {item.key === "tiktok" && <img src="./images/social-media/tiktok.png" alt=""/>}
+
+                            <TextField onChange={(e) => item.url = e.target.value} sx={{m: 1, minWidth: "43%"}}
                                        size="small"
                                        id="outlined-basic"
                                        label="https://" variant="outlined" className="textField"/>
 
                             {socialMedias.length > 1 && index !== 0 &&
-                            <div onClick={() => delSocialMedia(item.id)} className="del-icon"><img
+                            <div onClick={() => delSocialMedia(index, item.key)} className="del-icon"><img
                                 src="./images/del-icon.png" alt=""/></div>}
                         </div>
                     })}
+                    <div className="des">Ijtimoiy tarmoq sahifalarni kirtish majburiy emas!</div>
 
-                    <div className="des">Agar veb sayt mavjud bo‘lmasa ijtimoiy tarmoq sahifasining havolasini
-                        kiriting
-                    </div>
 
-                    <div onClick={addSocialMedia} className="add-social-media">
-                        Ijtomoiy sahifa qo‘shish
+                    <div className="add-social-media">
+                        {!tg && <div onClick={() => addSocialMedia("telegram")} className="social-mdeia-icon">
+                            <div className="sloy">
+                                <img src="./images/add.png" alt=""/>
+                            </div>
+                            <img src="./images/social-media/telegram.png" alt=""/>
+                        </div>}
+
+                        {!ins && <div onClick={() => addSocialMedia("instagram")} className="social-mdeia-icon">
+                            <div className="sloy">
+                                <img src="./images/add.png" alt=""/>
+                            </div>
+                            <img src="./images/social-media/instagram.png" alt=""/>
+                        </div>}
+
+                        {!face && <div onClick={() => addSocialMedia("facebook")} className="social-mdeia-icon">
+                            <div className="sloy">
+                                <img src="./images/add.png" alt=""/>
+                            </div>
+                            <img src="./images/social-media/facebook.png" alt=""/>
+                        </div>}
+
+                        {!you && <div onClick={() => addSocialMedia("youtube")} className="social-mdeia-icon">
+                            <div className="sloy">
+                                <img src="./images/add.png" alt=""/>
+                            </div>
+                            <img src="./images/social-media/youtube.png" alt=""/>
+                        </div>}
+
+                        {!tik && <div onClick={() => addSocialMedia("tiktok")} className="social-mdeia-icon">
+                            <div className="sloy">
+                                <img src="./images/add.png" alt=""/>
+                            </div>
+                            <img src="./images/social-media/tiktok.png" alt=""/>
+                        </div>}
                     </div>
 
                     <div className="des">
-                        Telegram, Whatsapp sahifasi havolasini qo‘shish orqali bemorlarni bog‘lanishini osonlashtiring
+                        Quyidagi ijtimoiy tarmoq sahifalaringizni qo‘shish orqali bemorlarni bog‘lanishini
+                        osonlashtiring.
                     </div>
                 </div>
 
                 <div className="btn-box">
-                    <div onClick={() => {
-                        setPageNumber(2);
-                    }} className="next-page-btn">
+                    <div onClick={() => formOne.handleSubmit()} className="next-page-btn">
                         Tasdiqlash va davom etish
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
                 </div>
+
             </div>}
 
 
@@ -475,17 +715,19 @@ const RegisterHospital = () => {
                         <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
                             <InputLabel id="demo-select-large-label">Viloyatni tanlang</InputLabel>
                             <Select
+                                error={region_validate}
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
-                                value={hospitalType}
+                                value={region}
                                 label="Viloyatni tanlang"
-                                onChange={handleChange}
+                                onChange={(e) => setRegion(e.target.value)}
                             >
 
                                 {regions.map((item, index) => {
                                     return <MenuItem key={index} onClick={() => {
+                                        setRegion_validate(false)
                                         setCenter({lat: item.latitude, lng: item.longitude})
-                                    }} value={item.name}>{item.name}</MenuItem>
+                                    }} value={index}>{item.name}</MenuItem>
                                 })}
 
                             </Select>
@@ -494,8 +736,10 @@ const RegisterHospital = () => {
                 </div>
 
                 <div className="label-address">Manzil:</div>
-                <div className="address-box">
-                    {addressLocation ? addressLocation : <p>Manzilni xaritadan belgilang</p>}
+                <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
+                    {i18next.language === "uz" && addressLocation ? addressLocation : ""}
+                    {i18next.language === "ru" && addressLocationRu ? addressLocationRu : ""}
+                    {!addressLocation && !addressLocationRu && <p>Manzilni xaritadan belgilang</p>}
                 </div>
                 <div className="address-container">
                     <GoogleMap
@@ -523,7 +767,14 @@ const RegisterHospital = () => {
                         <img src="./images/prev-btn.png" alt=""/>
                         Orqaga qaytish
                     </div>
-                    <div onClick={() => setPageNumber(3)} className="next-page-btn">
+                    <div onClick={() => {
+                        if (addressLocation && region) {
+                            setPageNumber(3)
+                        } else {
+                            if (!addressLocation) setAddress_validate(true);
+                            if (!region) setRegion_validate(true)
+                        }
+                    }} className="next-page-btn">
                         Tasdiqlash va davom etish
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
@@ -548,28 +799,28 @@ const RegisterHospital = () => {
                                     <Select
                                         labelId="demo-select-small-label"
                                         id="demo-select-small"
-                                        value={item.name}
+                                        value={item.service}
                                         label="Xizmat turi"
                                         onChange={(e) => {
-                                            item.name = e.target.value
+                                            item.service = e.target.value
                                             let change = [...service];
                                             setService(change);
                                         }}
                                     >
-                                        <MenuItem value={"xizmat 1"}>xizmat 1</MenuItem>
-                                        <MenuItem value={"xizmat 2"}>xizmat 2</MenuItem>
-                                        <MenuItem value={"xizmat 3"}>xizmat 3</MenuItem>
+                                        <MenuItem value={1}>xizmat 1</MenuItem>
+                                        <MenuItem value={2}>xizmat 2</MenuItem>
+                                        <MenuItem value={3}>xizmat 3</MenuItem>
                                     </Select>
                                 </FormControl>
                             </div>
                             <div className="select-sides">
                                 {service.length > 1 && index !== 0 &&
-                                <img onClick={() => delService(item.id)} src="./images/del-icon.png" alt=""/>}
+                                <img onClick={() => delService(index)} src="./images/del-icon.png" alt=""/>}
                             </div>
                         </div>
 
 
-                        {item.service.map((itemService, indexService) => {
+                        {item.sub_services_list.map((itemService, indexService) => {
                             return <div key={indexService} className="select-box">
                                 <div className="select-sides">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
@@ -577,16 +828,17 @@ const RegisterHospital = () => {
                                         <Select
                                             labelId="demo-select-small-label"
                                             id="demo-select-small"
-                                            value={itemService.name}
+                                            value={itemService.sub_service}
                                             label="Xizmat nomi"
                                             onChange={(e) => {
                                                 let change = [...service];
                                                 setService(change);
-                                                itemService.name = e.target.value}}
+                                                itemService.sub_service = e.target.value
+                                            }}
                                         >
-                                            <MenuItem value={"xizmat nomi 1"}>xizmat nomi 1</MenuItem>
-                                            <MenuItem value={"xizmat nomi 2"}>xizmat nomi 2</MenuItem>
-                                            <MenuItem value={"xizmat nomi 3"}>xizmat nomi 3</MenuItem>
+                                            <MenuItem value={1}>xizmat nomi 1</MenuItem>
+                                            <MenuItem value={2}>xizmat nomi 2</MenuItem>
+                                            <MenuItem value={3}>xizmat nomi 3</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </div>
@@ -596,8 +848,8 @@ const RegisterHospital = () => {
                                                size="small" id="outlined-basic"
                                                label="Xizmat narxi " variant="outlined" className="textField"/>
 
-                                    {item.service.length > 1 && indexService !== 0 && <img onClick={() => {
-                                        item.service = item.service.filter((item) => item.id !== itemService.id)
+                                    {item.sub_services_list.length > 1 && indexService !== 0 && <img onClick={() => {
+                                        item.sub_services_list = item.sub_services_list.filter((item, index) => index !== indexService);
                                         let change = [...service];
                                         setService(change);
                                     }} src="./images/del-icon.png" alt=""/>}
@@ -606,7 +858,7 @@ const RegisterHospital = () => {
                         })}
 
                         <div onClick={() => {
-                            item.service = item.service.concat({id: Date.now(), name: "", price: ""});
+                            item.sub_services_list = item.sub_services_list.concat({sub_service: "", price: ""});
                             let change = [...service];
                             setService(change);
                         }} className="add-social-media">
@@ -631,9 +883,7 @@ const RegisterHospital = () => {
                         Orqaga qaytish
                     </div>
 
-                    <div onClick={() => {
-                        console.log(service)
-                    }} className="next-page-btn">
+                    <div onClick={sendAllInfo} className="next-page-btn">
                         Tasdiqlash
                         <img src="./images/next-btn.png" alt=""/>
                     </div>

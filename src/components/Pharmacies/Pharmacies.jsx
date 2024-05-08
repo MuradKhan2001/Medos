@@ -49,61 +49,12 @@ const Pharmacies = () => {
 
                             <div>
                                 <div className="dropdown-filter">
-                                    <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
-                                                 className="selectHospitalType">
-                                        <InputLabel id="demo-select-large-label">Shifoxona turi</InputLabel>
-                                        <Select
-                                            labelId="demo-select-small-label"
-                                            id="demo-select-small"
-                                            value={typeHospital}
-                                            label="Shifoxona turi"
-                                            onChange={(e) => setTypeHospital(e.target.value)}
-                                        >
-                                            <MenuItem value={"Xususiy"}>Xususiy</MenuItem>
-                                            <MenuItem value={"Davlat"}>Davlat</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="dropdown-filter">
-                                    <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
-                                                 className="selectProfessional">
-                                        <InputLabel id="demo-select-large-label">Mutaxasislik</InputLabel>
-                                        <Select
-                                            labelId="demo-select-small-label"
-                                            id="demo-select-small"
-                                            value={professional}
-                                            label="Mutaxasislik"
-                                            onChange={(e) => setProfessional(e.target.value)}
-                                        >
-                                            <MenuItem value={"Stamatolog"}>Stamatolog</MenuItem>
-                                            <MenuItem value={"Terapvt"}>Terapvt</MenuItem>
-                                            <MenuItem value={"Lor"}>Lor</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="dropdown-filter">
                                     <div onClick={() => setWorking24(!working24)}
                                          className={`button-filter ${working24 ? "active-filter-btn" : ""}`}>
                                         24 soat ochiq
                                     </div>
                                 </div>
                             </div>
-
-                            <div>
-                                <div className="dropdown-filter">
-                                    <div onClick={() => setDisable(!disable)}
-                                         className={`button-filter ${disable ? "active-filter-btn" : ""}`}>
-                                        Nogironlar uchun imkoniyatlar
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
 
                         {!showMap && <div className="pharmacies">

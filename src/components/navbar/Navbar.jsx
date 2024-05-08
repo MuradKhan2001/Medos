@@ -18,7 +18,6 @@ const Navbar = () => {
     const dispatch = useDispatch();
     const location = useSelector((store) => store.LocationUser.data);
 
-
     const Menus = [
         {
             name: t('nav1'),

@@ -110,6 +110,17 @@
         color: rgba(38, 45, 51, 1);
       }
 
+      .des-input {
+        padding-left: 10px;
+        margin-top: 0;
+        text-align: start;
+        width: 100%;
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(133, 145, 158, 1);
+        margin-bottom: 30px;
+      }
+
       .logo-hospital {
         margin-top: 20px;
         width: 100%;
@@ -146,12 +157,13 @@
           border-radius: 15px;
           padding: 5px 15px;
           background-color: rgba(180, 192, 204, 0.1);
+          margin-bottom: 30px;
 
         }
       }
 
       .inputs-box {
-        margin-top: 20px;
+        margin-top: 5px;
 
         .textField {
           .MuiOutlinedInput-root {
@@ -168,6 +180,11 @@
             }
           }
 
+          .MuiInputLabel-root {
+            padding-right: 5px;
+            background-color: white;
+          }
+
           .MuiInputLabel-root.Mui-focused {
             color: rgba(0, 173, 173, 1);
           }
@@ -178,6 +195,10 @@
         .inputs-social-media {
           display: flex;
           align-items: center;
+
+          img {
+            width: 25px;
+          }
 
           .textField {
             .MuiOutlinedInput-root {
@@ -213,30 +234,62 @@
         }
 
         .des {
+          width: 50%;
           padding-left: 10px;
           margin-top: 0;
           text-align: start;
-          width: 50%;
           font-size: 14px;
           font-weight: 400;
           color: rgba(133, 145, 158, 1);
         }
 
         .add-social-media {
-          margin-top: 30px;
           width: 50%;
-          height: 40px;
-          background-color: rgba(180, 192, 204, 0.16);
-          color: rgba(0, 173, 173, 1);
-          display: flex;
-          align-items: center;
-          border-radius: 8px;
-          justify-content: center;
+          padding-left: 10px;
+          margin-top: 20px;
           margin-bottom: 10px;
-          cursor: pointer;
+          display: flex;
 
-          &:hover {
-            background-color: rgba(128, 137, 145, 0.16);
+          .social-mdeia-icon {
+            margin-right: 8px;
+            border: 1px solid rgba(0, 173, 173, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+
+            &:hover {
+              .sloy {
+                top: 0;
+              }
+            }
+
+            .sloy {
+              transition: 0.3s;
+              z-index: 10;
+              position: absolute;
+              top: -100%;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(255, 255, 255, 0.8);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              img {
+                width: 40%;
+              }
+            }
+
+            img {
+              width: 65%;
+            }
           }
         }
       }
@@ -267,6 +320,24 @@
             .MuiInputLabel-root.Mui-focused {
               color: rgba(0, 173, 173, 1);
             }
+          }
+
+          .selectMuiRequired {
+
+            .MuiOutlinedInput-root {
+              &:hover {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+            }
+
+            .MuiOutlinedInput-root.Mui-focused {
+              .MuiOutlinedInput-notchedOutline {
+                border: 1px solid rgba(0, 173, 173, 1);
+              }
+            }
+
           }
 
           .on-of {
@@ -466,7 +537,7 @@
             font-weight: 400;
           }
 
-          input {
+          .working_time {
             padding: 15px;
             margin-top: 10px;
             width: 100%;
@@ -480,6 +551,10 @@
             }
 
             font-size: 18px;
+          }
+
+          .working_time_required {
+            border: 1px solid red !important;
           }
         }
       }
@@ -560,6 +635,10 @@
         }
       }
 
+      .validate_location {
+        border: 1px solid red;
+      }
+
       .address-container {
         margin-top: 20px;
         width: 100%;
@@ -575,8 +654,8 @@
 
           .search-address {
             position: absolute;
-            top: 8px;
-            left: 37%;
+            top: 55px;
+            left: 10px;
             z-index: 100;
 
             .places-container {

@@ -23,6 +23,7 @@ const Clinics = () => {
     const navigate = useNavigate();
     const showMap = useSelector((store) => store.ShowMap.data);
     const dispatch = useDispatch();
+    const [price, setPrice] = useState("");
 
     const Category = [
         {id: 1, name: "Barchasi"},
@@ -113,6 +114,25 @@ const Clinics = () => {
                                             <MenuItem value={"Stamatolog"}>Stamatolog</MenuItem>
                                             <MenuItem value={"Terapvt"}>Terapvt</MenuItem>
                                             <MenuItem value={"Lor"}>Lor</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div className="dropdown-filter">
+                                    <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
+                                                 className="price">
+                                        <InputLabel id="demo-select-large-label">Narx</InputLabel>
+                                        <Select
+                                            labelId="demo-select-small-label"
+                                            id="demo-select-small"
+                                            value={price}
+                                            label="Jinsi"
+                                            onChange={(e) => setPrice(e.target.value)}
+                                        >
+                                            <MenuItem value={"axpensive"}>Arzondan- qimmatgacha</MenuItem>
+                                            <MenuItem value={"chip"}>Qimmatdan-  arzongacha</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </div>

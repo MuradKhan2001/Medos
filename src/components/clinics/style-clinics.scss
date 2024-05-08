@@ -355,6 +355,31 @@
               background-color: rgba(38, 45, 51, 1);
               color: white;
             }
+            .price {
+              width: max-content;
+              margin-right: 20px;
+              .MuiOutlinedInput-root {
+                border-radius: 20px;
+                margin-right: 10px;
+                background-color: rgba(180, 192, 204, 0.16);
+
+                &:hover {
+                  .MuiOutlinedInput-notchedOutline {
+                    border: 1px solid rgba(0, 173, 173, 1);
+                  }
+                }
+              }
+
+              .MuiOutlinedInput-root.Mui-focused {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+
+              .MuiInputLabel-root.Mui-focused {
+                color: rgba(0, 173, 173, 1);
+              }
+            }
           }
 
           &::-webkit-scrollbar {
@@ -745,6 +770,33 @@
             .active-filter-btn{
               background-color: rgba(38, 45, 51, 1);
               color: white;
+            }
+
+
+            .price {
+              width: max-content;
+              margin-right: 20px;
+              .MuiOutlinedInput-root {
+                border-radius: 20px;
+                margin-right: 10px;
+                background-color: white;
+
+                &:hover {
+                  .MuiOutlinedInput-notchedOutline {
+                    border: 1px solid rgba(0, 173, 173, 1);
+                  }
+                }
+              }
+
+              .MuiOutlinedInput-root.Mui-focused {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+
+              .MuiInputLabel-root.Mui-focused {
+                color: rgba(0, 173, 173, 1);
+              }
             }
           }
 
