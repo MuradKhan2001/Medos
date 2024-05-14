@@ -12,6 +12,9 @@ import RegisterHospital from "../components/register/register-hospital/RegisterH
 import RegisterDoctor from "../components/register/register-doctor/RegisterDoctor";
 import RegisterPharmacies from "../components/register/register-pharmacies/RegisterPharmacies";
 import Service from "../components/services/Services";
+import ProfileDoctor from "../components/profile/profile-doctor/ProfileDoctor";
+import ProfileHospital from "../components/profile/hospital-profile/HospitalProfile";
+
 
 export const publicRoutes = [
     {
@@ -69,10 +72,19 @@ export const publicRoutes = [
 ];
 
 export const allRoutes = [
-    // {
-    //     path: "/*",
-    //     element: <Admin/>
-    // },
+    ...publicRoutes,
+    {
+        path: "/profile-doctor",
+        element: <ProfileDoctor/>
+    },
+    {
+        path: "/profile-hospital",
+        element: <ProfileHospital/>
+    },
+    {
+        path: "/profile-pharmacy",
+        element: <ProfileDoctor/>
+    },
 ];
 
 

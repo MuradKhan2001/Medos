@@ -18,6 +18,7 @@ import "@reach/combobox/styles.css";
 import Loader from "../../loader/Loader";
 import i18next from "i18next";
 import {useTranslation} from "react-i18next";
+import {useSelector} from "react-redux";
 
 
 const libraries = ["places"];
@@ -26,6 +27,7 @@ const libraries = ["places"];
 const RegisterHospital = () => {
     const navigate = useNavigate();
     const {t} = useTranslation();
+    const baseUrl = useSelector((store) => store.baseUrl.data);
     const [hospitalType, setHospitalType] = useState('');
     const [invalidService, setInvalidService] = useState(true);
     const [workingTime24, setWorkingTime24] = useState(false);
@@ -43,6 +45,11 @@ const RegisterHospital = () => {
     const [region, setRegion] = useState("");
     const [region_validate, setRegion_validate] = useState(false);
     const [logoHospital, setLogoHospital] = useState(null);
+    const [daysList, setDaysList] = useState([]);
+    const [hospitalList, setHospitalList] = useState([]);
+
+    const [serviceList, setServiceList]= useState([])
+    const [SubServiceList, setSubServiceList]= useState([])
 
     const [tg, setTg] = useState(false)
     const [ins, setIns] = useState(false)
@@ -81,16 +88,6 @@ const RegisterHospital = () => {
         url: "./images/address.png",
         scaledSize: {width: 40, height: 50},
     };
-
-    const names = [
-        'Dushanba',
-        'Seshanba',
-        'Chorshanba',
-        'Payshanba',
-        'Juma',
-        'Shanba',
-        'Yakshanba'
-    ];
 
     const options = useMemo(
         () => ({
@@ -168,6 +165,22 @@ const RegisterHospital = () => {
             let locMy = {lat: latitude, lng: longitude};
             setCenter(locMy);
         });
+
+        axios.get(`${baseUrl}days/`).then((response) => {
+            setDaysList(response.data)
+        }).catch((error) => {
+        });
+
+        axios.get(`${baseUrl}hospital-type/`).then((response) => {
+            setHospitalList(response.data)
+        }).catch((error) => {
+        });
+
+        axios.get(`${baseUrl}speciality/`).then((response) => {
+            setServiceList(response.data)
+        }).catch((error) => {
+        });
+
     }, []);
 
     const handleChangeMore = (event) => {
@@ -179,7 +192,11 @@ const RegisterHospital = () => {
             typeof value === 'string' ? value.split(',') : value,
         );
 
-        formOne.handleChange(event)
+        let new_list = daysList.filter(day => {
+            return day.translations[i18next.language].day && value.includes(day.translations[i18next.language].day);
+        }).map(day => day.id);
+
+        formOne.values.working_days = new_list
     };
 
     const getInputPhoto = (event) => {
@@ -382,6 +399,13 @@ const RegisterHospital = () => {
         setService(newArr)
     };
 
+    const getSubService = (id)=>{
+        axios.get(`${baseUrl}speciality/${id}/`).then((response) => {
+            setSubServiceList(response.data)
+        }).catch((error) => {
+        });
+    }
+
     const sendAllInfo = () => {
         let loc = `${center.lat},${center.lng}`
         let allInfoHospital = {
@@ -408,6 +432,13 @@ const RegisterHospital = () => {
             socials: socialMedias,
             region: region
         }
+
+        axios.post(`${baseUrl}auth/register/hospital/`, allInfoHospital).then((response) => {
+            console.log("ishladi")
+        }).catch((error) => {
+            console.log(error)
+        });
+
         console.log(allInfoHospital)
     };
 
@@ -463,6 +494,7 @@ const RegisterHospital = () => {
                 <div className="des">
                     Shifoxona akkountingizni ro‘yxatdan o‘tkazish uchun bu juda muhim
                 </div>
+
                 <div className="logo-hospital">
                     <div className="logo-image">
                         {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
@@ -521,14 +553,16 @@ const RegisterHospital = () => {
                                 value={hospitalType}
                                 label="Shifoxona turi"
                                 onChange={(e) => {
-                                    formOne.handleChange(e)
+                                    formOne.handleChange(e);
                                     setHospitalType(e.target.value)
                                 }}
                             >
-                                <MenuItem value={1}>TTB</MenuItem>
-                                <MenuItem value={2}>Xususiy</MenuItem>
-                                <MenuItem value={3}>Poliklinika</MenuItem>
-                                <MenuItem value={4}>Stomotologiya</MenuItem>
+                                {hospitalList.map((item) => {
+                                    return <MenuItem key={item.id} value={item.id}>
+                                        {item.translations[i18next.language].name}
+                                    </MenuItem>
+                                })}
+
                             </Select>
                         </FormControl>
                     </div>
@@ -570,10 +604,11 @@ const RegisterHospital = () => {
                                 renderValue={(selected) => selected.join(', ')}
                                 MenuProps={MenuProps}
                             >
-                                {names.map((name, index) => (
-                                    <MenuItem key={name} value={name}>
-                                        <Checkbox checked={weekend.indexOf(name) > -1}/>
-                                        <ListItemText primary={name}/>
+                                {daysList.map((item) => (
+                                    <MenuItem key={item.id} value={item.translations[i18next.language].day}>
+                                        <Checkbox
+                                            checked={weekend.indexOf(item.translations[i18next.language].day) > -1}/>
+                                        <ListItemText primary={item.translations[i18next.language].day}/>
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -753,7 +788,7 @@ const RegisterHospital = () => {
                                     return <MenuItem key={index} onClick={() => {
                                         setRegion_validate(false)
                                         setCenter({lat: item.latitude, lng: item.longitude})
-                                    }} value={index}>{item.name}</MenuItem>
+                                    }} value={index+1}>{item.name}</MenuItem>
                                 })}
 
                             </Select>
@@ -831,11 +866,16 @@ const RegisterHospital = () => {
                                             item.service = e.target.value
                                             let change = [...service];
                                             setService(change);
+                                            setSubServiceList([])
+                                            getSubService(e.target.value)
                                         }}
                                     >
-                                        <MenuItem value={1}>xizmat 1</MenuItem>
-                                        <MenuItem value={2}>xizmat 2</MenuItem>
-                                        <MenuItem value={3}>xizmat 3</MenuItem>
+                                        {serviceList.map((item,index)=>{
+                                            return <MenuItem key={item.id} value={item.id}>
+                                                {item.translations[i18next.language].name}
+                                            </MenuItem>
+                                        })}
+
                                     </Select>
                                 </FormControl>
                             </div>
@@ -862,9 +902,12 @@ const RegisterHospital = () => {
                                                 itemService.sub_service = e.target.value
                                             }}
                                         >
-                                            <MenuItem value={1}>xizmat nomi 1</MenuItem>
-                                            <MenuItem value={2}>xizmat nomi 2</MenuItem>
-                                            <MenuItem value={3}>xizmat nomi 3</MenuItem>
+                                            {SubServiceList.map((item)=>{
+                                                return  <MenuItem key={item.id} value={item.id}>
+                                                    {item.translations[i18next.language].name}
+                                                </MenuItem>
+                                            })}
+
                                         </Select>
                                     </FormControl>
                                 </div>

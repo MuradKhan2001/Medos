@@ -14,7 +14,8 @@ export const MainContext = createContext();
 const App = () => {
     const [url, setUrl] = useState('https://api.buyukyol.uz/');
     const dispatch = useDispatch();
-    const user = useMemo(() => localStorage.getItem('user'), []);
+
+    const user = useMemo(() => localStorage.getItem('token'), []);
 
     const routes = useMemo(() => {
         if (user) return allRoutes;
@@ -31,7 +32,6 @@ const App = () => {
             });
         });
     }, []);
-
 
     return <MainContext.Provider value={url}>
         <Routes>

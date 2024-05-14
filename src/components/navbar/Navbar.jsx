@@ -63,7 +63,7 @@ const Navbar = () => {
         {name: "Navoiy", latitude: 40.096634, longitude: 65.352255},
         {name: "Qashqadaryo", latitude: 38.852124, longitude: 65.784203},
         {name: "Samarqand", latitude: 39.649307, longitude: 66.965182},
-        {name: "Sirdaryo", latitude:40.376986, longitude: 68.713159},
+        {name: "Sirdaryo", latitude: 40.376986, longitude: 68.713159},
         {name: "Surxondaryo", latitude: 37.931559, longitude: 67.564765},
         {name: "Toshkent", latitude: 41.295695, longitude: 69.239730},
         {name: "Xorazm", latitude: 41.522326, longitude: 60.623731},
@@ -88,7 +88,7 @@ const Navbar = () => {
         setShowModal(false)
     };
 
-    const ChangeMenu = (url)=>{
+    const ChangeMenu = (url) => {
         dispatch(changeMenu(url))
     };
 
@@ -166,7 +166,7 @@ const Navbar = () => {
                     <div className="menu-wrapper">
                         {
                             Menus.map((item, index) => {
-                                return <NavLink onClick={()=> ChangeMenu(item.url)} to={item.url} key={index}
+                                return <NavLink onClick={() => ChangeMenu(item.url)} to={item.url} key={index}
                                                 className={`menu-item ${({isActive}) => isActive ? "active" : ""}`}>
                                     <img src={item.img} alt=""/>
                                     <span> {item.name}</span>
@@ -208,19 +208,50 @@ const Navbar = () => {
 
                     {
                         profile && <div className="profile-card">
-                            <div onClick={()=>navigate("/register")} className="register-btn">Ro'yxatdan o'tish</div>
-                            <div onClick={() => navigate("/login")} className="login-btn">Profilga kirish</div>
-                            <div className="des">
-                                Shifoxaona, Shifokor yoki Dorixona qo'shish uchun ro'yxatdan o'ting!
-                            </div>
-                            <div onClick={() => navigate("/saved")} className="saved">
-                                <img src="./images/likes.png" alt=""/>
-                                Saqlanganlar
-                            </div>
-                            <div className="about-platform">
-                                <img src="./images/about.png" alt=""/>
-                                Dastur haqida
-                            </div>
+
+                            {localStorage.getItem("token") ? <div className="user-profile">
+                                    <div className="header-side">
+                                        <div className="name">
+                                            {i18next.language === "uz" && localStorage.getItem("nameUz")}
+                                            {i18next.language === "ru" && localStorage.getItem("nameRu")}
+                                        </div>
+                                    </div>
+                                    <div onClick={() => {
+                                        localStorage.getItem("userType") === "Doctor" && navigate("/profile-doctor");
+                                        localStorage.getItem("userType") === "Hospital" && navigate("/profile-hospital");
+                                        localStorage.getItem("userType") === "Pharmacy" && navigate("/profile-pharmacy");
+                                    }} className="btns">
+                                        <img src="./images/settings.png" alt=""/>
+                                        Sozlamalar
+                                    </div>
+                                    <div onClick={() => {
+                                        localStorage.removeItem("token")
+                                        localStorage.removeItem("userId")
+                                        localStorage.removeItem("nameUz")
+                                        localStorage.removeItem("nameRu")
+                                        window.location.reload()
+                                    }} className="btns">
+                                        <img src="./images/log-out.png" alt=""/>
+                                        Profildan chiqish
+                                    </div>
+                                </div> :
+                                <div className="register-card">
+                                    <div onClick={() => navigate("/register")} className="register-btn">Ro'yxatdan
+                                        o'tish
+                                    </div>
+                                    <div onClick={() => navigate("/login")} className="login-btn">Profilga kirish</div>
+                                    <div className="des">
+                                        Shifoxaona, Shifokor yoki Dorixona qo'shish uchun ro'yxatdan o'ting!
+                                    </div>
+                                    {/*<div onClick={() => navigate("/saved")} className="saved">*/}
+                                    {/*    <img src="./images/likes.png" alt=""/>*/}
+                                    {/*    Saqlanganlar*/}
+                                    {/*</div>*/}
+                                    {/*<div className="about-platform">*/}
+                                    {/*    <img src="./images/about.png" alt=""/>*/}
+                                    {/*    Dastur haqida*/}
+                                    {/*</div>*/}
+                                </div>}
                         </div>
                     }
                 </div>

@@ -25,11 +25,10 @@ import {useFormik} from "formik";
 import Textarea from '@mui/joy/Textarea';
 import {useDispatch, useSelector} from "react-redux";
 
-
 const libraries = ["places"];
 
 
-const RegisterHospital = () => {
+const ProfileDoctor = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const baseUrl = useSelector((store) => store.baseUrl.data);
@@ -139,13 +138,9 @@ const RegisterHospital = () => {
             errors.phone1 = "Required";
         }
 
-        if (!values.specialty && pageNumber === 3) {
+        if (!values.specialty) {
             errors.specialty = "Required";
         }
-
-        // if (!values.hospital && pageNumber === 2) {
-        //     errors.hospital = "Required";
-        // }
 
         if (!values.experience && pageNumber === 3) {
             errors.experience = "Required";
@@ -160,7 +155,7 @@ const RegisterHospital = () => {
 
     const formOne = useFormik({
         initialValues: {
-            first_name: "Murodxon",
+            first_name: "",
             last_name: "",
             middle_name: "",
             bio_uz: "",
@@ -169,37 +164,101 @@ const RegisterHospital = () => {
             start_time: "",
             end_time: "",
             working_days: [],
-            consultation_fee: null,
-            second_consultation_fee: null,
-            specialty: null,
+            consultation_fee: "",
+            second_consultation_fee: "",
+            specialty: "",
             hospital: "",
-            sub_speciality: "",
+            sub_speciality: [],
             experience: ""
         },
         validate,
         onSubmit: (values) => {
-            if (pageNumber === 1) {
-                setPageNumber(2);
-            }
-
-            if (pageNumber === 2) {
-
-                if (region && (addressLocation || values.hospital)) {
-                    setPageNumber(3)
-                } else {
-                    if (!addressLocation) setAddress_validate(true);
-                    if (!region) setRegion_validate(true)
-
-                }
-            }
-
-            if (pageNumber === 3) {
-                sendAllInfo()
-            }
+            sendAllInfo()
         },
     });
 
     useEffect(() => {
+        axios.get(`${baseUrl}doctor-profile/`, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }
+        ).then((response) => {
+
+            formOne.setValues({
+                first_name: response.data.translations[i18next.language].first_name,
+                last_name: response.data.translations[i18next.language].last_name,
+                middle_name: response.data.translations[i18next.language].middle_name,
+                bio_uz: response.data.translations["uz"].bio,
+                bio_ru: response.data.translations["ru"].bio,
+                phone1: response.data.phone,
+                start_time: response.data.start_time,
+                end_time: response.data.end_time,
+                working_days: response.data.working_days,
+                consultation_fee: response.data.consultation_fee,
+                second_consultation_fee: response.data.second_consultation_fee,
+                specialty: response.data.specialty,
+                hospital: response.data.hospital,
+                sub_speciality: response.data.sub_speciality,
+                experience: response.data.experience
+            });
+
+            setSocialMedias(response.data.doctor_socials)
+            response.data.doctor_socials.map((item, index) => {
+                if (item.key === "telegram") setTg(true)
+                if (item.key === "instagram") setIns(true)
+                if (item.key === "facebook") setFace(true)
+                if (item.key === "youtube") setYou(true)
+                if (item.key === "tiktok") setTik(true)
+            });
+
+            let week = response.data.working_days
+            axios.get(`${baseUrl}days/`).then((response) => {
+
+                let new_list = response.data.filter(day => {
+                    return day.id && week.includes(day.id);
+                }).map(day => day.translations[i18next.language].day);
+
+                setWeekend(new_list)
+            }).catch((error) => {
+            });
+
+            let newSubSpecialty = response.data.sub_speciality;
+            axios.get(`${baseUrl}speciality/${response.data.specialty}/`).then((response) => {
+                setSubSpecialtyList(response.data)
+                let new_list = response.data.filter(day => {
+                    return day && newSubSpecialty.includes(day.id);
+                }).map(day => day.translations[i18next.language].name);
+
+                setSubSpecialty(new_list)
+            });
+
+            setSpecialty(response.data.specialty)
+
+            setInvalidService(response.data.gender);
+
+            setLogoHospital(`http://192.168.0.102:8000` + response.data.image)
+
+            setRegion(response.data.region)
+
+            setHospitalType(response.data.hospital)
+
+            setAddressLocation(response.data.translations[i18next.language].address)
+
+            let location = response.data.location.split(',');
+
+            let locMy = {lat: Number(location[0]), lng: Number(location[1])};
+            setCenter(locMy);
+            setSelected(locMy)
+
+        }).catch((error) => {
+            if (error.response.statusText == "Unauthorized") {
+                window.location.pathname = "/";
+                localStorage.removeItem("token");
+                localStorage.removeItem("userId");
+            }
+        });
+
         navigator.geolocation.getCurrentPosition((position) => {
             const {latitude, longitude} = position.coords;
             let locMy = {lat: latitude, lng: longitude};
@@ -487,64 +546,33 @@ const RegisterHospital = () => {
             experience: formOne.values.experience
         };
 
-        axios.post(`${baseUrl}auth/register/doctor/`, allInfoHospital).then((response) => {
-            window.location.pathname = "/login"
-        }).catch((error) => {
-            console.log(error)
+        axios.post(`${baseUrl}doctor-profile/`, allInfoHospital, {
+            headers: {
+                "Authorization": `Token ${localStorage.getItem("token")}`
+            }
+        }).then((response) => {
+            window.location.reload()
+            localStorage.setItem("nameUz", `${response.data.translations["uz"].first_name} ${response.data.translations["uz"].last_name}`);
+            localStorage.setItem("nameRu", `${response.data.translations["ru"].first_name} ${response.data.translations["ru"].last_name}`);
         });
-        console.log(allInfoHospital)
     };
 
     if (!isLoaded) return <Loader/>;
 
-    return <div className="register-doctor-container">
+    return <div className="profile-doctor-container">
         <div className="logo">
             <img src="./images/logo.png" alt=""/>
         </div>
         <div className="xbtn">
             <img onClick={() => navigate("/")} src="./images/cancel.png" alt=""/>
         </div>
-
         <div className="register-page">
-            <div className="header-register">
-                <div className="line-page-numbers">
-                    <div
-                        className={`line ${pageNumber === 1 || pageNumber === 2 || pageNumber === 3 ? "line-active" : ""}`}></div>
-                    <div
-                        className={`num ${pageNumber === 1 || pageNumber === 2 || pageNumber === 3 ? "num-active" : ""}`}>
-                        1
-                        <div className={`name ${pageNumber === 1 || pageNumber === 2 ? "active-name" : ""}`}>
-                            Shifokor haqida
-                        </div>
-                    </div>
-
-                    <div className={`line ${pageNumber === 2 || pageNumber === 3 ? "line-active" : ""}`}></div>
-                    <div className={`num ${pageNumber === 2 || pageNumber === 3 ? "num-active" : ""}`}>
-                        2
-                        <div className={`name ${pageNumber === 2 ? "active-name" : ""}`}>
-                            Shifokor ish joyi
-                        </div>
-                    </div>
-
-                    <div className={`line ${pageNumber === 3 ? "line-active" : ""}`}></div>
-                    <div className={`num ${pageNumber === 3 ? "num-active" : ""}`}>
-                        3
-                        <div className="name">
-                            Mutaxasisligi to'grisida
-                        </div>
-                    </div>
-
-                    <div className={`line ${pageNumber === 3 ? "line-active" : ""}`}></div>
-                </div>
-            </div>
-
-            {pageNumber === 1 &&
             <div className="register-page-one">
                 <div className="title">
-                    O'zingiz haqingizda aytib bering
+                    Akkount sozlamalari
                 </div>
                 <div className="des">
-                    Shaxsiy akkountingizni ro‘yxatdan o‘tkazish uchun bu juda muhim
+                    Shaxsiy akkountingizni tahrirlashingiz mumkin
                 </div>
 
                 <div className="logo-hospital">
@@ -552,13 +580,10 @@ const RegisterHospital = () => {
                         {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
                             <img className="logo-camera" src="./images/Exclude.png" alt=""/>
                         }
-
                     </div>
-
                     {logoHospital && <div className="cancel-logo">
                         <img onClick={() => setLogoHospital(null)} src="./images/cancel.png" alt=""/>
                     </div>}
-
                     <div className="label">
                         Logo qo‘shish
                         <input onChange={getInputPhoto} type="file"/>
@@ -568,7 +593,7 @@ const RegisterHospital = () => {
                 <div className="select-box">
                     <div className="select-sides">
                         <TextField error={formOne.errors.last_name === "Required"}
-                                   value={formOne.last_name}
+                                   value={formOne.values.last_name}
                                    onChange={formOne.handleChange}
                                    name="last_name"
                                    sx={{m: 1, minWidth: "100%"}} size="small"
@@ -578,7 +603,7 @@ const RegisterHospital = () => {
                     </div>
                     <div className="select-sides">
                         <TextField error={formOne.errors.first_name === "Required"}
-                                   value={formOne.first_name}
+                                   value={formOne.values.first_name}
                                    onChange={formOne.handleChange}
                                    name="first_name"
                                    sx={{m: 1, minWidth: "100%"}} size="small"
@@ -590,7 +615,7 @@ const RegisterHospital = () => {
                 <div className="select-box">
                     <div className="select-sides">
                         <TextField error={formOne.errors.middle_name === "Required"}
-                                   value={formOne.middle_name}
+                                   value={formOne.values.middle_name}
                                    onChange={formOne.handleChange}
                                    name="middle_name"
                                    sx={{m: 1, minWidth: "100%"}} size="small"
@@ -625,7 +650,7 @@ const RegisterHospital = () => {
                     <div className="select-sides">
                         <TextField
                             error={formOne.errors.phone1 === "Required"}
-                            value={formOne.phone1}
+                            value={formOne.values.phone1}
                             onChange={formOne.handleChange}
                             name="phone1"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
@@ -675,14 +700,15 @@ const RegisterHospital = () => {
                         <label htmlFor="">Ish vaqti boshlanishi</label>
                         <input
                             className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
-                            name="start_time" onChange={formOne.handleChange} value={formOne.start_time}
+                            name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
                             type="time"/>
                     </div>
                     <div className="select-sides">
                         <label htmlFor="">Ish vaqti boshlanishi</label>
                         <input
                             className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
-                            name="end_time" onChange={formOne.handleChange} value={formOne.end_time} type="time"/>
+                            name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
+                            type="time"/>
                     </div>
                 </div>
 
@@ -702,7 +728,6 @@ const RegisterHospital = () => {
 
                 <div className="inputs-box-link">
 
-
                     {socialMedias.map((item, index) => {
                         return <div key={index} className="inputs-social-media">
 
@@ -713,7 +738,12 @@ const RegisterHospital = () => {
                             {item.key === "youtube" && <img src="./images/social-media/youtube.png" alt=""/>}
                             {item.key === "tiktok" && <img src="./images/social-media/tiktok.png" alt=""/>}
 
-                            <TextField onChange={(e) => item.url = e.target.value} sx={{m: 1, minWidth: "43%"}}
+                            <TextField onChange={(e) => {
+                                item.url = e.target.value
+                                let newSocial = [...socialMedias]
+                                setSocialMedias(newSocial)
+                            }} sx={{m: 1, minWidth: "43%"}}
+                                       value={item.url}
                                        size="small"
                                        id="outlined-basic"
                                        label="https://" variant="outlined" className="textField"/>
@@ -768,24 +798,138 @@ const RegisterHospital = () => {
                         osonlashtiring.
                     </div>
                 </div>
-
-                <div className="btn-box">
-                    <div onClick={() => formOne.handleSubmit()} className="next-page-btn">
-                        Tasdiqlash va davom etish
-                        <img src="./images/next-btn.png" alt=""/>
+            </div>
+            <div className="register-page-three">
+                <div className="select-box">
+                    <div className="select-sides">
+                        <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
+                            <InputLabel id="demo-select-large-label">Asosiy mutaxassislikni tanlang</InputLabel>
+                            <Select
+                                label="Asosiy mutaxassislikni tanlang___"
+                                error={formOne.errors.specialty === "Required"}
+                                name="specialty"
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={specialty}
+                                onChange={(e) => {
+                                    formOne.handleChange(e)
+                                    setSpecialty(e.target.value)
+                                    setSubSpecialty([])
+                                    getSubSpecialty(e.target.value);
+                                }}
+                            >
+                                {specialtyList.map((item) => {
+                                    return <MenuItem key={item.id}
+                                                     value={item.id}>{item.translations[i18next.language].name}</MenuItem>
+                                })}
+                            </Select>
+                        </FormControl>
+                    </div>
+                    <div className="select-sides">
+                        <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
+                            <InputLabel id="demo-multiple-checkbox-label">Qo'shimcha mutaxassisliklar</InputLabel>
+                            <Select
+                                name="sub_speciality"
+                                labelId="demo-multiple-checkbox-label"
+                                id="demo-multiple-checkbox"
+                                multiple
+                                value={subSpecialty}
+                                onChange={handleChangeMoreSpeciality}
+                                input={<OutlinedInput label="Qo'shimcha mutaxassisliklar__"/>}
+                                renderValue={(selected) => selected.join(', ')}
+                                MenuProps={MenuProps}
+                            >
+                                {subSpecialtyList.map((item, index) => (
+                                    <MenuItem key={item.id} value={item.translations[i18next.language].name}>
+                                        <Checkbox
+                                            checked={subSpecialty.indexOf(item.translations[i18next.language].name) > -1}/>
+                                        <ListItemText primary={item.translations[i18next.language].name}/>
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </div>
                 </div>
-            </div>}
 
-            {pageNumber === 2 &&
+                <div className="select-box">
+                    <div className="select-sides">
+                        <TextField error={formOne.errors.experience === "Required"}
+                                   value={formOne.values.experience}
+                                   onChange={formOne.handleChange}
+                                   name="experience"
+                                   sx={{m: 1, minWidth: "100%"}} size="small"
+                                   id="outlined-basic"
+                                   label="Tajribangiz " variant="outlined" className="textField"/>
+
+                    </div>
+                    <div className="select-sides">
+                    </div>
+                </div>
+
+                <div className="select-box">
+                    <div className="select-sides">
+                        <TextField
+                            value={formOne.values.consultation_fee}
+                            onChange={formOne.handleChange}
+                            name="consultation_fee"
+                            sx={{m: 1, minWidth: "80%"}} size="small"
+                            id="outlined-basic"
+                            label="Birinchi konsultatsiya " variant="outlined" className="textField"/>
+
+                        <div className="price">UZS</div>
+                    </div>
+                    <div className="select-sides">
+                        <TextField
+                            value={formOne.values.second_consultation_fee}
+                            onChange={formOne.handleChange}
+                            name="second_consultation_fee"
+                            sx={{m: 1, minWidth: "80%"}} size="small"
+                            id="outlined-basic"
+                            label="Ikkinchi konsultatsiya " variant="outlined" className="textField"/>
+
+                        <div className="price">UZS</div>
+                    </div>
+                </div>
+                <div className="bottom-validate">
+                    <div className="select-sides">
+                    </div>
+                    <div className="select-sides">
+                        <div className="des-no-validate">
+                            Bu maydon to‘ldirish muhim emas. Bo‘sh qoldirsangiz ham bo‘ladi
+                        </div>
+                    </div>
+                </div>
+
+                <div className="input-for-more-info">
+                    <div className="des-info">
+                        Iltimos o'zingiz haqingizdagi ma'lumotlarni o'zbek va rus tillarida kiriting!
+                    </div>
+                    <label htmlFor="more-info">O‘zingiz haqingizda batafsilroq yozing (uz)</label>
+                    <Textarea
+                        error={formOne.errors.bio_uz === "Required"}
+                        value={formOne.values.bio_uz}
+                        onChange={formOne.handleChange}
+                        name="bio_uz"
+                        className="textarea_bio"
+                        placeholder="Yutuqlaringiz, ta’lim olgan joylaringiz haqida va h.k. "
+                        sx={{m: 1, minWidth: "100%"}} size="small"
+                    />
+
+                    <label htmlFor="more-info">Напишите больше о себе (ru)</label>
+                    <Textarea
+                        error={formOne.errors.bio_ru === "Required"}
+                        value={formOne.values.bio_ru}
+                        onChange={formOne.handleChange}
+                        name="bio_ru"
+                        className="textarea_bio"
+                        placeholder="О ваших достижениях, местах обучения и т.д."
+                        sx={{m: 1, minWidth: "100%"}} size="small"
+                    />
+                </div>
+
+
+            </div>
             <div className="register-page-two">
-                <div className="title">
-                    Ish joyingiz qayerda joylashgan?
-                </div>
-                <div className="des">
-                    Bemorlar sizni topishlari oson bo‘lishi uchun bu juda muhim
-                </div>
-
                 <div className="select-box">
                     <div className="select-sides">
                         <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
@@ -828,7 +972,7 @@ const RegisterHospital = () => {
                                 <MenuItem onClick={() => {
                                     setAddressLocation("");
                                     setAddressLocationRu("");
-                                }} value={""}>---</MenuItem>
+                                }} value={''}>---</MenuItem>
                                 {hospitalList.map((item) => {
                                     return <MenuItem key={item.id}
                                                      value={item.id}>{item.translations[i18next.language].name}</MenuItem>
@@ -870,170 +1014,20 @@ const RegisterHospital = () => {
                         </div>
                     </>
                 }
-
-                <div className="btn-box">
-                    <div onClick={() => setPageNumber(1)} className="prev-btn">
-                        <img src="./images/prev-btn.png" alt=""/>
-                        Orqaga qaytish
-                    </div>
-                    <div onClick={() => formOne.handleSubmit()} className="next-page-btn">
-                        Tasdiqlash va davom etish
-                        <img src="./images/next-btn.png" alt=""/>
-                    </div>
-                </div>
-            </div>}
-
-            {pageNumber === 3 &&
-            <div className="register-page-three">
-                <div className="title">
-                    Nima ish bilan shug‘ullanasiz?
-                </div>
-                <div className="des">
-                    Bemorlar sizni topishlari oson bo‘lishi uchun bu juda muhim
-                </div>
-
-                <div className="select-box">
-                    <div className="select-sides">
-                        <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                            <InputLabel id="demo-select-large-label">Asosiy mutaxassislikni tanlang</InputLabel>
-                            <Select
-                                label="Asosiy mutaxassislikni tanlang___"
-                                error={formOne.errors.specialty === "Required"}
-                                name="specialty"
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                value={specialty}
-                                onChange={(e) => {
-                                    formOne.handleChange(e)
-                                    setSpecialty(e.target.value)
-                                    setSubSpecialty([])
-                                    getSubSpecialty(e.target.value);
-                                }}
-                            >
-                                {specialtyList.map((item, index) => {
-                                    return <MenuItem key={item.id}
-                                                     value={item.id}>{item.translations[i18next.language].name}</MenuItem>
-                                })}
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <div className="select-sides">
-                        <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
-                            <InputLabel id="demo-multiple-checkbox-label">Qo'shimcha mutaxassisliklar</InputLabel>
-                            <Select
-                                name="sub_speciality"
-                                labelId="demo-multiple-checkbox-label"
-                                id="demo-multiple-checkbox"
-                                multiple
-                                value={subSpecialty}
-                                onChange={handleChangeMoreSpeciality}
-                                input={<OutlinedInput label="Qo'shimcha mutaxassisliklar__"/>}
-                                renderValue={(selected) => selected.join(', ')}
-                                MenuProps={MenuProps}
-                            >
-                                {subSpecialtyList.map((item, index) => (
-                                    <MenuItem key={item.id} value={item.translations[i18next.language].name}>
-                                        <Checkbox
-                                            checked={subSpecialty.indexOf(item.translations[i18next.language].name) > -1}/>
-                                        <ListItemText primary={item.translations[i18next.language].name}/>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </div>
-                </div>
-
-                <div className="select-box">
-                    <div className="select-sides">
-                        <TextField error={formOne.errors.experience === "Required"}
-                                   value={formOne.experience}
-                                   onChange={formOne.handleChange}
-                                   name="experience"
-                                   sx={{m: 1, minWidth: "100%"}} size="small"
-                                   id="outlined-basic"
-                                   label="Tajribangiz " variant="outlined" className="textField"/>
-
-                    </div>
-                    <div className="select-sides">
-                    </div>
-                </div>
-
-                <div className="select-box">
-                    <div className="select-sides">
-                        <TextField
-                            value={formOne.consultation_fee}
-                            onChange={formOne.handleChange}
-                            name="consultation_fee"
-                            sx={{m: 1, minWidth: "80%"}} size="small"
-                            id="outlined-basic"
-                            label="Birinchi konsultatsiya " variant="outlined" className="textField"/>
-
-                        <div className="price">UZS</div>
-                    </div>
-                    <div className="select-sides">
-                        <TextField
-                            value={formOne.second_consultation_fee}
-                            onChange={formOne.handleChange}
-                            name="second_consultation_fee"
-                            sx={{m: 1, minWidth: "80%"}} size="small"
-                            id="outlined-basic"
-                            label="Ikkinchi konsultatsiya " variant="outlined" className="textField"/>
-
-                        <div className="price">UZS</div>
-                    </div>
-                </div>
-                <div className="bottom-validate">
-                    <div className="select-sides">
-                    </div>
-                    <div className="select-sides">
-                        <div className="des-no-validate">
-                            Bu maydon to‘ldirish muhim emas. Bo‘sh qoldirsangiz ham bo‘ladi
-                        </div>
-                    </div>
-                </div>
-
-                <div className="input-for-more-info">
-                    <div className="des-info">
-                        Iltimos o'zingiz haqingizdagi ma'lumotlarni o'zbek va rus tillarida kiriting!
-                    </div>
-                    <label htmlFor="more-info">O‘zingiz haqingizda batafsilroq yozing (uz)</label>
-                    <Textarea
-                        error={formOne.errors.bio_uz === "Required"}
-                        value={formOne.bio_uz}
-                        onChange={formOne.handleChange}
-                        name="bio_uz"
-                        className="textarea_bio"
-                        placeholder="Yutuqlaringiz, ta’lim olgan joylaringiz haqida va h.k. "
-                        sx={{m: 1, minWidth: "100%"}} size="small"
-                    />
-
-                    <label htmlFor="more-info">Напишите больше о себе (ru)</label>
-                    <Textarea
-                        error={formOne.errors.bio_ru === "Required"}
-                        value={formOne.bio_ru}
-                        onChange={formOne.handleChange}
-                        name="bio_ru"
-                        className="textarea_bio"
-                        placeholder="О ваших достижениях, местах обучения и т.д."
-                        sx={{m: 1, minWidth: "100%"}} size="small"
-                    />
-                </div>
-
                 <div className="btn-box">
                     <div onClick={() => setPageNumber(2)} className="prev-btn">
                         <img src="./images/prev-btn.png" alt=""/>
-                        Orqaga qaytish
+                        Bekor qilish
                     </div>
 
                     <div onClick={() => formOne.handleSubmit()} className="next-page-btn">
-                        Tasdiqlash
+                        O'zgarishlarni saqlash
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
                 </div>
-            </div>}
-
+            </div>
         </div>
     </div>
 };
 
-export default RegisterHospital
+export default ProfileDoctor

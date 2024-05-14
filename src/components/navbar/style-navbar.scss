@@ -89,7 +89,8 @@
               background-color: #B4C0CC38;
             }
           }
-          .active{
+
+          .active {
             color: rgba(0, 173, 173, 1);
           }
         }
@@ -163,13 +164,13 @@
     }
   }
 
-  .search-sloy{
+  .search-sloy {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: rgb(0,0,0,0.3);
+    background-color: rgb(0, 0, 0, 0.3);
     z-index: 120;
   }
 
@@ -235,6 +236,7 @@
         padding-right: 15px;
         z-index: 40;
         position: relative;
+
         .icon-search {
           margin-right: 10px;
           height: 100%;
@@ -259,7 +261,7 @@
           }
         }
 
-        .search-list{
+        .search-list {
           position: absolute;
           left: 0;
           bottom: -301px;
@@ -269,14 +271,17 @@
           border-radius: 0 0 20px 20px;
           padding: 20px;
           overflow-y: auto;
-          .search-none{
+
+          .search-none {
             margin-top: 30px;
-            .title{
+
+            .title {
               text-align: center;
               font-size: 16px;
               color: rgba(38, 45, 51, 1);
             }
-            .des{
+
+            .des {
               margin-top: 10px;
               text-align: center;
               font-size: 14px;
@@ -285,8 +290,8 @@
           }
         }
 
-        .xbtn{
-          img{
+        .xbtn {
+          img {
             cursor: pointer;
             width: 17px;
             opacity: 0.6;
@@ -294,7 +299,7 @@
         }
       }
 
-      .active-search{
+      .active-search {
         background-color: white;
         border-bottom: 1px solid rgba(180, 192, 204, 0.26);
         border-radius: 20px 20px 0 0;
@@ -347,96 +352,144 @@
       .profile-card {
         position: absolute;
         right: 0;
-        bottom: -300px;
+        bottom: -196px;
         background-color: white;
         padding: 15px;
         z-index: 10;
         border-radius: 20px;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
-        .register-btn {
-          width: 200px;
-          padding: 12px 20px;
-          color: white;
-          border-radius: 10px;
-          background-color: rgba(0, 173, 173, 1);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: 0.3s;
-          &:hover{
-            background-color: rgb(0, 147, 147);
+        .user-profile {
+          .header-side {
+            border-bottom: 1px solid rgba(180, 192, 204, 0.28);
+            width: 100%;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+
+            .name {
+              font-size: 18px;
+              font-weight: bold;
+            }
+
+            .text {
+              color: rgba(133, 145, 158, 1);
+              font-size: 16px;
+            }
+          }
+
+          .btns {
+            padding: 10px 20px;
+            margin-top: 15px;
+            width: 200px;
+            color: rgba(38, 45, 51, 1);
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+            font-size: 16px;
+            border-radius: 10px ;
+
+            img {
+              width: 20px;
+              margin-right: 10px;
+            }
+
+            &:hover {
+              background-color: rgb(241, 243, 246);
+            }
           }
         }
 
-        .login-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-top: 10px;
-          width: 200px;
-          padding: 12px 20px;
-          color: rgba(0, 173, 173, 1);
-          border-radius: 10px;
-          background-color: rgba(237, 247, 247, 1);
-          transition: 0.3s;
-          &:hover{
-          background-color: rgb(230, 240, 240)
+        .register-card {
+
+          .register-btn {
+            width: 230px;
+            padding: 12px 20px;
+            color: white;
+            border-radius: 10px;
+            background-color: rgba(0, 173, 173, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+
+            &:hover {
+              background-color: rgb(0, 147, 147);
+            }
+          }
+
+          .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            width: 230px;
+            padding: 12px 20px;
+            color: rgba(0, 173, 173, 1);
+            border-radius: 10px;
+            background-color: rgba(237, 247, 247, 1);
+            transition: 0.3s;
+
+            &:hover {
+              background-color: rgb(230, 240, 240)
+            }
+          }
+
+          .des {
+            margin-top: 10px;
+            color: rgba(133, 145, 158, 1);
+            text-align: center;
+            border-top: 1px solid rgba(180, 192, 204, 0.28);
+            padding-bottom: 10px;
+          }
+
+          .saved {
+            margin-top: 10px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            padding-left: 20px;
+
+            &:hover {
+              background-color: #B4C0CC38;
+            }
+
+            img {
+              width: 15px;
+              margin-right: 10px;
+            }
+          }
+
+          .about-platform {
+            margin-top: 10px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            padding-left: 20px;
+
+            &:hover {
+              background-color: #B4C0CC38;
+            }
+
+            img {
+              width: 15px;
+              margin-right: 10px;
+            }
           }
         }
 
-        .des {
-          margin-top: 10px;
-          color: rgba(133, 145, 158, 1);
-          text-align: center;
-          border-bottom: 1px solid rgba(180, 192, 204, 0.28);
-          padding-bottom: 10px;
-        }
 
-        .saved {
-          margin-top: 10px;
-          height: 35px;
-          display: flex;
-          align-items: center;
-          border-radius: 10px;
-          font-size: 16px;
-          cursor: pointer;
-          transition: 0.3s;
-          padding-left: 20px;
-
-          &:hover {
-            background-color: #B4C0CC38;
-          }
-
-          img {
-            width: 15px;
-            margin-right: 10px;
-          }
-        }
-
-        .about-platform {
-          margin-top: 10px;
-          height: 35px;
-          display: flex;
-          align-items: center;
-          border-radius: 10px;
-          font-size: 16px;
-          cursor: pointer;
-          transition: 0.3s;
-          padding-left: 20px;
-
-          &:hover {
-            background-color: #B4C0CC38;
-          }
-
-          img {
-            width: 15px;
-            margin-right: 10px;
-          }
-        }
       }
     }
-    .active-profile{
+
+    .active-profile {
       background-color: rgba(180, 192, 204, 0.26);
     }
   }

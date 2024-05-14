@@ -5,10 +5,11 @@ import AuthCode from "react-auth-code-input";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
 
 const Login = () => {
     const navigate = useNavigate();
-    const baseUrl = "https://api.buyukyol.uz/";
+    const baseUrl = useSelector((store) => store.baseUrl.data);
     const [phone, setPhone] = useState("");
     const [code, setCode] = useState("");
     const [checkCode, setCheckCode] = useState(false);
@@ -43,15 +44,15 @@ const Login = () => {
     const getCodeValue = (e) => {
         setCode(e);
     };
+
     const HandleLogin = () => {
         let user = {
-            phone: phone,
-            user_type: "Client",
+            phone: phone
         };
         axios
-            .post(`${baseUrl}api/login/`, user)
+            .post(`${baseUrl}auth/register/login/`, user)
             .then((response) => {
-                localStorage.setItem("userId", response.data.user);
+                localStorage.setItem("userId", response.data.user_id);
                 setCheckCode((prevState) => true);
 
                 if (checkCode) {
@@ -70,15 +71,55 @@ const Login = () => {
     };
 
     const CheckCode = () => {
-        axios
-            .post(`${baseUrl}api/verify/`, {
-                user: localStorage.getItem("userId"),
-                number: code,
-            })
+        axios.post(`${baseUrl}auth/register/verify/`, {
+            user: localStorage.getItem("userId"),
+            code,
+        })
             .then((response) => {
                 localStorage.setItem("token", response.data.token);
-                navigate("/");
-                window.location.reload();
+                localStorage.setItem("userType", response.data.user_type);
+
+                if (response.data.user_type === "Doctor") {
+                    axios.get(`${baseUrl}doctor-profile/`, {
+                            headers: {
+                                "Authorization": `Token ${response.data.token}`
+                            }
+                        }
+                    ).then((response) => {
+                        localStorage.setItem("nameUz", `${response.data.translations["uz"].first_name} ${response.data.translations["uz"].last_name}`);
+                        localStorage.setItem("nameRu", `${response.data.translations["ru"].first_name} ${response.data.translations["ru"].last_name}`);
+                        navigate("/");
+                        window.location.reload();
+                    });
+                }
+
+                if (response.data.user_type === "Hospital") {
+                    axios.get(`${baseUrl}hospital-profile/`, {
+                            headers: {
+                                "Authorization": `Token ${response.data.token}`
+                            }
+                        }
+                    ).then((response) => {
+                        localStorage.setItem("nameUz", `${response.data.translations["uz"].name}`);
+                        localStorage.setItem("nameRu", `${response.data.translations["ru"].name}`);
+                        navigate("/");
+                        window.location.reload();
+                    });
+                }
+
+                if (response.data.user_type === "Pharmacy") {
+                    axios.get(`${baseUrl}pharmacy-profile/`, {
+                            headers: {
+                                "Authorization": `Token ${response.data.token}`
+                            }
+                        }
+                    ).then((response) => {
+                        localStorage.setItem("nameUz", `${response.data.translations["uz"].name}`);
+                        localStorage.setItem("nameRu", `${response.data.translations["ru"].name}`);
+                        navigate("/");
+                        window.location.reload();
+                    });
+                }
             })
             .catch((error) => {
                 if (error.response.status === 404) {
@@ -157,7 +198,7 @@ const Login = () => {
 
         </div> : <div className="login-card">
             <div className="xbtn">
-                <img onClick={()=> navigate("/")} src="./images/cancel.png" alt=""/>
+                <img onClick={() => navigate("/")} src="./images/cancel.png" alt=""/>
             </div>
 
             <div className="title-login">

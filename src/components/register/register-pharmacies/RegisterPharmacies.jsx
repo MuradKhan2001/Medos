@@ -18,6 +18,7 @@ import Loader from "../../loader/Loader";
 import i18next from "i18next";
 import {useTranslation} from "react-i18next";
 import {useFormik} from "formik";
+import {useSelector} from "react-redux";
 
 const libraries = ["places"];
 
@@ -25,6 +26,7 @@ const libraries = ["places"];
 const RegisterPharmacies = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
+    const baseUrl = useSelector((store) => store.baseUrl.data);
     const [workingTime24, setWorkingTime24] = useState(false);
     const [selected, setSelected] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
@@ -36,6 +38,7 @@ const RegisterPharmacies = () => {
     const [region_validate, setRegion_validate] = useState(false);
     const [logoHospital, setLogoHospital] = useState(null);
     const [weekend, setWeekend] = useState([]);
+    const [daysList, setDaysList] = useState([]);
 
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -47,17 +50,6 @@ const RegisterPharmacies = () => {
             },
         },
     };
-
-    const names = [
-        'Dushanba',
-        'Seshanba',
-        'Chorshanba',
-        'Payshanba',
-        'Juma',
-        'Shanba',
-        'Yakshanba'
-    ];
-
     const regions = [
         {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
         {name: "Buxoro", latitude: 39.767070, longitude: 64.455393},
@@ -170,6 +162,11 @@ const RegisterPharmacies = () => {
             let locMy = {lat: latitude, lng: longitude};
             setCenter(locMy);
         });
+
+        axios.get(`${baseUrl}days/`).then((response) => {
+            setDaysList(response.data)
+        }).catch((error) => {
+        });
     }, []);
 
     const handleChangeMore = (event) => {
@@ -181,7 +178,11 @@ const RegisterPharmacies = () => {
             typeof value === 'string' ? value.split(',') : value,
         );
 
-        formOne.handleChange(event)
+        let new_list = daysList.filter(day => {
+            return day.translations[i18next.language].day && value.includes(day.translations[i18next.language].day);
+        }).map(day => day.id);
+
+        formOne.values.working_days = new_list
     };
 
     const ClicklLocation = (e) => {
@@ -335,6 +336,13 @@ const RegisterPharmacies = () => {
             working_days: formOne.values.working_days,
             region: region
         };
+
+        axios.post(`${baseUrl}auth/register/pharmacy/`, allInfoHospital).then((response) => {
+            console.log("ishladi")
+        }).catch((error) => {
+            console.log(error)
+        });
+
         console.log(allInfoHospital)
     };
 
@@ -443,10 +451,11 @@ const RegisterPharmacies = () => {
                                 renderValue={(selected) => selected.join(', ')}
                                 MenuProps={MenuProps}
                             >
-                                {names.map((name, index) => (
-                                    <MenuItem key={name} value={name}>
-                                        <Checkbox checked={weekend.indexOf(name) > -1}/>
-                                        <ListItemText primary={name}/>
+                                {daysList.map((item, index) => (
+                                    <MenuItem key={item.id} value={item.translations[i18next.language].day}>
+                                        <Checkbox
+                                            checked={weekend.indexOf(item.translations[i18next.language].day) > -1}/>
+                                        <ListItemText primary={item.translations[i18next.language].day}/>
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -549,7 +558,7 @@ const RegisterPharmacies = () => {
                                     return <MenuItem key={index} onClick={() => {
                                         setRegion_validate(false)
                                         setCenter({lat: item.latitude, lng: item.longitude})
-                                    }} value={index}>{item.name}</MenuItem>
+                                    }} value={index+1}>{item.name}</MenuItem>
                                 })}
 
                             </Select>
