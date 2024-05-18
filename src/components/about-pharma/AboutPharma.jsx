@@ -21,9 +21,6 @@ const AboutPharma = () => {
         <div className="pharmaci-box">
             <div className="header">
                 <img src="./images/pharma.png" alt=""/>
-                <div className="logo-pharma">
-                    <img src="./images/logo-pharma.png" alt=""/>
-                </div>
             </div>
             <div className="title-pahrma">
                 Oxymed
@@ -49,7 +46,6 @@ const AboutPharma = () => {
                     22:00 da yopiladi
                 </div>
             </div>
-
             <div className="map-locations">
                 <div className="map-side">
                     <Map/>
@@ -98,7 +94,6 @@ const AboutPharma = () => {
                 </div>
 
             </div>
-
             <div className="comments-box">
                 <div className="header-commet">
                     <div className="counts">

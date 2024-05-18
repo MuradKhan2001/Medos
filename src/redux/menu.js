@@ -3,7 +3,7 @@ import {createSlice} from "@reduxjs/toolkit"
 export const Menu = createSlice({
     name: "Menu",
     initialState: {
-        data: ""
+        data: "/"
     },
     reducers: {
         changeMenu: (state, {payload}) => {

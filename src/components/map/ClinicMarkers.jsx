@@ -1,23 +1,13 @@
-import {InfoWindow, Marker} from "@react-google-maps/api";
-import {useState} from "react";
+import {InfoWindow, MarkerF} from "@react-google-maps/api";
+import {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
 
-const ClinicMarkers = ()=>{
+const ClinicMarkers = () => {
+    const clinics = useSelector((store) => store.Clinics.data);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [clinicActiveId, setClinicActiveId] = useState(null);
     const icon = {url: './images/Location-Pin.png', scaledSize: {width: 50, height: 55}};
     const icon2 = {url: './images/Location-active.png', scaledSize: {width: 50, height: 55}};
-
-    const ClinicsLocation = [
-        {
-            id: 1, latitude: "41.311153", longitude: "69.279729"
-        },
-        {
-            id: 2, latitude: "41.611153", longitude: "69.279729"
-        },
-        {
-            id: 3, latitude: "41.511153", longitude: "69.279729"
-        }
-    ];
 
     const onMarkerClick = (location) => {
         setSelectedLocation(location);
@@ -29,16 +19,15 @@ const ClinicMarkers = ()=>{
     };
 
     return <>
-        {ClinicsLocation.map((item, index) => {
-            return <Marker
+        {clinics.map((item, index) => {
+            return <MarkerF
                 key={index}
                 position={{lat: Number(item.latitude), lng: Number(item.longitude)}}
                 icon={clinicActiveId === item.id ? icon2 : icon}
                 onClick={() => {
                     onMarkerClick(item);
                     setClinicActiveId(item.id)
-                }
-                }
+                }}
             />
         })}
 

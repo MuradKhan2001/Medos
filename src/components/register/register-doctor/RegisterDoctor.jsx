@@ -160,7 +160,7 @@ const RegisterHospital = () => {
 
     const formOne = useFormik({
         initialValues: {
-            first_name: "Murodxon",
+            first_name: "",
             last_name: "",
             middle_name: "",
             bio_uz: "",

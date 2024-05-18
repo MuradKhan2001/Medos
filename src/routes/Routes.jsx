@@ -14,6 +14,8 @@ import RegisterPharmacies from "../components/register/register-pharmacies/Regis
 import Service from "../components/services/Services";
 import ProfileDoctor from "../components/profile/profile-doctor/ProfileDoctor";
 import ProfileHospital from "../components/profile/hospital-profile/HospitalProfile";
+import PharmacyProfile from "../components/profile/pharmacy-profile/PharmacyProfile";
+import Messages from "../components/messages/Messages";
 
 
 export const publicRoutes = [
@@ -69,6 +71,10 @@ export const publicRoutes = [
         path: "/services",
         element: <Service/>
     },
+    {
+        path: "/messages",
+        element: <Messages/>
+    },
 ];
 
 export const allRoutes = [
@@ -83,7 +89,7 @@ export const allRoutes = [
     },
     {
         path: "/profile-pharmacy",
-        element: <ProfileDoctor/>
+        element: <PharmacyProfile/>
     },
 ];
 

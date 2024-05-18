@@ -4,17 +4,106 @@ import {useSelector, useDispatch} from "react-redux";
 import ReactStars from "react-stars";
 import {hideModal, showModals} from "../../redux/ModalContent";
 import "./style.scss";
+import {useFormik} from "formik";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
+import {addAlert, delAlert} from "../../redux/AlertsBox";
 
 const Modal = () => {
-    const baseUrl = useSelector((store) => store.baseUrl.data);
-    const modalContent = useSelector((store) => store.ModalContent.data);
-    const navigate = useNavigate();
     const {t} = useTranslation();
-    const nodeRef = useRef(null);
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const nodeRef = useRef(null);
+    const modalContent = useSelector((store) => store.ModalContent.data);
+    const baseUrl = useSelector((store) => store.baseUrl.data);
     const [raidCount, setRaidCount] = useState();
+
+    const validate = (values) => {
+        const errors = {};
+        if (!values.phone) {
+            errors.phone = "Required";
+        } else if (isNaN(Number(values.phone))) {
+            errors.phone = "Required";
+        }
+        if (!values.name) {
+            errors.name = "Required";
+        }
+        if (!values.text) {
+            errors.text = "Required";
+        }
+        return errors;
+    };
+    const formReception = useFormik({
+        initialValues: {
+            name: "",
+            phone: "",
+            text: ""
+        },
+        validate,
+        onSubmit: (values) => {
+            let reception = {
+                ...values,
+                user: modalContent.id
+            };
+
+            let rate = {
+                ...values,
+                user: modalContent.id,
+                mark: raidCount
+            };
+
+            if (modalContent.status === "sms") {
+                console.log(reception)
+
+                let idAlert = Date.now();
+                let alert = {
+                    id: idAlert,
+                    text: "Xabar yuborildi!",
+                    img: "./images/green.svg",
+                    color: "#EDFFFA",
+                };
+                dispatch(addAlert(alert));
+                setTimeout(() => {
+                    dispatch(delAlert(idAlert));
+                }, 5000);
+                dispatch(hideModal({show: false}))
+                formReception.resetForm()
+
+                // axios.post(`${baseUrl}patient/`, reception).then((response) => {
+                //     setSuccess(true)
+                //     setTimeout(() => {
+                //         setSuccess(false)
+                //     }, 4000)
+                //     formik.resetForm()
+                // });
+            }
+
+            if (modalContent.status === "commit") {
+                console.log(rate)
+
+                let idAlert = Date.now();
+                let alert = {
+                    id: idAlert,
+                    text: "Baxolandi!",
+                    img: "./images/green.svg",
+                    color: "#EDFFFA",
+                };
+                dispatch(addAlert(alert));
+                setTimeout(() => {
+                    dispatch(delAlert(idAlert));
+                }, 5000);
+                dispatch(hideModal({show: false}))
+                formReception.resetForm()
+                // axios.post(`${baseUrl}comment/`, rate).then((response) => {
+                //     setSuccess(true)
+                //     setTimeout(() => {
+                //         setSuccess(false)
+                //     }, 4000)
+                //     formik.resetForm()
+                // });
+            }
+        },
+    });
 
     return (
         <CSSTransition
@@ -24,14 +113,14 @@ const Modal = () => {
             classNames="alert"
             unmountOnExit
         >
-            <div
-                className="modal-sloy"
-            >
+            <div className="modal-sloy">
                 <div ref={nodeRef} className="modal-card">
-                    {modalContent.status === "sms" && <div className="send-sms">
+
+                    {modalContent.status === "sms" && <form onSubmit={formReception.handleSubmit} className="send-sms">
                         <div className="header">
                             <div className="xbtn">
-                                <img   onClick={() => dispatch(hideModal({ show: false }))} src="./images/cancel.png" alt=""/>
+                                <img onClick={() => dispatch(hideModal({show: false}))} src="./images/cancel.png"
+                                     alt=""/>
                             </div>
                         </div>
                         <div className="title">
@@ -42,17 +131,33 @@ const Modal = () => {
                             to‘ldiring!
                         </div>
                         <div className="inputs-box">
-                            <input placeholder="To'liq ismingizni yozing" type="text"/>
-                            <input placeholder="Telefon raqamingizni kiriting" type="text"/>
-                            <textarea placeholder="Siz kuzatilayotgan muammo haqida qisqacha izoh yozing" name=""
-                                      id=""
-                                      cols="30" rows="10"></textarea>
+                            <input
+                                className={formReception.errors.name === "Required" ? "Required" : ""}
+                                onChange={formReception.handleChange}
+                                value={formReception.values.name}
+                                name="name"
+                                placeholder="To'liq ismingizni yozing" type="text"/>
+                            <input
+                                className={formReception.errors.phone === "Required" ? "Required" : ""}
+                                onChange={formReception.handleChange}
+                                value={formReception.values.phone}
+                                name="phone"
+                                placeholder="Telefon raqamingizni kiriting" type="text"/>
+                            <textarea
+                                className={formReception.errors.text === "Required" ? "Required" : ""}
+                                onChange={formReception.handleChange}
+                                value={formReception.values.text}
+                                name="text"
+                                placeholder="Siz kuzatilayotgan muammo haqida qisqacha izoh yozing"
+                                cols="30" rows="10"></textarea>
                         </div>
                         <div className="buttons-box">
-                            <div  onClick={() => dispatch(hideModal({ show: false }))} className="cancel-btn">Bekor qilish</div>
-                            <div className="send-btn">Yuborish</div>
+                            <div onClick={() => dispatch(hideModal({show: false}))} className="cancel-btn">Bekor
+                                qilish
+                            </div>
+                            <button type="submit" className="send-btn">Yuborish</button>
                         </div>
-                    </div>}
+                    </form>}
 
                     {modalContent.status === "contact" &&
                     <div className="contact">
@@ -61,7 +166,8 @@ const Modal = () => {
                                 Akfa medline
                             </div>
                             <div className="xbtn">
-                                <img  onClick={() => dispatch(hideModal({ show: false }))} src="./images/cancel.png" alt=""/>
+                                <img onClick={() => dispatch(hideModal({show: false}))} src="./images/cancel.png"
+                                     alt=""/>
                             </div>
                         </div>
                         <div className="title-contact">Ish vaqti</div>
@@ -80,16 +186,17 @@ const Modal = () => {
                         </div>
                     </div>}
 
-                    {modalContent.status === "commit" && <div className="send-commit">
+                    {modalContent.status === "commit" &&
+                    <form onSubmit={formReception.handleSubmit} className="send-commit">
                         <div className="header">
                             <div className="xbtn">
-                                <img  onClick={() => dispatch(hideModal({ show: false }))} src="./images/cancel.png" alt=""/>
+                                <img onClick={() => dispatch(hideModal({show: false}))} src="./images/cancel.png"
+                                     alt=""/>
                             </div>
                         </div>
                         <div className="title">
                             Baholang va izoh qoldiring
                         </div>
-
                         <div className="stars">
                             <ReactStars
                                 count={5}
@@ -101,27 +208,35 @@ const Modal = () => {
                                 half={false}
                             />
                         </div>
-
-
                         <div className="inputs-box">
-                            <input placeholder="Ism familiyangiz" type="text"/>
-
-                            <input placeholder="Telefon raqamingiz" type="text"/>
+                            <input
+                                className={formReception.errors.name === "Required" ? "Required" : ""}
+                                onChange={formReception.handleChange}
+                                value={formReception.values.name}
+                                name="name"
+                                placeholder="To'liq ismingizni yozing" type="text"/>
+                            <input
+                                className={formReception.errors.phone === "Required" ? "Required" : ""}
+                                onChange={formReception.handleChange}
+                                value={formReception.values.phone}
+                                name="phone"
+                                placeholder="Telefon raqamingizni kiriting" type="text"/>
                             <div className="description">
                                 Sizning xavfsizligingiz uchun telefon raqami boshqa foydalanuvchilarga ko‘rinmaydi.
                             </div>
-
-                            <textarea placeholder="Ijobiy va salbiy jihatlarni yozing" name=""
-                                      id=""
-                                      cols="30" rows="10"></textarea>
+                            <textarea
+                                className={formReception.errors.text === "Required" ? "Required" : ""}
+                                onChange={formReception.handleChange}
+                                value={formReception.values.text}
+                                name="text"
+                                placeholder="Siz kuzatilayotgan muammo haqida qisqacha izoh yozing"
+                                cols="30" rows="10"></textarea>
                         </div>
-
                         <div className="description">
                             Barcha izohlar tekshiruvdan o'tadi
                         </div>
-
-                        <div className="send-btn">Saqlash va yuborish</div>
-                    </div>}
+                        <button type="submit" className="send-btn">Saqlash va yuborish</button>
+                    </form>}
                 </div>
             </div>
         </CSSTransition>

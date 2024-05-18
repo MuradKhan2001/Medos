@@ -29,6 +29,7 @@ const RegisterHospital = () => {
     const {t} = useTranslation();
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [hospitalType, setHospitalType] = useState('');
+    const [hospital, setHospital] = useState('');
     const [invalidService, setInvalidService] = useState(true);
     const [workingTime24, setWorkingTime24] = useState(false);
     const [selected, setSelected] = useState(null);
@@ -36,7 +37,7 @@ const RegisterHospital = () => {
     const [center, setCenter] = useState(null);
     const [socialMedias, setSocialMedias] = useState([{key: "web", url: ""}]);
     const [service, setService] = useState([
-        {service: "", sub_services_list: [{sub_service: "", price: ""}]}
+        {service: "", options: [], sub_services_list: [{sub_service: "", price: ""}]}
     ]);
     const [addressLocation, setAddressLocation] = useState("");
     const [addressLocationRu, setAddressLocationRu] = useState("");
@@ -47,9 +48,7 @@ const RegisterHospital = () => {
     const [logoHospital, setLogoHospital] = useState(null);
     const [daysList, setDaysList] = useState([]);
     const [hospitalList, setHospitalList] = useState([]);
-
-    const [serviceList, setServiceList]= useState([])
-    const [SubServiceList, setSubServiceList]= useState([])
+    const [serviceList, setServiceList] = useState([])
 
     const [tg, setTg] = useState(false)
     const [ins, setIns] = useState(false)
@@ -110,6 +109,10 @@ const RegisterHospital = () => {
             errors.hospital_type = "Required";
         }
 
+        if (!values.type) {
+            errors.type = "Required";
+        }
+
         if (!values.nameUz) {
             errors.nameUz = "Required";
         }
@@ -147,6 +150,7 @@ const RegisterHospital = () => {
             nameUz: "",
             nameRu: "",
             hospital_type: "",
+            type:"",
             phone1: "",
             phone2: "",
             start_time: "",
@@ -389,7 +393,7 @@ const RegisterHospital = () => {
     };
 
     const addService = () => {
-        let newService = {service: "", sub_services_list: [{sub_service: "", price: ""}]}
+        let newService = {service: "", options: [], sub_services_list: [{sub_service: "", price: ""}]}
         let newArr = service.concat(newService);
         setService(newArr)
     };
@@ -398,13 +402,6 @@ const RegisterHospital = () => {
         let newArr = service.filter((item, index) => index !== ind);
         setService(newArr)
     };
-
-    const getSubService = (id)=>{
-        axios.get(`${baseUrl}speciality/${id}/`).then((response) => {
-            setSubServiceList(response.data)
-        }).catch((error) => {
-        });
-    }
 
     const sendAllInfo = () => {
         let loc = `${center.lat},${center.lng}`
@@ -434,7 +431,7 @@ const RegisterHospital = () => {
         }
 
         axios.post(`${baseUrl}auth/register/hospital/`, allInfoHospital).then((response) => {
-            console.log("ishladi")
+            window.location.pathname = "/login"
         }).catch((error) => {
             console.log(error)
         });
@@ -533,6 +530,37 @@ const RegisterHospital = () => {
 
                 <div className="des-input">
                     Iltimos, shifoxona nomini rus tili va o'zbek tilida kiritng
+                </div>
+
+                <div className="select-box">
+                    <div className="select-sides">
+                        <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
+                                     className="selectMui">
+                            <InputLabel id="demo-select-large-label">Shifoxona</InputLabel>
+                            <Select
+                                error={formOne.errors.type === "Required"}
+                                name="type"
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={hospital}
+                                label="Shifoxona"
+                                onChange={(e) => {
+                                    formOne.handleChange(e);
+                                    setHospital(e.target.value)
+                                }}
+                            >
+                                <MenuItem value={1}>
+                                    Davlat
+                                </MenuItem>
+                                <MenuItem value={2}>
+                                    Xususiy
+                                </MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+
+                    <div className="select-sides">
+                    </div>
                 </div>
 
                 <div className="label-text">
@@ -788,7 +816,7 @@ const RegisterHospital = () => {
                                     return <MenuItem key={index} onClick={() => {
                                         setRegion_validate(false)
                                         setCenter({lat: item.latitude, lng: item.longitude})
-                                    }} value={index+1}>{item.name}</MenuItem>
+                                    }} value={index + 1}>{item.name}</MenuItem>
                                 })}
 
                             </Select>
@@ -864,13 +892,12 @@ const RegisterHospital = () => {
                                         label="Xizmat turi"
                                         onChange={(e) => {
                                             item.service = e.target.value
+                                            item.options = serviceList.filter((item)=> item.id === e.target.value)[0].options;
                                             let change = [...service];
                                             setService(change);
-                                            setSubServiceList([])
-                                            getSubService(e.target.value)
                                         }}
                                     >
-                                        {serviceList.map((item,index)=>{
+                                        {serviceList.map((item, index) => {
                                             return <MenuItem key={item.id} value={item.id}>
                                                 {item.translations[i18next.language].name}
                                             </MenuItem>
@@ -902,8 +929,8 @@ const RegisterHospital = () => {
                                                 itemService.sub_service = e.target.value
                                             }}
                                         >
-                                            {SubServiceList.map((item)=>{
-                                                return  <MenuItem key={item.id} value={item.id}>
+                                            {item.options.map((item) => {
+                                                return <MenuItem key={item.id} value={item.id}>
                                                     {item.translations[i18next.language].name}
                                                 </MenuItem>
                                             })}

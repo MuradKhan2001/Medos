@@ -5,19 +5,82 @@ import {CSSTransition} from "react-transition-group";
 import {useNavigate} from "react-router-dom";
 import Footer from "../footer/Footer";
 import Map from "../map/Map";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import {showModals} from "../../redux/ModalContent";
+import {getLocation} from "../../redux/locationUser";
 
 
 const Pharmacies = () => {
-    const [region, setRegions] = useState("");
-    const [typeHospital, setTypeHospital] = useState("");
-    const [professional, setProfessional] = useState("");
-    const [working24, setWorking24] = useState(false);
-    const [disable, setDisable] = useState(false);
-    const [like, setLike] = useState(false);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const baseUrl = useSelector((store) => store.baseUrl.data);
+    const location = useSelector((store) => store.LocationUser.data);
+    const [like, setLike] = useState(false);
     const showMap = useSelector((store) => store.ShowMap.data);
+    const [regionSelect, setRegionSelect] = useState("");
+    const [working24, setWorking24] = useState("");
+    const [region, setRegion] = useState("");
+
+    const regions = [
+        {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
+        {name: "Buxoro", latitude: 39.767070, longitude: 64.455393},
+        {name: "Farg‘ona", latitude: 40.372379, longitude: 71.797770},
+        {name: "Jizzax", latitude: 40.119300, longitude: 67.880140},
+        {name: "Namangan", latitude: 41.004297, longitude: 71.642956},
+        {name: "Navoiy", latitude: 40.096634, longitude: 65.352255},
+        {name: "Qashqadaryo", latitude: 38.852124, longitude: 65.784203},
+        {name: "Samarqand", latitude: 39.649307, longitude: 66.965182},
+        {name: "Sirdaryo", latitude: 40.376986, longitude: 68.713159},
+        {name: "Surxondaryo", latitude: 37.931559, longitude: 67.564765},
+        {name: "Toshkent", latitude: 41.295695, longitude: 69.239730},
+        {name: "Xorazm", latitude: 41.522326, longitude: 60.623731},
+        {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
+    ];
+
+    useEffect(() => {
+        // axios.get(`${baseUrl}hospital-type/`).then((response) => {
+        //     setHospitalList(response.data)
+        // }).catch((error) => {
+        // });
+        //
+        // axios.get(`${baseUrl}speciality/`).then((response) => {
+        //     setServiceList(response.data)
+        // }).catch((error) => {});
+    }, []);
+
+    useEffect(() => {
+        if (location.key) {
+            filterHospital(location.key + 1, working24);
+            setRegion(location.key + 1)
+            setRegionSelect(location.key)
+        }
+    }, [location]);
+
+    const ShowModal = (status) => {
+        dispatch(showModals({show: true, status}))
+    };
+
+    const filterHospital = (region_key, open_24_key) => {
+        let filterBox = {
+            region: region_key,
+            open_24: open_24_key
+        };
+
+        const queryString = Object.entries(filterBox)
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+            .join('&');
+
+        console.log(filterBox)
+        // axios.get(`${baseUrl}hospital/?${queryString}`).then((response) => {
+        //     dispatch(getClinics(response.data));
+        // })
+    };
+
+    const changeRegion = (region, index) => {
+        const location = {key: index, "city": region.name, "latitude": region.latitude, "longitude": region.longitude};
+        dispatch(getLocation(location));
+    };
 
     return <>
         <div className="pharmacies-wrapper">
@@ -30,18 +93,26 @@ const Pharmacies = () => {
                         <div className="category-wrapper">
                             <div>
                                 <div className="dropdown-filter">
-                                    <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectRegion">
-                                        <InputLabel id="demo-select-large-label">Tuman</InputLabel>
+                                    <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
+                                                 className="selectProfessional">
+                                        <InputLabel id="demo-select-large-label">Viloyat</InputLabel>
                                         <Select
                                             labelId="demo-select-small-label"
                                             id="demo-select-small"
-                                            value={region}
-                                            label="Tuman"
-                                            onChange={(e) => setRegions(e.target.value)}
+                                            value={regionSelect}
+                                            label="Viloyat"
+                                            onChange={(e) => {
+                                                setRegion(e.target.value)
+                                                setRegionSelect(e.target.value)
+                                            }}
                                         >
-                                            <MenuItem value={"Yunusobot"}>Yunusobot</MenuItem>
-                                            <MenuItem value={"Sergili"}>Sergili</MenuItem>
-                                            <MenuItem value={"Chilonzor"}>Chilonzor</MenuItem>
+                                            {regions.map((item, index) => {
+                                                return <MenuItem onClick={() => changeRegion(item, index)}
+                                                                 key={index + 1}
+                                                                 value={index}>
+                                                    {item.name}
+                                                </MenuItem>
+                                            })}
                                         </Select>
                                     </FormControl>
                                 </div>
@@ -49,7 +120,10 @@ const Pharmacies = () => {
 
                             <div>
                                 <div className="dropdown-filter">
-                                    <div onClick={() => setWorking24(!working24)}
+                                    <div onClick={() => {
+                                        filterHospital(region, !working24);
+                                        setWorking24(!working24)
+                                    }}
                                          className={`button-filter ${working24 ? "active-filter-btn" : ""}`}>
                                         24 soat ochiq
                                     </div>
@@ -65,8 +139,10 @@ const Pharmacies = () => {
                                         <div className="like">
                                             {
                                                 like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png" alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png" alt=""/>
+                                                    <img onClick={() => setLike(false)} src="./images/like.png"
+                                                         alt=""/> :
+                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
+                                                         alt=""/>
                                             }
                                         </div>
                                     </div>
@@ -113,7 +189,7 @@ const Pharmacies = () => {
                                         </div>
 
                                         <div className="buttons">
-                                            <div onClick={()=> navigate("/about-pharmacies")} className="more-btn">
+                                            <div onClick={() => navigate("/about-pharmacies")} className="more-btn">
                                                 Ko'proq ko'rsatish
                                             </div>
                                         </div>
@@ -126,8 +202,10 @@ const Pharmacies = () => {
                                         <div className="like">
                                             {
                                                 like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png" alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png" alt=""/>
+                                                    <img onClick={() => setLike(false)} src="./images/like.png"
+                                                         alt=""/> :
+                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
+                                                         alt=""/>
                                             }
                                         </div>
                                     </div>
@@ -174,7 +252,7 @@ const Pharmacies = () => {
                                         </div>
 
                                         <div className="buttons">
-                                            <div onClick={()=> navigate("/about-clinic")} className="more-btn">
+                                            <div onClick={() => navigate("/about-clinic")} className="more-btn">
                                                 Ko'proq ko'rsatish
                                             </div>
                                         </div>
@@ -187,8 +265,10 @@ const Pharmacies = () => {
                                         <div className="like">
                                             {
                                                 like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png" alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png" alt=""/>
+                                                    <img onClick={() => setLike(false)} src="./images/like.png"
+                                                         alt=""/> :
+                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
+                                                         alt=""/>
                                             }
                                         </div>
                                     </div>
@@ -235,7 +315,7 @@ const Pharmacies = () => {
                                         </div>
 
                                         <div className="buttons">
-                                            <div onClick={()=> navigate("/about-clinic")} className="more-btn">
+                                            <div onClick={() => navigate("/about-clinic")} className="more-btn">
                                                 Ko'proq ko'rsatish
                                             </div>
                                         </div>
@@ -248,8 +328,10 @@ const Pharmacies = () => {
                                         <div className="like">
                                             {
                                                 like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png" alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png" alt=""/>
+                                                    <img onClick={() => setLike(false)} src="./images/like.png"
+                                                         alt=""/> :
+                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
+                                                         alt=""/>
                                             }
                                         </div>
                                     </div>
@@ -296,7 +378,7 @@ const Pharmacies = () => {
                                         </div>
 
                                         <div className="buttons">
-                                            <div onClick={()=> navigate("/about-clinic")} className="more-btn">
+                                            <div onClick={() => navigate("/about-clinic")} className="more-btn">
                                                 Ko'proq ko'rsatish
                                             </div>
                                         </div>

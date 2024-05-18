@@ -6,7 +6,7 @@ import {
     TextField, MenuItem, InputLabel, FormControl, Select, Checkbox, OutlinedInput,
     ListItemText
 } from "@mui/material";
-import {GoogleMap, Marker, useLoadScript} from "@react-google-maps/api";
+import {GoogleMap, MarkerF, useLoadScript} from "@react-google-maps/api";
 import {GOOGLE_MAPS_API_KEY} from "../googleMapsApi";
 import usePlacesAutocomplete, {
     getGeocode,
@@ -19,18 +19,19 @@ import i18next from "i18next";
 import {useTranslation} from "react-i18next";
 import {useFormik} from "formik";
 import {useSelector} from "react-redux";
+import {addAlert, delAlert} from "../../../redux/AlertsBox";
 
 const libraries = ["places"];
 
 
-const RegisterPharmacies = () => {
+const PharmacyProfile = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [workingTime24, setWorkingTime24] = useState(false);
     const [selected, setSelected] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
-    const [center, setCenter] = useState(null);
+    const [center, setCenter] = useState({lat: 41.295695, lng: 69.239730});
     const [addressLocation, setAddressLocation] = useState("");
     const [addressLocationRu, setAddressLocationRu] = useState("");
     const [address_validate, setAddress_validate] = useState(false);
@@ -123,7 +124,6 @@ const RegisterPharmacies = () => {
         initialValues: {
             nameUz: "",
             nameRu: "",
-            hospital_type: "",
             phone1: "",
             phone2: "",
             start_time: "",
@@ -132,7 +132,8 @@ const RegisterPharmacies = () => {
         },
         validate,
         onSubmit: (values) => {
-            setPageNumber(2);
+            setPageNumber(2)
+            console.log(values)
         },
     });
 
@@ -155,13 +156,59 @@ const RegisterPharmacies = () => {
         getBase64(file);
     };
 
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const {latitude, longitude} = position.coords;
-            let locMy = {lat: latitude, lng: longitude};
-            setCenter(locMy);
-        });
+    const getInformation = () => {
+        axios.get(`${baseUrl}pharmacy-profile/`, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }
+        ).then((response) => {
 
+            formOne.setValues({
+                nameUz: response.data.translations["uz"].name,
+                nameRu: response.data.translations["ru"].name,
+                phone1: response.data.phone1,
+                phone2: response.data.phone2,
+                start_time: response.data.start_time,
+                end_time: response.data.end_time,
+                working_days: response.data.working_days,
+            });
+
+            let week = response.data.working_days
+            axios.get(`${baseUrl}days/`).then((response) => {
+
+                let new_list = response.data.filter(day => {
+                    return day.id && week.includes(day.id);
+                }).map(day => day.translations[i18next.language].day);
+
+                setWeekend(new_list)
+            }).catch((error) => {
+            });
+
+            setLogoHospital(`http://192.168.0.102:8000` + response.data.image)
+
+            setRegion(response.data.region)
+
+            setAddressLocation(response.data.translations[i18next.language].address)
+
+            let location = response.data.location.split(',');
+
+            let locMy = {lat: Number(location[0]), lng: Number(location[1])};
+            setCenter(locMy);
+            setSelected(locMy)
+
+            setWorkingTime24(response.data.open_24)
+        }).catch((error) => {
+            if (error.response.statusText == "Unauthorized") {
+                window.location.pathname = "/";
+                localStorage.removeItem("token");
+                localStorage.removeItem("userId");
+            }
+        });
+    }
+
+    useEffect(() => {
+        getInformation()
         axios.get(`${baseUrl}days/`).then((response) => {
             setDaysList(response.data)
         }).catch((error) => {
@@ -335,52 +382,48 @@ const RegisterPharmacies = () => {
             working_days: formOne.values.working_days,
             region: region
         };
-        axios.post(`${baseUrl}auth/register/pharmacy/`, allInfoHospital).then((response) => {
-            window.location.pathname = "/login"
+
+        axios.post(`${baseUrl}pharmacy-profile/`, allInfoHospital, {
+            headers: {
+                "Authorization": `Token ${localStorage.getItem("token")}`
+            }
+        }).then((response) => {
+
+            let idAlert = Date.now();
+            let alert = {
+                id: idAlert,
+                text: "Malumotlar yangilandi!",
+                img: "./images/green.svg",
+                color: "#EDFFFA",
+            };
+            dispatch(addAlert(alert));
+            setTimeout(() => {
+                dispatch(delAlert(idAlert));
+            }, 5000);
+
+            getInformation()
+        }).catch((error) => {
         });
+
+        console.log(allInfoHospital)
     };
 
     if (!isLoaded) return <Loader/>;
 
-    return <div className="register-pharmacies-container">
-
+    return <div className="profile-pharmacies-container">
         <div className="logo">
             <img src="./images/logo.png" alt=""/>
         </div>
         <div className="xbtn">
             <img onClick={() => navigate("/")} src="./images/cancel.png" alt=""/>
         </div>
-
         <div className="register-page">
-            <div className="header-register">
-                <div className="line-page-numbers">
-                    <div className={`line ${pageNumber === 1 || pageNumber === 2 ? "line-active" : ""}`}></div>
-                    <div className={`num ${pageNumber === 1 || pageNumber === 2 ? "num-active" : ""}`}>
-                        1
-                        <div className={`name ${pageNumber === 1 || pageNumber === 2 ? "active-name" : ""}`}>
-                            Dorixona haqida
-                        </div>
-                    </div>
-
-                    <div className={`line ${pageNumber === 2 ? "line-active" : ""}`}></div>
-                    <div className={`num ${pageNumber === 2 ? "num-active" : ""}`}>
-                        2
-                        <div className={`name ${pageNumber === 2 ? "active-name" : ""}`}>
-                            Dorixona manzili
-                        </div>
-                    </div>
-
-                    <div className={`line ${pageNumber === 2 ? "line-active" : ""}`}></div>
-                </div>
-            </div>
-
-            {pageNumber === 1 &&
             <div className="register-page-one">
                 <div className="title">
-                    Dorixona haqida ma'lumotlarni toldiring
+                    Akkount sozlamalari
                 </div>
                 <div className="des">
-                    Dorixona akkountingizni ro‘yxatdan o‘tkazish uchun bu juda muhim
+                    Dorixona akkountingizni tahrirlashingiz mumkin
                 </div>
                 <div className="logo-hospital">
                     <div className="logo-image">
@@ -402,7 +445,7 @@ const RegisterPharmacies = () => {
 
                 <div className="inputs-box">
                     <TextField error={formOne.errors.nameUz === "Required"}
-                               value={formOne.nameUz}
+                               value={formOne.values.nameUz}
                                onChange={formOne.handleChange}
                                name="nameUz"
                                sx={{m: 1, minWidth: "100%"}} size="small"
@@ -411,7 +454,7 @@ const RegisterPharmacies = () => {
                 </div>
 
                 <div className="inputs-box">
-                    <TextField error={formOne.errors.nameRu === "Required"} value={formOne.nameRu}
+                    <TextField error={formOne.errors.nameRu === "Required"} value={formOne.values.nameRu}
                                onChange={formOne.handleChange}
                                name="nameRu" sx={{m: 1, minWidth: "100%"}} size="small"
                                id="outlined-basic"
@@ -462,6 +505,7 @@ const RegisterPharmacies = () => {
                                     onChange={(e) => {
                                         setWorkingTime24((prevState) => !prevState);
                                     }}
+                                    checked={workingTime24}
                                     id="c1-13"
                                     type="checkbox"
                                 />
@@ -478,14 +522,15 @@ const RegisterPharmacies = () => {
                         <label htmlFor="">Ish vaqti boshlanishi</label>
                         <input
                             className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
-                            name="start_time" onChange={formOne.handleChange} value={formOne.start_time}
+                            name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
                             type="time"/>
                     </div>
                     <div className="select-sides">
                         <label htmlFor="">Ish vaqti boshlanishi</label>
                         <input
                             className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
-                            name="end_time" onChange={formOne.handleChange} value={formOne.end_time} type="time"/>
+                            name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
+                            type="time"/>
                     </div>
                 </div>}
 
@@ -500,7 +545,7 @@ const RegisterPharmacies = () => {
                     <div className="select-sides">
                         <TextField
                             error={formOne.errors.phone1 === "Required"}
-                            value={formOne.phone1}
+                            value={formOne.values.phone1}
                             onChange={formOne.handleChange}
                             name="phone1"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
@@ -509,32 +554,15 @@ const RegisterPharmacies = () => {
                     <div className="select-sides">
                         <TextField
                             error={formOne.errors.phone2 === "Required"}
-                            value={formOne.phone2}
+                            value={formOne.values.phone2}
                             onChange={formOne.handleChange}
                             name="phone2"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
                             label="Telefon raqam 2" variant="outlined" className="textField"/>
                     </div>
                 </div>
-
-                <div className="btn-box">
-                    <div onClick={() => formOne.handleSubmit()} className="next-page-btn">
-                        Tasdiqlash va davom etish
-                        <img src="./images/next-btn.png" alt=""/>
-                    </div>
-                </div>
-            </div>}
-
-
-            {pageNumber === 2 &&
+            </div>
             <div className="register-page-two">
-                <div className="title">
-                    Dorixona qayerda joylashgan?
-                </div>
-                <div className="des">
-                    Mijozlar sizni topishlari oson bo‘lishi uchun bu juda muhim
-                </div>
-
                 <div className="select-box">
                     <div className="select-sides">
                         <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
@@ -552,14 +580,13 @@ const RegisterPharmacies = () => {
                                     return <MenuItem key={index} onClick={() => {
                                         setRegion_validate(false)
                                         setCenter({lat: item.latitude, lng: item.longitude})
-                                    }} value={index+1}>{item.name}</MenuItem>
+                                    }} value={index + 1}>{item.name}</MenuItem>
                                 })}
 
                             </Select>
                         </FormControl>
                     </div>
                 </div>
-
                 <div className="label-address">Manzil:</div>
                 <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
                     {i18next.language === "uz" && addressLocation ? addressLocation : ""}
@@ -575,7 +602,7 @@ const RegisterPharmacies = () => {
                         mapContainerClassName="map-box"
                     >
                         {selected && (
-                            <Marker icon={selectAddressIcon} position={selected}/>
+                            <MarkerF icon={selectAddressIcon} position={selected}/>
                         )}
 
                         <div className="search-address">
@@ -586,11 +613,10 @@ const RegisterPharmacies = () => {
                         </div>
                     </GoogleMap>
                 </div>
-
                 <div className="btn-box">
-                    <div onClick={() => setPageNumber(1)} className="prev-btn">
+                    <div onClick={() => navigate("/")} className="prev-btn">
                         <img src="./images/prev-btn.png" alt=""/>
-                        Orqaga qaytish
+                        Bekor qilish
                     </div>
                     <div onClick={() => {
                         if (addressLocation && region) {
@@ -600,14 +626,13 @@ const RegisterPharmacies = () => {
                             if (!region) setRegion_validate(true)
                         }
                     }} className="next-page-btn">
-                        Tasdiqlash va davom etish
+                        O'zgarishlarni saqlash
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
                 </div>
-            </div>}
-
+            </div>
         </div>
     </div>
 };
 
-export default RegisterPharmacies
+export default PharmacyProfile

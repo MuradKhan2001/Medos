@@ -7,7 +7,7 @@ import {
     TextField, MenuItem, InputLabel, FormControl, Select, Checkbox, OutlinedInput,
     ListItemText
 } from "@mui/material";
-import {GoogleMap, Marker, useLoadScript} from "@react-google-maps/api";
+import {GoogleMap, MarkerF, useLoadScript} from "@react-google-maps/api";
 import {GOOGLE_MAPS_API_KEY} from "../googleMapsApi";
 import usePlacesAutocomplete, {
     getGeocode,
@@ -18,7 +18,8 @@ import "@reach/combobox/styles.css";
 import Loader from "../../loader/Loader";
 import i18next from "i18next";
 import {useTranslation} from "react-i18next";
-import {useSelector} from "react-redux";
+import {useSelector,useDispatch} from "react-redux";
+import { delAlert, addAlert } from "../../../redux/AlertsBox";
 
 
 const libraries = ["places"];
@@ -27,16 +28,18 @@ const libraries = ["places"];
 const ProfileHospital = () => {
     const navigate = useNavigate();
     const {t} = useTranslation();
+    const dispatch = useDispatch();
+    const [hospital, setHospital] = useState('');
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [hospitalType, setHospitalType] = useState('');
     const [invalidService, setInvalidService] = useState(true);
     const [workingTime24, setWorkingTime24] = useState(false);
     const [selected, setSelected] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
-    const [center, setCenter] = useState(null);
+    const [center, setCenter] = useState({lat: 41.295695, lng: 69.239730});
     const [socialMedias, setSocialMedias] = useState([{key: "web", url: ""}]);
     const [service, setService] = useState([
-        {service: "", sub_services_list: [{sub_service: "", price: ""}]}
+        {service: "", options: [], sub_services_list: [{sub_service: "", price: ""}]}
     ]);
     const [addressLocation, setAddressLocation] = useState("");
     const [addressLocationRu, setAddressLocationRu] = useState("");
@@ -47,10 +50,7 @@ const ProfileHospital = () => {
     const [logoHospital, setLogoHospital] = useState(null);
     const [daysList, setDaysList] = useState([]);
     const [hospitalList, setHospitalList] = useState([]);
-
-    const [serviceList, setServiceList] = useState([])
-    const [SubServiceList, setSubServiceList] = useState([])
-
+    const [serviceList, setServiceList] = useState([]);
     const [tg, setTg] = useState(false)
     const [ins, setIns] = useState(false)
     const [face, setFace] = useState(false)
@@ -110,6 +110,10 @@ const ProfileHospital = () => {
             errors.hospital_type = "Required";
         }
 
+        if (!values.type) {
+            errors.type = "Required";
+        }
+
         if (!values.nameUz) {
             errors.nameUz = "Required";
         }
@@ -146,6 +150,7 @@ const ProfileHospital = () => {
         initialValues: {
             nameUz: "",
             nameRu: "",
+            type: "",
             hospital_type: "",
             phone1: "",
             phone2: "",
@@ -159,9 +164,8 @@ const ProfileHospital = () => {
         },
     });
 
-    useEffect(() => {
-
-        axios.get(`${baseUrl}doctor-profile/`, {
+    const getInformation = () => {
+        axios.get(`${baseUrl}hospital-profile/`, {
                 headers: {
                     "Authorization": `Token ${localStorage.getItem("token")}`
                 }
@@ -171,6 +175,7 @@ const ProfileHospital = () => {
             formOne.setValues({
                 nameUz: response.data.translations["uz"].name,
                 nameRu: response.data.translations["ru"].name,
+                type: response.data.type,
                 hospital_type: response.data.hospital_type,
                 phone1: response.data.phone1,
                 phone2: response.data.phone2,
@@ -179,8 +184,8 @@ const ProfileHospital = () => {
                 working_days: response.data.working_days,
             });
 
-            setSocialMedias(response.data.doctor_socials)
-            response.data.doctor_socials.map((item, index) => {
+            setSocialMedias(response.data.hospital_socials)
+            response.data.hospital_socials.map((item, index) => {
                 if (item.key === "telegram") setTg(true)
                 if (item.key === "instagram") setIns(true)
                 if (item.key === "facebook") setFace(true)
@@ -199,25 +204,13 @@ const ProfileHospital = () => {
             }).catch((error) => {
             });
 
-            let newSubSpecialty = response.data.sub_speciality;
-            axios.get(`${baseUrl}speciality/${response.data.specialty}/`).then((response) => {
-                setSubSpecialtyList(response.data)
-                let new_list = response.data.filter(day => {
-                    return day && newSubSpecialty.includes(day.id);
-                }).map(day => day.translations[i18next.language].name);
-
-                setSubSpecialty(new_list)
-            });
-
-            setSpecialty(response.data.specialty)
-
             setInvalidService(response.data.gender);
 
             setLogoHospital(`http://192.168.0.102:8000` + response.data.image)
 
             setRegion(response.data.region)
 
-            setHospitalType(response.data.hospital)
+            setHospitalType(response.data.hospital_type)
 
             setAddressLocation(response.data.translations[i18next.language].address)
 
@@ -227,6 +220,11 @@ const ProfileHospital = () => {
             setCenter(locMy);
             setSelected(locMy)
 
+            setWorkingTime24(response.data.open_24)
+
+            setService(response.data.hospital_services)
+
+
         }).catch((error) => {
             if (error.response.statusText == "Unauthorized") {
                 window.location.pathname = "/";
@@ -234,13 +232,10 @@ const ProfileHospital = () => {
                 localStorage.removeItem("userId");
             }
         });
+    };
 
-        navigator.geolocation.getCurrentPosition((position) => {
-            const {latitude, longitude} = position.coords;
-            let locMy = {lat: latitude, lng: longitude};
-            setCenter(locMy);
-        });
-
+    useEffect(() => {
+        getInformation()
         axios.get(`${baseUrl}days/`).then((response) => {
             setDaysList(response.data)
         }).catch((error) => {
@@ -464,23 +459,14 @@ const ProfileHospital = () => {
     };
 
     const addService = () => {
-        let newService = {service: "", sub_services_list: [{sub_service: "", price: ""}]}
+        let newService = {service: "", options: [], sub_services_list: [{sub_service: "", price: ""}]}
         let newArr = service.concat(newService);
         setService(newArr)
     };
-
     const delService = (ind) => {
         let newArr = service.filter((item, index) => index !== ind);
         setService(newArr)
     };
-
-    const getSubService = (id) => {
-        axios.get(`${baseUrl}speciality/${id}/`).then((response) => {
-            setSubServiceList(response.data)
-        }).catch((error) => {
-        });
-    }
-
     const sendAllInfo = () => {
         let loc = `${center.lat},${center.lng}`
         let allInfoHospital = {
@@ -507,14 +493,26 @@ const ProfileHospital = () => {
             socials: socialMedias,
             region: region
         }
+        axios.post(`${baseUrl}hospital-profile/`, allInfoHospital, {
+            headers: {
+                "Authorization": `Token ${localStorage.getItem("token")}`
+            }
+        }).then((response) => {
+            let idAlert = Date.now();
+            let alert = {
+                id: idAlert,
+                text: "Malumotlar yangilandi!",
+                img: "./images/green.svg",
+                color: "#EDFFFA",
+            };
+            dispatch(addAlert(alert));
+            setTimeout(() => {
+                dispatch(delAlert(idAlert));
+            }, 5000);
 
-        axios.post(`${baseUrl}auth/register/hospital/`, allInfoHospital).then((response) => {
-            console.log("ishladi")
+            getInformation()
         }).catch((error) => {
-            console.log(error)
         });
-
-        console.log(allInfoHospital)
     };
 
     if (!isLoaded) return <Loader/>;
@@ -526,7 +524,6 @@ const ProfileHospital = () => {
         <div className="xbtn">
             <img onClick={() => navigate("/")} src="./images/cancel.png" alt=""/>
         </div>
-
         <div className="register-page">
 
             <div className="title">
@@ -535,12 +532,14 @@ const ProfileHospital = () => {
             <div className="des">
                 Shifoxona akkountingizni tahrirlashingiz mumkin
             </div>
-
             <div className="header">
-                <div onClick={() => setPageNumber(1)} className={`item-menu ${pageNumber === 1 ?  "active" :""}`}>Umumiy ma'lumotlar</div>
-                <div onClick={() => setPageNumber(2)} className={`item-menu ${pageNumber === 2 ?  "active" :""}`}>Xizmatlar</div>
+                <div onClick={() => setPageNumber(1)} className={`item-menu ${pageNumber === 1 ? "active" : ""}`}>Umumiy
+                    ma'lumotlar
+                </div>
+                <div onClick={() => setPageNumber(2)}
+                     className={`item-menu ${pageNumber === 2 ? "active" : ""}`}>Xizmatlar
+                </div>
             </div>
-
             {pageNumber === 1 &&
             <>
                 <div className="register-page-one">
@@ -564,7 +563,7 @@ const ProfileHospital = () => {
 
                     <div className="inputs-box">
                         <TextField error={formOne.errors.nameUz === "Required"}
-                                   value={formOne.nameUz}
+                                   value={formOne.values.nameUz}
                                    onChange={formOne.handleChange}
                                    name="nameUz"
                                    sx={{m: 1, minWidth: "100%"}} size="small"
@@ -573,7 +572,7 @@ const ProfileHospital = () => {
                     </div>
 
                     <div className="inputs-box">
-                        <TextField error={formOne.errors.nameRu === "Required"} value={formOne.nameRu}
+                        <TextField error={formOne.errors.nameRu === "Required"} value={formOne.values.nameRu}
                                    onChange={formOne.handleChange}
                                    name="nameRu" sx={{m: 1, minWidth: "100%"}} size="small"
                                    id="outlined-basic"
@@ -582,6 +581,37 @@ const ProfileHospital = () => {
 
                     <div className="des-input">
                         Iltimos, shifoxona nomini rus tili va o'zbek tilida kiritng
+                    </div>
+
+                    <div className="select-box">
+                        <div className="select-sides">
+                            <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
+                                         className="selectMui">
+                                <InputLabel id="demo-select-large-label">Shifoxona</InputLabel>
+                                <Select
+                                    error={formOne.errors.type === "Required"}
+                                    name="type"
+                                    labelId="demo-select-small-label"
+                                    id="demo-select-small"
+                                    value={hospital}
+                                    label="Shifoxona"
+                                    onChange={(e) => {
+                                        formOne.handleChange(e);
+                                        setHospital(e.target.value)
+                                    }}
+                                >
+                                    <MenuItem value={1}>
+                                        Davlat
+                                    </MenuItem>
+                                    <MenuItem value={2}>
+                                        Xususiy
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+
+                        <div className="select-sides">
+                        </div>
                     </div>
 
                     <div className="label-text">
@@ -670,6 +700,7 @@ const ProfileHospital = () => {
                                         onChange={(e) => {
                                             setWorkingTime24((prevState) => !prevState);
                                         }}
+                                        checked={workingTime24}
                                         id="c1-13"
                                         type="checkbox"
                                     />
@@ -686,14 +717,15 @@ const ProfileHospital = () => {
                             <label htmlFor="">Ish vaqti boshlanishi</label>
                             <input
                                 className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
-                                name="start_time" onChange={formOne.handleChange} value={formOne.start_time}
+                                name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
                                 type="time"/>
                         </div>
                         <div className="select-sides">
                             <label htmlFor="">Ish vaqti boshlanishi</label>
                             <input
                                 className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
-                                name="end_time" onChange={formOne.handleChange} value={formOne.end_time} type="time"/>
+                                name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
+                                type="time"/>
                         </div>
                     </div>}
 
@@ -708,7 +740,7 @@ const ProfileHospital = () => {
                         <div className="select-sides">
                             <TextField
                                 error={formOne.errors.phone1 === "Required"}
-                                value={formOne.phone1}
+                                value={formOne.values.phone1}
                                 onChange={formOne.handleChange}
                                 name="phone1"
                                 sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
@@ -717,7 +749,7 @@ const ProfileHospital = () => {
                         <div className="select-sides">
                             <TextField
                                 error={formOne.errors.phone2 === "Required"}
-                                value={formOne.phone2}
+                                value={formOne.values.phone2}
                                 onChange={formOne.handleChange}
                                 name="phone2"
                                 sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
@@ -733,8 +765,6 @@ const ProfileHospital = () => {
                     </div>
 
                     <div className="inputs-box-link">
-
-
                         {socialMedias.map((item, index) => {
                             return <div key={index} className="inputs-social-media">
 
@@ -745,7 +775,12 @@ const ProfileHospital = () => {
                                 {item.key === "youtube" && <img src="./images/social-media/youtube.png" alt=""/>}
                                 {item.key === "tiktok" && <img src="./images/social-media/tiktok.png" alt=""/>}
 
-                                <TextField onChange={(e) => item.url = e.target.value} sx={{m: 1, minWidth: "43%"}}
+                                <TextField onChange={(e) => {
+                                    item.url = e.target.value
+                                    let newSocial = [...socialMedias]
+                                    setSocialMedias(newSocial)
+                                }} sx={{m: 1, minWidth: "43%"}}
+                                           value={item.url}
                                            size="small"
                                            id="outlined-basic"
                                            label="https://" variant="outlined" className="textField"/>
@@ -756,8 +791,6 @@ const ProfileHospital = () => {
                             </div>
                         })}
                         <div className="des">Ijtimoiy tarmoq sahifalarni kirtish majburiy emas!</div>
-
-
                         <div className="add-social-media">
                             {!tg && <div onClick={() => addSocialMedia("telegram")} className="social-mdeia-icon">
                                 <div className="sloy">
@@ -794,7 +827,6 @@ const ProfileHospital = () => {
                                 <img src="./images/social-media/tiktok.png" alt=""/>
                             </div>}
                         </div>
-
                         <div className="des">
                             Quyidagi ijtimoiy tarmoq sahifalaringizni qo‘shish orqali bemorlarni bog‘lanishini
                             osonlashtiring.
@@ -841,7 +873,7 @@ const ProfileHospital = () => {
                             mapContainerClassName="map-box"
                         >
                             {selected && (
-                                <Marker icon={selectAddressIcon} position={selected}/>
+                                <MarkerF icon={selectAddressIcon} position={selected}/>
                             )}
 
                             <div className="search-address">
@@ -869,11 +901,10 @@ const ProfileHospital = () => {
                                         value={item.service}
                                         label="Xizmat turi"
                                         onChange={(e) => {
-                                            item.service = e.target.value
+                                            item.service = e.target.value;
+                                            item.options = serviceList.filter((item) => item.id === e.target.value)[0].options;
                                             let change = [...service];
                                             setService(change);
-                                            setSubServiceList([])
-                                            getSubService(e.target.value)
                                         }}
                                     >
                                         {serviceList.map((item, index) => {
@@ -891,7 +922,6 @@ const ProfileHospital = () => {
                             </div>
                         </div>
 
-
                         {item.sub_services_list.map((itemService, indexService) => {
                             return <div key={indexService} className="select-box">
                                 <div className="select-sides">
@@ -908,19 +938,23 @@ const ProfileHospital = () => {
                                                 itemService.sub_service = e.target.value
                                             }}
                                         >
-                                            {SubServiceList.map((item) => {
+                                            {item.options.map((item) => {
                                                 return <MenuItem key={item.id} value={item.id}>
                                                     {item.translations[i18next.language].name}
                                                 </MenuItem>
                                             })}
-
                                         </Select>
                                     </FormControl>
                                 </div>
                                 <div className="select-sides">
-                                    <TextField onChange={(e) => itemService.price = e.target.value}
+                                    <TextField onChange={(e) => {
+                                        itemService.price = e.target.value;
+                                        let change = [...service];
+                                        setService(change);
+                                    }}
                                                sx={{m: 1, minWidth: "80%"}}
                                                size="small" id="outlined-basic"
+                                               value={itemService.price}
                                                label="Xizmat narxi " variant="outlined" className="textField"/>
 
                                     {item.sub_services_list.length > 1 && indexService !== 0 && <img onClick={() => {
@@ -944,7 +978,6 @@ const ProfileHospital = () => {
                         </div>
                     </div>
                 })}
-
                 <div onClick={addService} className="add-social-media">
                     Xizmat yaratish
                 </div>
@@ -956,11 +989,11 @@ const ProfileHospital = () => {
             <div className="btn-box">
                 <div onClick={() => setPageNumber(2)} className="prev-btn">
                     <img src="./images/prev-btn.png" alt=""/>
-                    Orqaga qaytish
+                    Bekor qilish
                 </div>
 
                 <div onClick={sendAllInfo} className="next-page-btn">
-                    Tasdiqlash
+                    O'zgarishlarni tasdiqlash
                     <img src="./images/next-btn.png" alt=""/>
                 </div>
             </div>

@@ -12,7 +12,7 @@ import {
     OutlinedInput,
     ListItemText
 } from "@mui/material";
-import {GoogleMap, Marker, useLoadScript} from "@react-google-maps/api";
+import {GoogleMap, MarkerF, useLoadScript} from "@react-google-maps/api";
 import {GOOGLE_MAPS_API_KEY} from "../googleMapsApi";
 import usePlacesAutocomplete, {getGeocode, getLatLng} from "use-places-autocomplete";
 import {Combobox, ComboboxInput, ComboboxOption} from "@reach/combobox";
@@ -24,6 +24,7 @@ import CyrillicToTranslit from 'cyrillic-to-translit-js';
 import {useFormik} from "formik";
 import Textarea from '@mui/joy/Textarea';
 import {useDispatch, useSelector} from "react-redux";
+import {addAlert, delAlert} from "../../../redux/AlertsBox";
 
 const libraries = ["places"];
 
@@ -37,7 +38,7 @@ const ProfileDoctor = () => {
     const [invalidService, setInvalidService] = useState(true);
     const [selected, setSelected] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
-    const [center, setCenter] = useState(null);
+    const [center, setCenter] = useState({lat: 41.295695, lng: 69.239730});
     const [socialMedias, setSocialMedias] = useState([{key: "web", url: ""}]);
     const [addressLocation, setAddressLocation] = useState("");
     const [addressLocationRu, setAddressLocationRu] = useState("");
@@ -177,7 +178,7 @@ const ProfileDoctor = () => {
         },
     });
 
-    useEffect(() => {
+    const getInformation = () => {
         axios.get(`${baseUrl}doctor-profile/`, {
                 headers: {
                     "Authorization": `Token ${localStorage.getItem("token")}`
@@ -258,13 +259,10 @@ const ProfileDoctor = () => {
                 localStorage.removeItem("userId");
             }
         });
+    }
 
-        navigator.geolocation.getCurrentPosition((position) => {
-            const {latitude, longitude} = position.coords;
-            let locMy = {lat: latitude, lng: longitude};
-            setCenter(locMy);
-        });
-
+    useEffect(() => {
+        getInformation()
         axios.get(`${baseUrl}days/`).then((response) => {
             setDaysList(response.data)
         }).catch((error) => {
@@ -551,7 +549,19 @@ const ProfileDoctor = () => {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             }
         }).then((response) => {
-            window.location.reload()
+            let idAlert = Date.now();
+            let alert = {
+                id: idAlert,
+                text: "Malumotlar yangilandi!",
+                img: "./images/green.svg",
+                color: "#EDFFFA",
+            };
+            dispatch(addAlert(alert));
+            setTimeout(() => {
+                dispatch(delAlert(idAlert));
+            }, 5000);
+            getInformation()
+
             localStorage.setItem("nameUz", `${response.data.translations["uz"].first_name} ${response.data.translations["uz"].last_name}`);
             localStorage.setItem("nameRu", `${response.data.translations["ru"].first_name} ${response.data.translations["ru"].last_name}`);
         });
@@ -1001,7 +1011,7 @@ const ProfileDoctor = () => {
                                 mapContainerClassName="map-box"
                             >
                                 {selected && (
-                                    <Marker icon={selectAddressIcon} position={selected}/>
+                                    <MarkerF icon={selectAddressIcon} position={selected}/>
                                 )}
 
                                 <div className="search-address">

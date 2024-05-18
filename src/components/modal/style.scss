@@ -1,5 +1,4 @@
-
-.alert-enter {
+alert-enter {
   opacity: 0;
   transform: scale(0.9);
 }
@@ -72,23 +71,25 @@
       }
 
       .inputs-box {
+
+        .Required {
+          border: 1px solid red;
+        }
+
         input {
           background-color: rgba(180, 192, 204, 0.16);
           border: none;
           height: 45px;
           width: 100%;
           padding-left: 15px;
-
+          border-radius: 10px;
+          margin-top: 20px;
+          &:focus {
+            outline: 1px solid rgba(0, 173, 173, 1);
+          }
           &::placeholder {
             color: rgba(133, 145, 158, 1);
             font-size: 16px;
-          }
-
-          border-radius: 10px;
-          margin-top: 20px;
-
-          &:focus {
-            outline: 1px solid rgba(0, 173, 173, 1);
           }
         }
 
@@ -133,6 +134,7 @@
           padding: 8px 30px;
           color: white;
           cursor: pointer;
+          border: none;
         }
       }
     }
@@ -269,16 +271,21 @@
           text-align: start;
           color: rgba(133, 145, 158, 1);
         }
+
+        .Required {
+          border: 1px solid red;
+        }
       }
 
       .send-btn {
-        margin-top: 10px;
+        margin: 15px auto;
+        border: none;
         display: flex;
         align-items: center;
         justify-content: center;
         background-color: rgba(0, 173, 173, 1);
         border-radius: 10px;
-        padding: 10px 30px;
+        padding: 15px 35px;
         color: white;
         cursor: pointer;
       }

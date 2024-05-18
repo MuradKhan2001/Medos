@@ -13,14 +13,7 @@ const AboutClinic = () => {
     const [tabActive, setTabActive] = useState(1);
     const [category, setCategory] = useState(1);
     const dispatch = useDispatch();
-
     const navigate = useNavigate();
-
-    const imageBox = [
-        {url: "./images/hospital3.png"},
-        {url: "./images/hospital2.png"},
-        {url: "./images/hospital1.jpg"}
-    ];
     const tabs = [
         {id: 1, name: "Umumiy"},
         {id: 2, name: "Shifokorlar"},
@@ -28,8 +21,8 @@ const AboutClinic = () => {
         {id: 4, name: "Xizmatlar va narxlar"}
     ];
 
-    const ShowModal = (status) => {
-        dispatch(showModals({show: true, status}))
+    const ShowModal = (status, id) => {
+        dispatch(showModals({show: true, status, id: id}))
     };
 
     const Category = [
@@ -46,7 +39,6 @@ const AboutClinic = () => {
 
     return <div className="about-clinic-box">
         <Navbar/>
-
         <div className="about-hospital">
             <div className="header">
                 <div className="title">
@@ -67,7 +59,7 @@ const AboutClinic = () => {
                          className="button-call">Qo'ng'iroq qilish
                     </div>
 
-                    <div onClick={() => ShowModal("sms")} className="button-send">Yozish</div>
+                    <div onClick={() => ShowModal("sms", 1)} className="button-send">Yozish</div>
                 </div>
             </div>
             <div className="body">
@@ -94,18 +86,12 @@ const AboutClinic = () => {
                         08:00 dan 18:00 gacha
                     </div>
                 </div>
+
                 <div className="images-location">
                     <div className="images-box">
-                        {
-                            imageBox.map((item, index) => {
-                                return <div>
-                                    <div key={index} className="image-hospital">
-                                        <img src={item.url} alt=""/>
-                                    </div>
-                                </div>
-
-                            })
-                        }
+                        <div className="image-hospital">
+                            <img src="./images/hospital3.png" alt=""/>
+                        </div>
                     </div>
 
                     <div className="location-box">
@@ -204,7 +190,7 @@ const AboutClinic = () => {
                                 </div>
                             </div>
 
-                            <div onClick={() => ShowModal("commit")} className="btn-commit">
+                            <div onClick={() => ShowModal("commit", 1)} className="btn-commit">
                                 <img src="./images/comit.png" alt=""/>
                                 Izoh yozib qoldirish
                             </div>
@@ -395,7 +381,7 @@ const AboutClinic = () => {
                             </div>
                         </div>
 
-                        <div onClick={() => ShowModal("commit")} className="btn-commit">
+                        <div onClick={() => ShowModal("commit", 1)} className="btn-commit">
                             <img src="./images/comit.png" alt=""/>
                             Izoh yozib qoldirish
                         </div>
@@ -497,11 +483,9 @@ const AboutClinic = () => {
                         </div>
                     </div>
 
-                </div>
-                }
+                </div>}
             </div>
         </div>
-
         <Footer/>
     </div>
 };

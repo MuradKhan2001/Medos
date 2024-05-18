@@ -5,8 +5,8 @@ import {useTranslation} from "react-i18next";
 import {useEffect, useRef, useState} from "react";
 import {CSSTransition} from "react-transition-group";
 import {useDispatch, useSelector} from "react-redux";
-import {getLocation} from "../../redux/locationUser";
 import {changeMenu} from "../../redux/menu";
+import axios from "axios";
 
 const Navbar = () => {
     const {t} = useTranslation();
@@ -16,7 +16,17 @@ const Navbar = () => {
     const [searchList, setSearchList] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const location = useSelector((store) => store.LocationUser.data);
+    const [location, setLocation] = useState();
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const {latitude, longitude} = position.coords;
+            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&lan=en`;
+            axios.get(`${url}`, {headers: {"Accept-Language": i18next.language}}).then((res) => {
+                setLocation(res.data.address.city)
+            });
+        });
+    }, []);
 
     const Menus = [
         {
@@ -54,22 +64,6 @@ const Navbar = () => {
         },
     ];
 
-    const regions = [
-        {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
-        {name: "Buxoro", latitude: 39.767070, longitude: 64.455393},
-        {name: "Farg‘ona", latitude: 40.372379, longitude: 71.797770},
-        {name: "Jizzax", latitude: 40.119300, longitude: 67.880140},
-        {name: "Namangan", latitude: 41.004297, longitude: 71.642956},
-        {name: "Navoiy", latitude: 40.096634, longitude: 65.352255},
-        {name: "Qashqadaryo", latitude: 38.852124, longitude: 65.784203},
-        {name: "Samarqand", latitude: 39.649307, longitude: 66.965182},
-        {name: "Sirdaryo", latitude: 40.376986, longitude: 68.713159},
-        {name: "Surxondaryo", latitude: 37.931559, longitude: 67.564765},
-        {name: "Toshkent", latitude: 41.295695, longitude: 69.239730},
-        {name: "Xorazm", latitude: 41.522326, longitude: 60.623731},
-        {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
-    ];
-
     const changeLanguage = (code) => {
         localStorage.setItem("lng", code);
         i18next.changeLanguage(code);
@@ -82,12 +76,6 @@ const Navbar = () => {
 
     };
 
-    const changeRegion = (region) => {
-        const location = {"city": region.name, "latitude": region.latitude, "longitude": region.longitude};
-        dispatch(getLocation(location));
-        setShowModal(false)
-    };
-
     const ChangeMenu = (url) => {
         dispatch(changeMenu(url))
     };
@@ -95,45 +83,45 @@ const Navbar = () => {
     return <>
         <div className="navbar-wrapper">
 
-            <CSSTransition
-                in={showModal}
-                nodeRef={nodeRef}
-                timeout={300}
-                classNames="alert"
-                unmountOnExit
-            >
-                <div className="modal-sloy">
-                    <div className="modal-card">
-                        <div className="locations">
-                            <div className="header">
-                                <div className="xbtn">
-                                    <img onClick={() => setShowModal(false)} src="./images/cancel.png" alt=""/>
-                                </div>
-                            </div>
-                            <div className="title">
-                                Viloyatni tanlang
-                            </div>
-                            <div className="regions">
-                                {regions.map((item, index) => {
-                                    return <div
-                                        onClick={() => changeRegion(item)}
-                                        key={index}
-                                        className={`region ${location.city === item.name ? "active" : ""}`}>{item.name}</div>
-                                })}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </CSSTransition>
+            {/*<CSSTransition*/}
+            {/*    in={showModal}*/}
+            {/*    nodeRef={nodeRef}*/}
+            {/*    timeout={300}*/}
+            {/*    classNames="alert"*/}
+            {/*    unmountOnExit*/}
+            {/*>*/}
+            {/*    <div className="modal-sloy">*/}
+            {/*        <div className="modal-card">*/}
+            {/*            <div className="locations">*/}
+            {/*                <div className="header">*/}
+            {/*                    <div className="xbtn">*/}
+            {/*                        <img onClick={() => setShowModal(false)} src="./images/cancel.png" alt=""/>*/}
+            {/*                    </div>*/}
+            {/*                </div>*/}
+            {/*                <div className="title">*/}
+            {/*                    Viloyatni tanlang*/}
+            {/*                </div>*/}
+            {/*                <div className="regions">*/}
+            {/*                    {regions.map((item, index) => {*/}
+            {/*                        return <div*/}
+            {/*                            onClick={() => changeRegion(item, index)}*/}
+            {/*                            key={index}*/}
+            {/*                            className={`region ${location.city === item.name ? "active" : ""}`}>{item.name}</div>*/}
+            {/*                    })}*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</CSSTransition>*/}
 
             {
                 searchList && <div onClick={() => setSearchList(false)} className="search-sloy"></div>
             }
 
             <div className="section-header">
-                <div onClick={() => setShowModal(true)} className="location-user">
+                <div className="location-user">
                     <div><img src="./images/loaction.png" alt=""/></div>
-                    <div className="title">{location.city}</div>
+                    <div className="title">{location}</div>
                 </div>
 
                 <div className="languages-wrapper">

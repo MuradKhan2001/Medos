@@ -1,0 +1,166 @@
+.messages-wrapper {
+  width: 100%;
+  height: 100vh;
+
+  .bottom-contents {
+    display: flex;
+    width: 100%;
+    height: calc(100% - 120px);
+
+    .left-side {
+      padding-top: 20px;
+      width: 70%;
+      height: 100%;
+      padding-left: 80px;
+
+      .title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 28px;
+      }
+
+      .messages {
+        margin-top: 30px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        .message-box {
+          margin-right: 20px;
+          margin-top: 20px;
+          padding: 15px;
+          width: 300px;
+          height: 200px;
+          border-top-left-radius: 20px;
+          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+          position: relative;
+
+          .icon-message {
+            position: absolute;
+            right: 15px;
+            bottom: 0px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+              width: 70%;
+              opacity: 0.2;
+            }
+          }
+
+          .del-icon {
+            position: absolute;
+            right: 0px;
+            top: 5px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+              width: 55%;
+              cursor: pointer;
+              transition: 0.3s;
+              &:hover{
+                transform: scale(1.1);
+              }
+            }
+          }
+
+          .name {
+            font-weight: bold;
+            text-align: center;
+          }
+
+          .number {
+            text-align: center;
+            margin-top: 6px;
+          }
+
+          .des {
+            margin-top: 10px;
+            padding: 6px;
+            width: 100%;
+            height: 110px;
+            overflow-y: auto;
+
+            &::-webkit-scrollbar {
+              width: 4px;
+              height: 6px;
+              border-radius: 20px;
+            }
+
+            &::-webkit-scrollbar-track {
+              box-shadow: inset 0 0 6px rgba(150, 141, 141, 0.3);
+            }
+
+            &::-webkit-scrollbar-thumb {
+              border-radius: 20px;
+              background-color: gray;
+            }
+          }
+        }
+      }
+
+
+    }
+
+    .right-side {
+      padding-right: 80px;
+      width: 30%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .my-information-card {
+        padding: 40px 20px;
+        width: 320px;
+        height: auto;
+        border-left: 1px solid #d0d0d0;
+        .img-box {
+          width: 100%;
+          height: 220px;
+          border-radius: 8px;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+        }
+        .info-box {
+          .name {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+
+          }
+
+          .info {
+            display: flex;
+            align-items: center;
+
+            img {
+              margin-right: 8px;
+            }
+
+            margin-top: 15px;
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+
+
+}
