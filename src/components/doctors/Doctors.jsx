@@ -8,6 +8,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {showModals} from "../../redux/ModalContent";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import {getLocation} from "../../redux/locationUser";
+import {show} from "../../redux/show-map";
+import MobileNavbar from "../mobile-navbar/MobileNavbar";
 
 const Doctors = () => {
     const navigate = useNavigate();
@@ -287,29 +289,28 @@ const Doctors = () => {
                                 </div>
                             </div>
 
+                            {/*<div className="pagination-box">*/}
+                            {/*    <div className="prev-btn">*/}
+                            {/*        <img src="./images/arrow.png" alt=""/>*/}
+                            {/*    </div>*/}
 
-                            <div className="pagination-box">
-                                <div className="prev-btn">
-                                    <img src="./images/arrow.png" alt=""/>
-                                </div>
+                            {/*    <div className="pagination-items">*/}
+                            {/*        1*/}
+                            {/*    </div>*/}
+                            {/*    <div className="pagination-items">*/}
+                            {/*        2*/}
+                            {/*    </div>*/}
+                            {/*    <div className="pagination-items">*/}
+                            {/*        3*/}
+                            {/*    </div>*/}
+                            {/*    <div className="pagination-items">*/}
+                            {/*        4*/}
+                            {/*    </div>*/}
 
-                                <div className="pagination-items">
-                                    1
-                                </div>
-                                <div className="pagination-items">
-                                    2
-                                </div>
-                                <div className="pagination-items">
-                                    3
-                                </div>
-                                <div className="pagination-items">
-                                    4
-                                </div>
-
-                                <div className="next-btn">
-                                    <img src="./images/arrow.png" alt=""/>
-                                </div>
-                            </div>
+                            {/*    <div className="next-btn">*/}
+                            {/*        <img src="./images/arrow.png" alt=""/>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
                             <Footer/>
                         </div>}
                     </div>
@@ -318,6 +319,16 @@ const Doctors = () => {
                         <Map/>
                     </div>
                 </div>
+            </div>
+
+            <div onClick={() => dispatch(show(!showMap))} className="map-mobile">
+                {showMap ?  <img className="prev-to" src="./images/next-btn.png" alt=""/> :
+                    <img src="./images/map-mobile.png" alt=""/>}
+                {showMap ? "Orqaga" : "Xaritadan"}
+            </div>
+
+            <div className="mobile-navbar-container">
+                <MobileNavbar/>
             </div>
         </div>
     </>

@@ -1,0 +1,113 @@
+.mobile-navbar {
+  width: 100%;
+  height: 65px;
+  background-color: white;
+  border-top: 4px solid #B4C0CC29;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  .menu-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 20px;
+    padding-left: 20px;
+
+    .menu-item {
+      cursor: pointer;
+      color: #85919E;
+      font-weight: 500;
+      transition: 0.4s;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+
+      &:hover {
+        color: #262D33;
+      }
+
+      .icon {
+        margin-bottom: 5px;
+        .icons {
+          width: 28px;
+          height: 28px;
+          mask: {
+            repeat: no-repeat;
+            size: 100%;
+            position: center center;
+          };
+          -webkit-mask: {
+            repeat: no-repeat;
+            size: 100%;
+            position: center center;
+          };
+        }
+
+        .doctor {
+          -webkit-mask-size: cover;
+          mask-size: cover;
+          -webkit-mask-image: url(./icons/doctor-icon.svg);
+          mask-image: url(./icons/doctor-icon.svg);
+          background-color: rgba(133, 145, 158, 1);
+        }
+
+        .clinic {
+          -webkit-mask-size: cover;
+          mask-size: cover;
+          -webkit-mask-image: url(./icons/clinic-icon.svg);
+          mask-image: url(./icons/clinic-icon.svg);
+          background-color: rgba(133, 145, 158, 1);
+        }
+
+        .pharmacy {
+          -webkit-mask-size: cover;
+          mask-size: cover;
+          -webkit-mask-image: url(./icons/pharmacy-icon.svg);
+          mask-image: url(./icons/pharmacy-icon.svg);
+          background-color: rgba(133, 145, 158, 1);
+        }
+
+        .service {
+          -webkit-mask-size: cover;
+          mask-size: cover;
+          -webkit-mask-image: url(./icons/service-icon.svg);
+          mask-image: url(./icons/service-icon.svg);
+          background-color: rgba(133, 145, 158, 1);
+        }
+      }
+    }
+
+    .active {
+      font-weight: 600;
+      color: rgba(0, 173, 173, 1);
+
+      .icon {
+        .clinic {
+          background-color: rgba(0, 173, 173, 1);
+        }
+
+        .pharmacy {
+          background-color: rgba(0, 173, 173, 1);
+        }
+
+        .doctor {
+          background-color: rgba(0, 173, 173, 1);
+        }
+
+        .service {
+          background-color: rgba(0, 173, 173, 1);
+        }
+      }
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+}

@@ -98,30 +98,6 @@ const DoctorMarkers = ()=>{
                             </div>
                         </div>
 
-                        <div className="services">
-                            <div className="service">
-                                Bolalar stomatolog
-                            </div>
-                            <div className="service">
-                                Stomatolog-terapevt
-                            </div>
-                            <div className="service">
-                                Stomatolog jarroh
-                            </div>
-                        </div>
-
-                        <div className="prices">
-                            <div className="item-price">
-                                <div className="title">Birinchi konsultatsiya</div>
-                                <div className="number">650 000 so'm</div>
-                            </div>
-
-                            <div className="item-price">
-                                <div className="title">Takroriy konsultatsiya</div>
-                                <div className="number">Narxi so'rov bo'yicha</div>
-                            </div>
-                        </div>
-
                         <div className="buttons">
                             <div onClick={()=> navigate("/about-clinic")} className="more-btn">
                                 Ko'proq ko'rsatish

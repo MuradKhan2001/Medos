@@ -10,6 +10,8 @@ import {showModals} from "../../redux/ModalContent";
 import axios from "axios";
 import i18next from "i18next";
 import {getLocation} from "../../redux/locationUser";
+import MobileNavbar from "../mobile-navbar/MobileNavbar";
+import {show} from "../../redux/show-map";
 
 
 const Clinics = () => {
@@ -115,6 +117,7 @@ const Clinics = () => {
                     }
                 </div>
                 <div className="bottom-content">
+
                     <div className={showMap ? "left-side-hide" : "left-side"}>
                         <div className="category-wrapper">
                             <div>
@@ -297,7 +300,18 @@ const Clinics = () => {
                     <div className={`right-side ${showMap ? "show-map" : ""}`}>
                         <Map/>
                     </div>
+
                 </div>
+            </div>
+
+            <div onClick={() => dispatch(show(!showMap))} className="map-mobile">
+                {showMap ?  <img className="prev-to" src="./images/next-btn.png" alt=""/> :
+                    <img src="./images/map-mobile.png" alt=""/>}
+                {showMap ? "Orqaga" : "Xaritadan"}
+            </div>
+
+            <div className="mobile-navbar-container">
+                <MobileNavbar/>
             </div>
         </div>
     </>

@@ -32,6 +32,7 @@ const libraries = ["places"];
 const ProfileDoctor = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const cyrillicToTranslit = new CyrillicToTranslit();
     const [hospitalType, setHospitalType] = useState('');

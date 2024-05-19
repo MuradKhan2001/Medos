@@ -1,14 +1,14 @@
 import "./style-pharmacies.scss";
 import Navbar from "../navbar/Navbar";
-import {useEffect, useState, useMemo, useRef} from "react";
-import {CSSTransition} from "react-transition-group";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Footer from "../footer/Footer";
 import Map from "../map/Map";
 import {useDispatch, useSelector} from "react-redux";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
-import {showModals} from "../../redux/ModalContent";
 import {getLocation} from "../../redux/locationUser";
+import {show} from "../../redux/show-map";
+import MobileNavbar from "../mobile-navbar/MobileNavbar";
 
 
 const Pharmacies = () => {
@@ -57,10 +57,6 @@ const Pharmacies = () => {
         }
     }, [location]);
 
-    const ShowModal = (status) => {
-        dispatch(showModals({show: true, status}))
-    };
-
     const filterHospital = (region_key, open_24_key) => {
         let filterBox = {
             region: region_key,
@@ -85,10 +81,8 @@ const Pharmacies = () => {
     return <>
         <div className="pharmacies-wrapper">
             <Navbar/>
-
             <div className="pharmacies-list">
                 <div className="bottom-content">
-
                     <div className={showMap ? "left-side-hide" : "left-side"}>
                         <div className="category-wrapper">
                             <div>
@@ -385,28 +379,6 @@ const Pharmacies = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="pagination-box">
-                                <div className="prev-btn">
-                                    <img src="./images/arrow.png" alt=""/>
-                                </div>
-
-                                <div className="pagination-items">
-                                    1
-                                </div>
-                                <div className="pagination-items">
-                                    2
-                                </div>
-                                <div className="pagination-items">
-                                    3
-                                </div>
-                                <div className="pagination-items">
-                                    4
-                                </div>
-
-                                <div className="next-btn">
-                                    <img src="./images/arrow.png" alt=""/>
-                                </div>
-                            </div>
                             <Footer/>
                         </div>}
                     </div>
@@ -415,6 +387,16 @@ const Pharmacies = () => {
                         <Map/>
                     </div>
                 </div>
+            </div>
+
+            <div onClick={() => dispatch(show(!showMap))} className="map-mobile">
+                {showMap ?  <img className="prev-to" src="./images/next-btn.png" alt=""/> :
+                    <img src="./images/map-mobile.png" alt=""/>}
+                {showMap ? "Orqaga" : "Xaritadan"}
+            </div>
+
+            <div className="mobile-navbar-container">
+                <MobileNavbar/>
             </div>
         </div>
     </>

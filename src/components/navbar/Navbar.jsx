@@ -183,6 +183,7 @@ const Navbar = () => {
                             <img src="./images/cancel.png" alt=""/>
                         </div>}
                     </div>
+
                 </div>
 
                 <div className={`profile ${profile ? "active-profile" : ""}`}>

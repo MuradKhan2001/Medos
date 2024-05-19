@@ -386,7 +386,7 @@
             align-items: center;
             transition: 0.3s;
             font-size: 16px;
-            border-radius: 10px ;
+            border-radius: 10px;
 
             img {
               width: 20px;
@@ -491,6 +491,126 @@
 
     .active-profile {
       background-color: rgba(180, 192, 204, 0.26);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-wrapper {
+    .section-header {
+      padding-left: 20px;
+      padding-right: 20px;
+
+      .location-user {
+        .title {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .section-menu {
+      width: 100%;
+      height: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 20px;
+
+      .left-side {
+        width: 90%;
+        display: block;
+        align-items: center;
+
+        .logo {
+          margin-right: 20px;
+
+          img {
+            width: 90px;
+          }
+        }
+
+        .menu-wrapper {
+          display: none;
+        }
+
+        .search-box {
+          margin-top: 10px;
+        }
+      }
+
+      .profile {
+        margin-left: -100px;
+
+        .profile-card {
+          bottom: -177px;
+          z-index: 50;
+
+          .user-profile {
+            .header-side {
+              border-bottom: 1px solid rgba(180, 192, 204, 0.28);
+              width: 100%;
+              padding-bottom: 20px;
+              margin-bottom: 20px;
+
+              .name {
+                font-size: 18px;
+                font-weight: bold;
+              }
+
+              .text {
+                color: rgba(133, 145, 158, 1);
+                font-size: 16px;
+              }
+            }
+
+            .btns {
+              padding: 10px 20px;
+              margin-top: 15px;
+              width: 200px;
+              color: rgba(38, 45, 51, 1);
+              display: flex;
+              align-items: center;
+              transition: 0.3s;
+              font-size: 16px;
+              border-radius: 10px;
+
+              img {
+                width: 20px;
+                margin-right: 10px;
+              }
+
+              &:hover {
+                background-color: rgb(241, 243, 246);
+              }
+            }
+          }
+
+          .register-card {
+            .register-btn {
+              width: 220px;
+              padding: 10px 15px;
+            }
+
+            .login-btn {
+              width: 220px;
+              padding: 10px 15px;
+            }
+
+            .des {
+              margin-top: 10px;
+              color: rgba(133, 145, 158, 1);
+              text-align: center;
+              border-top: 1px solid rgba(180, 192, 204, 0.28);
+              padding-bottom: 10px;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+
+      .active-profile {
+        background-color: rgba(180, 192, 204, 0.26);
+      }
     }
   }
 }

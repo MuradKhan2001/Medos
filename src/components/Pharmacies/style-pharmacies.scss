@@ -847,4 +847,457 @@
       }
     }
   }
+
+  .mobile-navbar-container {
+    display: none;
+  }
+
+  .map-mobile {
+    display: none;
+  }
+}
+
+@media (max-width: 768px){
+  .pharmacies-wrapper {
+    height: auto;
+
+    .pharmacies-list {
+      height: auto;
+
+      .bottom-content {
+        display: block;
+        width: 100%;
+        height: auto;
+
+        .left-side {
+          width: 100%;
+          height: 100%;
+          padding-right: 0;
+
+          .category-wrapper {
+            position: sticky;
+            background-color: white;
+            top: 0px;
+            width: 100%;
+            height: 60px;
+            padding-left: 5px;
+            z-index: 40;
+
+            .dropdown-filter {
+              .selectRegion {
+                width: 90px;
+
+                .MuiOutlinedInput-root {
+                  margin: 0;
+                }
+              }
+
+              .selectHospitalType {
+                width: 160px;
+
+                .MuiOutlinedInput-root {
+                  margin-right: 5px;
+                }
+              }
+
+              .selectProfessional {
+                width: 120px;
+
+                .MuiOutlinedInput-root {
+                  margin-right: 6px;
+                }
+              }
+
+              .button-filter {
+                margin-left: 6px;
+              }
+
+              .price {
+                width: max-content;
+                margin-right: 6px;
+
+                .MuiOutlinedInput-root {
+                  border-radius: 20px;
+                  margin-right: 6px;
+                  background-color: rgba(180, 192, 204, 0.16);
+
+                  &:hover {
+                    .MuiOutlinedInput-notchedOutline {
+                      border: 1px solid rgba(0, 173, 173, 1);
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .pharmacies {
+            margin: 0 auto;
+            width: 98%;
+            height: auto;
+
+            .pharmacies-box {
+              width: 100%;
+              display: flex;
+              flex-wrap: wrap;
+
+              .pharma {
+                padding: 10px;
+                margin: 0;
+                width: 100%;
+                display: block;
+
+                .left-side {
+                  width: 100%;
+                  height: 180px;
+                }
+
+                .right-side {
+                  display: block;
+                  margin-top: 15px;
+                  width: 100%;
+                  height: 100%;
+                  padding: 10px;
+                }
+              }
+            }
+          }
+        }
+
+        .left-side-hide {
+          position: sticky!important;
+          background-color: white;
+          top: 0px!important;
+          width: 98%;
+          overflow-x: auto;
+          left: 0;
+          z-index: 45;
+
+          .category-wrapper {
+            width: 100%;
+            height: 60px;
+            padding-left: 5px;
+
+            .dropdown-filter {
+              .selectRegion {
+                width: 90px;
+
+                .MuiOutlinedInput-root {
+                  margin: 0;
+                }
+              }
+
+              .selectHospitalType {
+                width: 160px;
+
+                .MuiOutlinedInput-root {
+                  margin-right: 5px;
+                }
+              }
+
+              .selectProfessional {
+                width: 120px;
+
+                .MuiOutlinedInput-root {
+                  margin-right: 6px;
+                }
+              }
+
+              .button-filter {
+                margin-left: 6px;
+              }
+
+              .price {
+                width: max-content;
+                margin-right: 6px;
+
+                .MuiOutlinedInput-root {
+                  border-radius: 20px;
+                  margin-right: 6px;
+                  background-color: rgba(180, 192, 204, 0.16);
+
+                  &:hover {
+                    .MuiOutlinedInput-notchedOutline {
+                      border: 1px solid rgba(0, 173, 173, 1);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .show-map {
+          display: block!important;
+          width: 100% !important;
+        }
+
+        .right-side {
+          display: none;
+          width: 100%;
+          height: 100vh;
+          padding: 15px;
+          .map {
+            width: 100%;
+            height: 100%;
+
+            .gm-style-iw-c {
+              margin-top: -50px;
+              box-shadow: rgba(230, 230, 230, 0.16) 0px 10px 36px 0px, rgba(255, 255, 255, 0.06) 0px 0px 0px 1px;
+            }
+
+            .gm-style-iw-tc {
+              margin-top: -50px;
+            }
+
+            .info-box-clinic {
+              width: 250px;
+
+              .photo-clinic {
+                width: 100%;
+                height: 20%;
+                display: flex;
+                justify-content: center;
+
+                img {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                }
+              }
+
+              .content {
+                width: 100%;
+                height: 50%;
+
+                .header-clinic {
+                  margin-top: 10px;
+                  width: 100%;
+                  display: flex;
+                  justify-content: space-between;
+
+                  .name-clinic {
+                    color: #262D33;
+                    font-weight: 600;
+                    font-size: 18px;
+                  }
+
+                  .section-commit {
+                    margin-left: 20px;
+                    display: flex;
+                    align-items: center;
+
+                    .raiting {
+                      display: flex;
+                      align-items: center;
+                      margin-right: 10px;
+
+                      img {
+                        width: 15px;
+                        margin-right: 5px;
+                      }
+                    }
+
+                    .commit-count {
+                      color: rgba(133, 145, 158, 1);
+                      font-size: 14px;
+                      margin-right: 10px;
+                    }
+
+                    span {
+                      width: 3px;
+                      height: 3px;
+                      background-color: rgba(133, 145, 158, 1);
+                      margin-right: 10px;
+                      border-radius: 50%;
+                    }
+
+                    .name {
+                      color: rgba(133, 145, 158, 1);
+                      font-size: 14px;
+                    }
+                  }
+                }
+
+                .section-location {
+                  width: 100%;
+                  margin-top: 10px;
+                  display: flex;
+                  align-items: center;
+
+                  .location {
+                    display: flex;
+                    align-items: center;
+
+                    img {
+                      width: 17px;
+                      margin-right: 5px;
+                    }
+
+                    color: rgba(38, 45, 51, 1);
+                  }
+
+                  .open {
+                    font-weight: bold;
+                    color: rgba(0, 153, 89, 1);
+                  }
+
+                  .close {
+                    font-weight: bold;
+                    color: rgba(250, 88, 70, 1);
+                  }
+
+                  span {
+                    width: 3px;
+                    height: 3px;
+                    background-color: rgba(133, 145, 158, 1);
+                    margin-right: 10px;
+                    margin-left: 10px;
+                    border-radius: 50%;
+                  }
+
+                  .time-open {
+                    display: flex;
+                    align-items: center;
+
+                    img {
+                      width: 17px;
+                      margin-right: 5px;
+                    }
+
+                    color: rgba(38, 45, 51, 1);
+                  }
+                }
+
+                .services {
+                  display: flex;
+                  flex-wrap: wrap;
+
+                  .service {
+                    margin-top: 10px;
+                    border-radius: 20px;
+                    padding: 5px 12px;
+                    color: rgba(38, 45, 51, 1);
+                    font-size: 12px;
+                    margin-right: 6px;
+                    background-color: rgba(180, 192, 204, 0.16);
+                  }
+                }
+
+                .prices {
+                  width: 100%;
+                  margin-top: 10px;
+                  padding-top: 5px;
+                  border-top: 1px solid rgba(180, 192, 204, 0.28);
+
+                  .item-price {
+                    margin-top: 8px;
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-bottom: 2px dotted rgba(133, 145, 158, 1);
+
+                    .title {
+                      background-color: white;
+                      color: rgba(133, 145, 158, 1);
+                      margin-bottom: -6px;
+                      padding-right: 5px;
+                    }
+
+                    .number {
+                      background-color: white;
+                      margin-bottom: -6px;
+                      font-weight: bold;
+                      color: rgba(38, 45, 51, 1);
+                      padding-left: 5px;
+                    }
+                  }
+                }
+
+                .buttons {
+                  margin-top: 15px;
+                  display: flex;
+                  justify-content: space-between;
+
+                  .left-btn {
+                    display: flex;
+
+                    .button-call {
+                      padding: 8px 15px;
+                      border-radius: 10px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      background-color: #EDF7F7;
+                      color: #00ADAD;
+
+                      cursor: pointer;
+                    }
+
+                    .button-send {
+                      margin-right: 10px;
+                      cursor: pointer;
+                      padding: 8px 15px;
+                      border-radius: 10px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      background-color: #00ADAD;
+                      color: white;
+                    }
+                  }
+
+                  .more-btn {
+                    cursor: pointer;
+                    margin-top: 10px;
+                    width: max-content;
+                    color: rgba(0, 173, 173, 1);
+                    font-size: 14px;
+                    border-bottom: 1px dashed rgba(0, 173, 173, 1);
+                  }
+                }
+              }
+            }
+
+            .show-hide-btn {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    .mobile-navbar-container {
+      width: 100%;
+      display: flex;
+    }
+
+    .map-mobile {
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      left: 50%;
+      bottom: 100px;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      background-color: rgba(38, 45, 51, 1);
+      color: white;
+      z-index: 100;
+      border-radius: 20px;
+      line-height: 20px;
+
+      img {
+        width: 20px;
+        margin-right: 10px;
+      }
+
+      .prev-to {
+        width: 10px;
+        transform: rotate(180deg);
+      }
+    }
+  }
 }

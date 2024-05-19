@@ -18,7 +18,7 @@ import Loader from "../../loader/Loader";
 import i18next from "i18next";
 import {useTranslation} from "react-i18next";
 import {useFormik} from "formik";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {addAlert, delAlert} from "../../../redux/AlertsBox";
 
 const libraries = ["places"];
@@ -27,6 +27,7 @@ const libraries = ["places"];
 const PharmacyProfile = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [workingTime24, setWorkingTime24] = useState(false);
     const [selected, setSelected] = useState(null);

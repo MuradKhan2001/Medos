@@ -1,5 +1,5 @@
-import {useEffect, useState, useMemo, useRef, useCallback} from "react";
-import {GoogleMap, InfoWindow, Marker, useLoadScript} from "@react-google-maps/api";
+import {useEffect, useState, useMemo} from "react";
+import {GoogleMap,useLoadScript} from "@react-google-maps/api";
 import i18next from "i18next";
 import {GOOGLE_MAPS_API_KEY} from "./googleMapsApi";
 import axios from "axios";
@@ -20,7 +20,6 @@ const Clinics = () => {
     const [onloadMap, setOnloadMap] = useState(false)
     const location = useSelector((store) => store.LocationUser.data);
     const showMap = useSelector((store) => store.ShowMap.data);
-    const menu = useSelector((store) => store.Menu.data);
     const [center, setCenter] = useState(null)
     const {isLoaded} = useLoadScript({
         googleMapsApiKey: GOOGLE_MAPS_API_KEY,
@@ -91,7 +90,7 @@ const Clinics = () => {
     return <>
         <GoogleMap
             zoom={9}
-            center={center}
+            center={{lat: 41.295695, lng: 69.239730}}
             options={options}
             mapContainerClassName="map"
             onLoad={() => setOnloadMap(true)}
