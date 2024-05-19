@@ -9,12 +9,17 @@ import {showModals} from "../../redux/ModalContent";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import {getLocation} from "../../redux/locationUser";
 import {show} from "../../redux/show-map";
+import {getDoctor} from "../../redux/doctors";
+import axios from "axios";
 import MobileNavbar from "../mobile-navbar/MobileNavbar";
+import i18next from "i18next";
+import {getAboutMarker} from "../../redux/markerAbout";
 
 const Doctors = () => {
     const navigate = useNavigate();
-    const baseUrl = useSelector((store) => store.baseUrl.data);
     const dispatch = useDispatch();
+    const baseUrl = useSelector((store) => store.baseUrl.data);
+    const Doctors = useSelector((store) => store.Doctors.data);
     const [like, setLike] = useState(false);
     const showMap = useSelector((store) => store.ShowMap.data);
     const [serviceList, setServiceList] = useState([]);
@@ -44,13 +49,14 @@ const Doctors = () => {
     ];
 
     useEffect(() => {
-        // axios.get(`${baseUrl}speciality/`).then((response) => {
-        //     setServiceList(response.data)
-        // }).catch((error) => {});
+        axios.get(`${baseUrl}speciality/`).then((response) => {
+            setServiceList(response.data)
+        }).catch((error) => {
+        });
     }, []);
 
     useEffect(() => {
-        if (location.key) {
+        if (location.key + 1) {
             filterHospital(location.key + 1, gender, cost, speciality);
             setRegion(location.key + 1);
             setRegionSelect(location.key)
@@ -62,17 +68,16 @@ const Doctors = () => {
             region: region_key,
             gender: gender_key,
             cost: cost_key,
-            speciality: speciality_key,
+            specialty: speciality_key,
         };
 
         const queryString = Object.entries(filterBox)
             .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
             .join('&');
 
-        console.log(filterBox)
-        // axios.get(`${baseUrl}hospital/?${queryString}`).then((response) => {
-        //     dispatch(getClinics(response.data));
-        // })
+        axios.get(`${baseUrl}doctor/?${queryString}`).then((response) => {
+            dispatch(getDoctor(response.data));
+        })
     };
 
     const changeRegion = (region, index) => {
@@ -80,8 +85,8 @@ const Doctors = () => {
         dispatch(getLocation(location));
     };
 
-    const ShowModal = (status) => {
-        dispatch(showModals({show: true, status}))
+    const ShowModal = (status, item) => {
+        dispatch(showModals({show: true, status, item}))
     };
 
     return <>
@@ -133,8 +138,8 @@ const Doctors = () => {
                                                 setGender(e.target.value)
                                             }}
                                         >
-                                            <MenuItem value={1}>Erkak</MenuItem>
-                                            <MenuItem value={2}>Ayol</MenuItem>
+                                            <MenuItem value={true}>Erkak</MenuItem>
+                                            <MenuItem value={false}>Ayol</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </div>
@@ -152,10 +157,11 @@ const Doctors = () => {
                                             label="Narx"
                                             onChange={(e) => {
                                                 filterHospital(region, gender, e.target.value, speciality);
-                                                setCost(e.target.value)}}
+                                                setCost(e.target.value)
+                                            }}
                                         >
-                                            <MenuItem value={1}>Arzondan- qimmatgacha</MenuItem>
-                                            <MenuItem value={2}>Qimmatdan- arzongacha</MenuItem>
+                                            <MenuItem value={true}>Arzondan- qimmatgacha</MenuItem>
+                                            <MenuItem value={false}>Qimmatdan- arzongacha</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </div>
@@ -173,11 +179,14 @@ const Doctors = () => {
                                             label="Mutaxasislik"
                                             onChange={(e) => {
                                                 filterHospital(region, gender, cost, e.target.value);
-                                                setSpeciality(e.target.value)}}
+                                                setSpeciality(e.target.value)
+                                            }}
                                         >
-                                            <MenuItem value={1}>Stamatolog</MenuItem>
-                                            <MenuItem value={2}>Terapvt</MenuItem>
-                                            <MenuItem value={3}>Lor</MenuItem>
+                                            {serviceList.map((item, index) => {
+                                                return <MenuItem key={index} value={item.id}>
+                                                    {item.translations[i18next.language].name}
+                                                </MenuItem>
+                                            })}
                                         </Select>
                                     </FormControl>
                                 </div>
@@ -185,109 +194,134 @@ const Doctors = () => {
                         </div>
 
                         {!showMap && <div className="doctors">
-                            <div className="doctor">
-                                <div className="left-side">
-                                    <img src="./images/doctor.png" alt=""/>
-                                    <div className="like">
-                                        {
-                                            like ?
-                                                <img onClick={() => setLike(false)} src="./images/like.png" alt=""/> :
-                                                <img onClick={() => setLike(true)} src="./images/no-like.png" alt=""/>
-                                        }
-                                    </div>
-                                </div>
 
-                                <div className="right-side">
-                                    <div className="header-clinic">
-                                        <div className="name-clinic">
-                                            Aktubaev Alisher
+                            {Doctors.map((item, index) => {
+                                return <div key={index} className="doctor">
+                                    <div className="left-side">
+                                        <img src={item.image} alt=""/>
+                                        <div className="like">
+                                            {
+                                                like ?
+                                                    <img onClick={() => setLike(false)} src="./images/like.png"
+                                                         alt=""/> :
+                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
+                                                         alt=""/>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div className="right-side">
+                                        <div className="header-clinic">
+                                            <div className="name-clinic">
+                                                {item.translations[i18next.language].first_name} &nbsp;
+                                                {item.translations[i18next.language].last_name} &nbsp;
+                                                {item.translations[i18next.language].middle_name}
+                                            </div>
+
+                                            <div className="section-commit">
+                                                <div className="raiting">
+                                                    {item.avg_rating}
+                                                </div>
+                                                <span></span>
+                                                <div className="commit-count">
+                                                    {item.comment_count} ta izoh
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        <div className="section-commit">
-                                            <div className="raiting">
-                                                <img src="./images/star.png" alt=""/>
-                                                4.88
+                                        <div className="section-location">
+                                            <div className="location">
+                                                <img src="./images/job.png" alt=""/>
+                                                {item.specialty.translations[i18next.language].name}
                                             </div>
                                             <span></span>
-                                            <div className="commit-count">
-                                                324 ta izoh
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="section-location">
-                                        <div className="location">
-                                            <img src="./images/job.png" alt=""/>
-                                            Stomotolog
-                                        </div>
-                                        <span></span>
-                                        <div className="time-open">
-                                            16 yillik tajriba
-                                        </div>
-                                    </div>
-
-                                    <div className="section-location">
-                                        <div className="location">
-                                            <img src="./images/icon.png" alt=""/>
-                                            Olmazor tumani
-                                        </div>
-                                        <span></span>
-                                        <div className="time-open">
-                                            Akfa medline
-                                        </div>
-                                    </div>
-
-                                    <div className="section-location">
-                                        <div className="location">
-                                            <img src="./images/time.png" alt=""/>
-                                            Dushanba, Chorshanba, Payshanba, Juma
-                                        </div>
-                                        <span></span>
-                                        <div className="time-open">
-                                            9:00 - 15:00
-                                        </div>
-                                    </div>
-
-                                    <div className="services">
-                                        <div className="service">
-                                            Bolalar stomatolog
-                                        </div>
-                                        <div className="service">
-                                            Stomatolog-terapevt
-                                        </div>
-                                        <div className="service">
-                                            Stomatolog jarroh
-                                        </div>
-                                    </div>
-
-                                    <div className="prices">
-                                        <div className="item-price">
-                                            <div className="title">Birinchi konsultatsiya</div>
-                                            <div className="number">650 000 so'm</div>
-                                        </div>
-
-                                        <div className="item-price">
-                                            <div className="title">Takroriy konsultatsiya</div>
-                                            <div className="number">Narxi so'rov bo'yicha</div>
-                                        </div>
-                                    </div>
-
-                                    <div className="buttons">
-                                        <div className="left-btn">
-                                            <div onClick={() => ShowModal("sms")} className="button-send">
-                                                Qabuliga yozilish
-                                            </div>
-                                            <div onClick={() => ShowModal("contact")} className="button-call">Qo'ng'iroq
-                                                qilish
+                                            <div className="time-open">
+                                                {item.experience} yillik tajriba
                                             </div>
                                         </div>
 
-                                        <div onClick={() => navigate("/about-doctor")} className="more-btn">
-                                            Ko'proq ko'rsatish
+                                        <div className="section-location">
+                                            <div className="location">
+                                                <img src="./images/icon.png" alt=""/>
+                                                {item.hospital ? item.hospital.translations[i18next.language].address :
+                                                    item.translations[i18next.language].address}
+                                            </div>
+
+                                            {item.hospital ?
+                                                <>
+                                                    <span></span>
+                                                    <div className="time-open">
+                                                        {item.hospital.translations[i18next.language].name}
+                                                    </div>
+                                                </> : ""}
+                                        </div>
+
+                                        <div className="section-location">
+                                            <div className="location">
+                                                <img src="./images/time.png" alt=""/>
+                                                {item.working_days.map((item, index) => {
+                                                    return <p key={index}>
+                                                        {item.translations[i18next.language].day}
+                                                    </p>
+                                                })}
+                                            </div>
+                                            <span></span>
+                                            <div className="time-open">
+                                                {item.start_time} dan
+                                                &nbsp;
+                                                {item.end_time} gacha
+                                            </div>
+                                        </div>
+
+                                        <div className="services">
+                                            {item.sub_speciality.map((item, index) => {
+                                                return <div key={index} className="service">
+                                                    {item.translations[i18next.language].name}
+                                                </div>
+                                            })}
+                                        </div>
+
+                                        <div className="prices">
+                                            <div className="item-price">
+                                                <div className="title">Birinchi konsultatsiya</div>
+                                                <div className="number">
+                                                    {item.consultation_fee ? <>{item.consultation_fee} so'm </> : "Kelishuv asosida"}
+                                                </div>
+                                            </div>
+
+                                            <div className="item-price">
+                                                <div className="title">Takroriy konsultatsiya</div>
+                                                <div className="number">
+                                                    {item.second_consultation_fee ?
+                                                        <>{item.second_consultation_fee} so'm </> :
+                                                        "Kelishuv asosida"}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="buttons">
+                                            <div className="left-btn">
+                                                <div onClick={() => ShowModal("sms", item.user)}
+                                                     className="button-send">
+                                                    Qabuliga yozilish
+                                                </div>
+                                                <div onClick={() => ShowModal("contact", item)}
+                                                     className="button-call">Qo'ng'iroq
+                                                    qilish
+                                                </div>
+                                            </div>
+                                            <div onClick={() => {
+                                                localStorage.setItem("doctorId", item.id)
+                                                navigate("/about-doctor")
+                                                dispatch(getAboutMarker(item.location ? item.location : item.hospital.location))
+                                            }} className="more-btn">
+                                                Ko'proq ko'rsatish
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            })}
+
 
                             {/*<div className="pagination-box">*/}
                             {/*    <div className="prev-btn">*/}
@@ -322,7 +356,7 @@ const Doctors = () => {
             </div>
 
             <div onClick={() => dispatch(show(!showMap))} className="map-mobile">
-                {showMap ?  <img className="prev-to" src="./images/next-btn.png" alt=""/> :
+                {showMap ? <img className="prev-to" src="./images/next-btn.png" alt=""/> :
                     <img src="./images/map-mobile.png" alt=""/>}
                 {showMap ? "Orqaga" : "Xaritadan"}
             </div>

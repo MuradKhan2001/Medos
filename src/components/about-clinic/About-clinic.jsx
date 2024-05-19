@@ -1,17 +1,29 @@
 import "./clinic-style.scss"
 import Navbar from "../navbar/Navbar";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Map from "../map/Map";
 import Footer from "../footer/Footer";
 import {showModals} from "../../redux/ModalContent";
-import {useSelector, useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import MobileNavbar from "../mobile-navbar/MobileNavbar";
+import axios from "axios";
+import {useTranslation} from "react-i18next";
+import i18next from "i18next";
+import {getAboutMarker} from "../../redux/markerAbout";
+import MapAbout from "../map/MapAbout";
 
 
 const AboutClinic = () => {
+    const {t} = useTranslation();
+    const baseUrl = useSelector((store) => store.baseUrl.data);
     const [like, setLike] = useState(false);
     const [tabActive, setTabActive] = useState(1);
     const [category, setCategory] = useState(1);
+    const [clinic, setClinic] = useState("");
+    const [comments, setComments] = useState([]);
+    const [doctors, setDoctors] = useState([]);
+    const [services, setServices] = useState([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const tabs = [
@@ -21,10 +33,29 @@ const AboutClinic = () => {
         {id: 4, name: "Xizmatlar va narxlar"}
     ];
 
-    const ShowModal = (status, id) => {
-        dispatch(showModals({show: true, status, id: id}))
-    };
+    useEffect(() => {
+        axios.get(`${baseUrl}hospital/${localStorage.getItem("clinicId")}/`).then((response) => {
+            setClinic(response.data);
 
+            dispatch(getAboutMarker(response.data.location));
+
+            axios.get(`${baseUrl}comment/${response.data.user}/`).then((response) => {
+                setComments(response.data)
+            });
+
+            axios.get(`${baseUrl}hospital/${response.data.id}/doctors/`).then((response) => {
+                setDoctors(response.data)
+            });
+
+            axios.get(`${baseUrl}hospital/${response.data.id}/services/`).then((response) => {
+                setServices(response.data)
+            })
+        });
+    }, []);
+
+    const ShowModal = (status, item) => {
+        dispatch(showModals({show: true, status, item}))
+    };
     const Category = [
         {id: 1, name: "Barchasi", count: 14},
         {id: 2, name: "Narkologlar", count: 4},
@@ -42,7 +73,7 @@ const AboutClinic = () => {
         <div className="about-hospital">
             <div className="header">
                 <div className="title">
-                    Respublika ixtisoslashtirilgan kardiologiya markazi
+                    {clinic && clinic.translations[i18next.language].name}
                 </div>
 
                 <div className="buttons">
@@ -52,53 +83,50 @@ const AboutClinic = () => {
                                 <img onClick={() => setLike(false)} src="./images/like.png" alt=""/> :
                                 <img onClick={() => setLike(true)} src="./images/no-like.png" alt=""/>
                         }
-
                     </div>
 
-                    <div onClick={() => ShowModal("contact")}
+                    <div onClick={() => ShowModal("contact", clinic)}
                          className="button-call">Qo'ng'iroq qilish
                     </div>
-
-                    <div onClick={() => ShowModal("sms", 1)} className="button-send">Yozish</div>
+                    <div onClick={() => ShowModal("sms", clinic.user)}
+                         className="button-send">Yozish
+                    </div>
                 </div>
             </div>
             <div className="body">
                 <div className="section-commit">
                     <div className="raiting">
-                        4.9
+                        {clinic.avg_rating}
                     </div>
                     <div className="commit-count">
-                        324 ta izoh
-                    </div>
-                    <span></span>
-                    <div className="name">
-                        Kasalxona
+                        {clinic.comment_count} ta izoh
                     </div>
                 </div>
                 <div className="section-location">
                     <div className="location">
                         <img src="./images/icon.png" alt=""/>
-                        Olmazor tumani
+                        {clinic && clinic.translations[i18next.language].address}
                     </div>
                     <span></span>
                     <div className="time-open">
                         <img src="./images/clock.png" alt=""/>
-                        08:00 dan 18:00 gacha
+                        {clinic.open_24 ? "24 soat ochiq" : <>
+                            {clinic.start_time} dan
+                            &nbsp;
+                            {clinic.end_time} gacha
+                        </>}
                     </div>
                 </div>
-
                 <div className="images-location">
                     <div className="images-box">
                         <div className="image-hospital">
-                            <img src="./images/hospital3.png" alt=""/>
+                            <img src={clinic.image} alt=""/>
                         </div>
                     </div>
-
                     <div className="location-box">
-                        <Map/>
+                        <MapAbout/>
                     </div>
                 </div>
-
                 <div className="tab-hospital">
                     {tabs.map((item, index) => {
                         return <div key={index} onClick={() => setTabActive(item.id)}
@@ -109,142 +137,64 @@ const AboutClinic = () => {
                 </div>
 
                 {tabActive === 1 && <div className="all-info">
-                    <div className="all-info-hospital">
-                        <div className="title">
-                            Shifoxona haqida
-                        </div>
-                        <div className="des">
-                            Diagnostika va davolash xizmatlarining to‘liq to‘plamiga ega bo‘lgan Akfa Medline ko‘p
-                            tarmoqli tibbiy markazi yordamida siz tez va oson sifatli tibbiy yordam olishingiz mumkin.
-                            Yuqori malakali xodimlar va eng sifatli uskunalarga ega klinika sog‘ligingiz uchun zarur
-                            bo‘lgan hamma narsani bir joyda taqdim etadi. Unda barcha tor mutaxassisliklar bo‘yicha
-                            shifokorlar xizmatidan foydalanish mumkin bo‘lgan poliklinika, operatsion blok, shinam
-                            palatalardan iborat 12 qavatli shifoxona, eng yangi ish qurollari bilan jihozlangan
-                            laboratoriya, spa va restoran mavjud.
-                            Klinikada sizga ko‘p yillik tajribaga ega malakali mutaxassislar xizmat ko‘rsatadi. Bu yerda
-                            neyroxirurgiya, angioxirurgiya, kardiojarrohlik va ortopediya yo‘nalishlarida murakkab
-                            operatsiyalar amalga oshiriladi. Shifokorlar jamoasi har bir bemorga individual yordam
-                            ko‘rsatish va davolashni ta‘minlashga intiladi. Akfa Medline klinikasida keng qamrovli
-                            diagnostika va malakali davolashdan tortib jarrohlik operatsiyalarigacha bo‘lgan barcha
-                            jarayonlar davomida ishonchli qo‘llarda bo‘lasiz.
-                            Klinikada sizga ko‘p yillik tajribaga ega malakali mutaxassislar xizmat ko‘rsatadi. Bu yerda
-                            neyroxirurgiya, angioxirurgiya, kardiojarrohlik va ortopediya yo‘nalishlarida murakkab
-                            operatsiyalar amalga oshiriladi. Shifokorlar jamoasi har bir bemorga individual yordam
-                            ko‘rsatish va davolashni ta‘minlashga intiladi. Akfa Medline klinikasida keng qamrovli
-                            diagnostika va malakali davolashdan tortib jarrohlik operatsiyalarigacha bo‘lgan barcha
-                            jarayonlar davomida ishonchli qo‘llarda bo‘lasiz.
-                        </div>
-                    </div>
                     <div className="service-hospital">
                         <div className="title">
                             Shifokorlarning ixtisoslashuvi
                         </div>
                         <div className="contents">
-                            <div className="service">
-                                Androlog
-                            </div>
-                            <div className="service">
-                                Gastroenterolog
-                            </div>
-                            <div className="service">
-                                Gastroenterolog
-                            </div>
-                            <div className="service">
-                                Anesteziolog
-                            </div>
-                            <div className="service">
-                                Ginekolog
-                            </div>
-                            <div className="service">
-                                Ginekolog
-                            </div>
-                            <div className="service">
-                                Venereolog
-                            </div>
-                            <div className="service">
-                                Dermatolog
-                            </div>
-                            <div className="service">
-                                Ginekolog
-                            </div>
-                            <div className="service">
-                                Venereolog
-                            </div>
-                            <div className="service">
-                                Dermatolog
-                            </div>
-                        </div>
-                        <div onClick={() => navigate("/about-clinic")} className="more-btn">
-                            Ko'proq ko'rsatish
+                            {clinic && clinic.hospital_services.map((item, index) => {
+                                return <div key={index} className="service">
+                                    {item.service.translations[i18next.language].name}
+                                </div>
+                            })}
                         </div>
                     </div>
-
                     <div className="comments-box">
                         <div className="header-commet">
                             <div className="counts">
                                 <div className="raiting">
-                                    4.9
+                                    {clinic.avg_rating}
                                 </div>
                                 <div className="commit-count">
-                                    324 ta izoh
+                                    {clinic.comment_count} ta izoh
                                 </div>
                             </div>
 
-                            <div onClick={() => ShowModal("commit", 1)} className="btn-commit">
+                            <div onClick={() => ShowModal("commit", clinic.user)} className="btn-commit">
                                 <img src="./images/comit.png" alt=""/>
                                 Izoh yozib qoldirish
                             </div>
                         </div>
+                        {comments.map((item, index) => {
+                            if (index < 6) {
+                                return <div key={index} className="commits">
+                                    <div className="header-commit">
+                                        <div className="left-circle">
+                                            {item.name.slice(0, 1)}
+                                        </div>
+                                        <div className="right-names">
+                                            <div className="name">
+                                                {item.name}
+                                                <span>{item.time}</span>
+                                            </div>
+                                            <div className="stars">
+                                                {Array.from({length: item.mark}).map((_, index) => (
+                                                    <img key={index} src="./images/raiting1.png" alt="Rating 1"/>
+                                                ))}
 
-                        <div className="commits">
-                            <div className="header-commit">
-                                <div className="left-circle">
-                                    D
-                                </div>
-                                <div className="right-names">
-                                    <div className="name">Durdona Valiyeva <span>24-fevral, 2023</span></div>
-                                    <div className="stars">
-                                        <img src="./images/raiting1.png" alt=""/>
-                                        <img src="./images/raiting1.png" alt=""/>
-                                        <img src="./images/raiting1.png" alt=""/>
-                                        <img src="./images/raiting1.png" alt=""/>
-                                        <img src="./images/raiting2.png" alt=""/>
+                                                {Array.from({length: 5 - item.mark}).map((_, index) => (
+                                                    <img key={index} src="./images/raiting2.png" alt="Rating 2"/>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="text-commit">
+                                        {item.text}
                                     </div>
                                 </div>
-                            </div>
-                            <div className="text-commit">
-                                Chiroyli zamonaviy klinika. Men operatsiyani o‘tkazdim va keyin bir necha kun o‘sha erda
-                                qoldim. Yoqimli va sezgir tibbiyot xodimlari, sabrlari uchun ularga alohida rahmat! Va,
-                                albatta, davolovchi shifokor Rustam Ashurmatovga RAHMAT! Diqqatli va yoqimli
-                                shifokorlar, o‘z sohasining professionallari. Sizga katta rahmat!!!!
-                            </div>
-                        </div>
-
-                        <div className="commits">
-                            <div className="header-commit">
-                                <div className="left-circle">
-                                    D
-                                </div>
-                                <div className="right-names">
-                                    <div className="name">Durdona Valiyeva <span>24-fevral, 2023</span></div>
-                                    <div className="stars">
-                                        <img src="./images/raiting1.png" alt=""/>
-                                        <img src="./images/raiting1.png" alt=""/>
-                                        <img src="./images/raiting1.png" alt=""/>
-                                        <img src="./images/raiting1.png" alt=""/>
-                                        <img src="./images/raiting2.png" alt=""/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="text-commit">
-                                Chiroyli zamonaviy klinika. Men operatsiyani o‘tkazdim va keyin bir necha kun o‘sha erda
-                                qoldim. Yoqimli va sezgir tibbiyot xodimlari, sabrlari uchun ularga alohida rahmat! Va,
-                                albatta, davolovchi shifokor Rustam Ashurmatovga RAHMAT! Diqqatli va yoqimli
-                                shifokorlar, o‘z sohasining professionallari. Sizga katta rahmat!!!!
-                            </div>
-                        </div>
-
-                        <div onClick={() => navigate("/about-clinic")} className="more-btn">
+                            }
+                        })}
+                        <div onClick={() => setTabActive(3)} className="more-btn">
                             Ko'proq ko'rsatish
                         </div>
                     </div>
@@ -253,11 +203,11 @@ const AboutClinic = () => {
                 {tabActive === 2 && <div className="doctors">
                     <div className="category-wrapper">
                         {
-                            Category.map((item, index) => {
+                            doctors.services.map((item, index) => {
                                 return <div key={index}>
                                     <div onClick={() => setCategory(item.id)}
-                                         className={`category-name ${category === item.id ? "active" : ""}`}>
-                                        {item.name} <span></span> {item.count}
+                                         className="category-name active">
+                                        {item.translations[i18next.language].name} <span></span> {item.doctor_count}
                                     </div>
                                 </div>
                             })
@@ -265,108 +215,129 @@ const AboutClinic = () => {
                     </div>
 
                     <div className="doctors-warapper">
-                        <div className="doctor">
-                            <div className="left-side">
-                                <img src="./images/doctor.png" alt=""/>
-                                <div className="like">
-                                    {
-                                        like ?
-                                            <img onClick={() => setLike(false)} src="./images/like.png" alt=""/> :
-                                            <img onClick={() => setLike(true)} src="./images/no-like.png" alt=""/>
-                                    }
-                                </div>
-                            </div>
-
-                            <div className="right-side">
-                                <div className="header-clinic">
-                                    <div className="name-clinic">
-                                        Aktubaev Alisher
-                                    </div>
-
-                                    <div className="section-commit">
-                                        <div className="raiting">
-                                            4.88
-                                        </div>
-                                        <span></span>
-                                        <div className="commit-count">
-                                            324 ta izoh
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="section-location">
-                                    <div className="location">
-                                        <img src="./images/job.png" alt=""/>
-                                        Stomotolog
-                                    </div>
-                                    <span></span>
-                                    <div className="time-open">
-                                        16 yillik tajriba
-                                    </div>
-                                </div>
-
-                                <div className="section-location">
-                                    <div className="location">
-                                        <img src="./images/icon.png" alt=""/>
-                                        Olmazor tumani
-                                    </div>
-                                    <span></span>
-                                    <div className="time-open">
-                                        Akfa medline
-                                    </div>
-                                </div>
-
-                                <div className="section-location">
-                                    <div className="location">
-                                        <img src="./images/time.png" alt=""/>
-                                        Dushanba, Chorshanba, Payshanba, Juma
-                                    </div>
-                                    <span></span>
-                                    <div className="time-open">
-                                        9:00 - 15:00
-                                    </div>
-                                </div>
-
-                                <div className="services">
-                                    <div className="service">
-                                        Bolalar stomatolog
-                                    </div>
-                                    <div className="service">
-                                        Stomatolog-terapevt
-                                    </div>
-                                    <div className="service">
-                                        Stomatolog jarroh
-                                    </div>
-                                </div>
-
-                                <div className="prices">
-                                    <div className="item-price">
-                                        <div className="title">Birinchi konsultatsiya</div>
-                                        <div className="number">650 000 so'm</div>
-                                    </div>
-
-                                    <div className="item-price">
-                                        <div className="title">Takroriy konsultatsiya</div>
-                                        <div className="number">Narxi so'rov bo'yicha</div>
-                                    </div>
-                                </div>
-
-                                <div className="buttons">
-                                    <div className="left-btn">
-                                        <div onClick={() => ShowModal("sms")} className="button-send">
-                                            Qabuliga yozilish
-                                        </div>
-                                        <div onClick={() => ShowModal("contact")} className="button-call">Qo'ng'iroq
-                                            qilish
+                        {
+                            doctors.doctors.map((item, index) => {
+                                return <div key={index} className="doctor">
+                                    <div className="left-side">
+                                        <img src={"http://138.197.97.98" + item.image} alt=""/>
+                                        <div className="like">
+                                            {
+                                                like ?
+                                                    <img onClick={() => setLike(false)} src="./images/like.png"
+                                                         alt=""/> :
+                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
+                                                         alt=""/>
+                                            }
                                         </div>
                                     </div>
 
-                                    <div onClick={() => navigate("/about-clinic")} className="more-btn">
-                                        Ko'proq ko'rsatish
+                                    <div className="right-side">
+                                        <div className="header-clinic">
+                                            <div className="name-clinic">
+                                                {item.translations[i18next.language].first_name} &nbsp;
+                                                {item.translations[i18next.language].last_name} &nbsp;
+                                                {item.translations[i18next.language].middle_name}
+                                            </div>
+
+                                            <div className="section-commit">
+                                                <div className="raiting">
+                                                    {item.avg_rating}
+                                                </div>
+                                                <span></span>
+                                                <div className="commit-count">
+                                                    {item.comment_count} ta izoh
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="section-location">
+                                            <div className="location">
+                                                <img src="./images/job.png" alt=""/>
+                                                {item.specialty.translations[i18next.language].name}
+                                            </div>
+                                            <span></span>
+                                            <div className="time-open">
+                                                {item.experience} yillik tajriba
+                                            </div>
+                                        </div>
+
+                                        <div className="section-location">
+                                            <div className="location">
+                                                <img src="./images/icon.png" alt=""/>
+                                                {item.hospital ? clinic.translations[i18next.language].address :
+                                                    item.translations[i18next.language].address}
+                                            </div>
+                                            {item.hospital ?
+                                                <>
+                                                    <span></span>
+                                                    <div className="time-open">
+                                                        {clinic.translations[i18next.language].name}
+                                                    </div>
+                                                </> : ""}
+                                        </div>
+
+                                        <div className="section-location">
+                                            <div className="location">
+                                                <img src="./images/time.png" alt=""/>
+                                                {item.working_days.map((item, index) => {
+                                                    return <p key={index}>
+                                                        {item.translations[i18next.language].day}
+                                                    </p>
+                                                })}
+                                            </div>
+                                            <span></span>
+                                            <div className="time-open">
+                                                {item.start_time} dan
+                                                &nbsp;
+                                                {item.end_time} gacha
+                                            </div>
+                                        </div>
+
+                                        <div className="services">
+                                            {item.sub_speciality.map((item, index) => {
+                                                return <div key={index} className="service">
+                                                    {item.translations[i18next.language].name}
+                                                </div>
+                                            })}
+                                        </div>
+
+                                        <div className="prices">
+                                            <div className="item-price">
+                                                <div className="title">Birinchi konsultatsiya</div>
+                                                <div className="number">
+                                                    {item.consultation_fee ? <>{item.consultation_fee} so'm </> : "Kelishuv asosida"}
+                                                </div>
+                                            </div>
+
+                                            <div className="item-price">
+                                                <div className="title">Takroriy konsultatsiya</div>
+                                                <div className="number">
+                                                    {item.second_consultation_fee ?
+                                                        <>{item.second_consultation_fee} so'm </> :
+                                                        "Kelishuv asosida"}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="buttons">
+                                            <div className="left-btn">
+                                                <div onClick={() => ShowModal("sms", item.user)}
+                                                     className="button-send">
+                                                    Qabuliga yozilish
+                                                </div>
+                                                <div onClick={() => ShowModal("contact", item)}
+                                                     className="button-call">Qo'ng'iroq
+                                                    qilish
+                                                </div>
+                                            </div>
+                                            <div onClick={() => navigate("/about-clinic")} className="more-btn">
+                                                Ko'proq ko'rsatish
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            })
+                        }
                     </div>
                 </div>}
 
@@ -374,117 +345,82 @@ const AboutClinic = () => {
                     <div className="header-commet">
                         <div className="counts">
                             <div className="raiting">
-                                4.9
+                                {clinic.avg_rating}
                             </div>
                             <div className="commit-count">
-                                324 ta izoh
+                                {clinic.comment_count} ta izoh
                             </div>
                         </div>
 
-                        <div onClick={() => ShowModal("commit", 1)} className="btn-commit">
+                        <div onClick={() => ShowModal("commit", clinic.user)} className="btn-commit">
                             <img src="./images/comit.png" alt=""/>
                             Izoh yozib qoldirish
                         </div>
                     </div>
 
-                    <div className="commits">
-                        <div className="header-commit">
-                            <div className="left-circle">
-                                D
-                            </div>
-                            <div className="right-names">
-                                <div className="name">Durdona Valiyeva <span>24-fevral, 2023</span></div>
-                                <div className="stars">
-                                    <img src="./images/raiting1.png" alt=""/>
-                                    <img src="./images/raiting1.png" alt=""/>
-                                    <img src="./images/raiting1.png" alt=""/>
-                                    <img src="./images/raiting1.png" alt=""/>
-                                    <img src="./images/raiting2.png" alt=""/>
+                    {comments.map((item, index) => {
+                        return <div key={index} className="commits">
+                            <div className="header-commit">
+                                <div className="left-circle">
+                                    {item.name.slice(0, 1)}
+                                </div>
+                                <div className="right-names">
+                                    <div className="name">
+                                        {item.name}
+                                        <span>{item.time}</span>
+                                    </div>
+                                    <div className="stars">
+                                        {Array.from({length: item.mark}).map((_, index) => (
+                                            <img key={index} src="./images/raiting1.png" alt="Rating 1"/>
+                                        ))}
+
+                                        {Array.from({length: 5 - item.mark}).map((_, index) => (
+                                            <img key={index} src="./images/raiting2.png" alt="Rating 2"/>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="text-commit">
-                            Chiroyli zamonaviy klinika. Men operatsiyani o‘tkazdim va keyin bir necha kun o‘sha erda
-                            qoldim. Yoqimli va sezgir tibbiyot xodimlari, sabrlari uchun ularga alohida rahmat! Va,
-                            albatta, davolovchi shifokor Rustam Ashurmatovga RAHMAT! Diqqatli va yoqimli
-                            shifokorlar, o‘z sohasining professionallari. Sizga katta rahmat!!!!
-                        </div>
-                    </div>
-
-                    <div className="commits">
-                        <div className="header-commit">
-                            <div className="left-circle">
-                                D
-                            </div>
-                            <div className="right-names">
-                                <div className="name">Durdona Valiyeva <span>24-fevral, 2023</span></div>
-                                <div className="stars">
-                                    <img src="./images/raiting1.png" alt=""/>
-                                    <img src="./images/raiting1.png" alt=""/>
-                                    <img src="./images/raiting1.png" alt=""/>
-                                    <img src="./images/raiting1.png" alt=""/>
-                                    <img src="./images/raiting2.png" alt=""/>
-                                </div>
+                            <div className="text-commit">
+                                {item.text}
                             </div>
                         </div>
-                        <div className="text-commit">
-                            Chiroyli zamonaviy klinika. Men operatsiyani o‘tkazdim va keyin bir necha kun o‘sha erda
-                            qoldim. Yoqimli va sezgir tibbiyot xodimlari, sabrlari uchun ularga alohida rahmat! Va,
-                            albatta, davolovchi shifokor Rustam Ashurmatovga RAHMAT! Diqqatli va yoqimli
-                            shifokorlar, o‘z sohasining professionallari. Sizga katta rahmat!!!!
-                        </div>
-                    </div>
+                    })}
 
-                    <div onClick={() => navigate("/about-clinic")} className="more-btn">
-                        Ko'proq ko'rsatish
-                    </div>
                 </div>}
 
                 {tabActive === 4 && <div className="service-box">
                     <div className="category-wrapper">
                         {
-                            Category.map((item, index) => {
+                            services.services_count.map((item, index) => {
                                 return <div key={index}>
                                     <div onClick={() => setCategory(item.id)}
-                                         className={`category-name ${category === item.id ? "active" : ""}`}>
-                                        {item.name} <span></span> {item.count}
+                                         className="category-name active">
+                                        {item.translations[i18next.language].name} <span></span> {item.service_count}
                                     </div>
                                 </div>
                             })
                         }
                     </div>
 
-                    <div className="one-service">
-                        <div className="title">
-                            Muolaja xonasi
+                    {services.services.map((item, index) => {
+                        return <div key={index} className="one-service">
+                            <div className="title">
+                                {item.service.translations[i18next.language].name}
+                            </div>
+                            {item.sub_services_list.map((item, index) => {
+                                return <div key={index} className="service">
+                                    <div className="name">{item.sub_service.translations[i18next.language].name}</div>
+                                    <div className="value">{item.price} so‘m</div>
+                                </div>
+                            })}
                         </div>
-                        <div className="service">
-                            <div className="name">To‘liq qon ro‘yxati (BC-30)</div>
-                            <div className="value">100 000 so‘m</div>
-                        </div>
-
-                        <div className="service">
-                            <div className="name">To‘liq qon ro‘yxati (BC-30)</div>
-                            <div className="value">300 000 so‘m</div>
-                        </div>
-
-                        <div className="service">
-                            <div className="name">Umumiy koagulogramma (albatros)</div>
-                            <div className="value">120 000 so‘m</div>
-                        </div>
-
-                        <div className="service">
-                            <div className="name">Bilirubin testi (jami)</div>
-                            <div className="value">180 000 so‘m</div>
-                        </div>
-
-                        <div onClick={() => navigate("/about-clinic")} className="more-btn">
-                            Ko'proq ko'rsatish
-                        </div>
-                    </div>
+                    })}
 
                 </div>}
             </div>
+        </div>
+        <div className="mobile-navbar-container">
+            <MobileNavbar/>
         </div>
         <Footer/>
     </div>

@@ -17,10 +17,9 @@ i18next.use(initReactI18next).init({
     resources: {
         uz: {
             translation: uz,
-        }, ru: {
+        },
+        ru: {
             translation: ru,
-        }, en: {
-            translation: en,
         }
     }, lng: localStorage.getItem("lng") || "uz",
 });

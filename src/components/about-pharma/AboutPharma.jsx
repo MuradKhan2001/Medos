@@ -1,54 +1,96 @@
 import "./style-pharma.scss"
-import {useState} from "react";
-import {useDispatch} from "react-redux";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import Map from "../map/Map";
 import {showModals} from "../../redux/ModalContent";
+import axios from "axios";
+import {useTranslation} from "react-i18next";
+import {getAboutMarker} from "../../redux/markerAbout";
+import i18next from "i18next";
+import MapAbout from "../map/MapAbout";
 
 const AboutPharma = () => {
+    const {t} = useTranslation();
+    const baseUrl = useSelector((store) => store.baseUrl.data);
     const [like, setLike] = useState(false);
+    const [pharmacy, setPharmacy] = useState("");
+    const [comments, setComments] = useState([]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const ShowModal = (status) => {
-        dispatch(showModals({show: true, status}))
+    useEffect(() => {
+        axios.get(`${baseUrl}pharmacy/${localStorage.getItem("pharmacyId")}/`).then((response) => {
+            setPharmacy(response.data);
+            axios.get(`${baseUrl}comment/${response.data.user}/`).then((response) => {
+                setComments(response.data)
+            });
+            dispatch(getAboutMarker(response.data.location));
+        });
+    }, []);
+
+    const isPlaceOpen = (startTime, endTime) => {
+        const startParts = startTime.split(':');
+        const endParts = endTime.split(':');
+
+        const startDate = new Date();
+        startDate.setHours(startParts[0], startParts[1], startParts[2]);
+
+        const endDate = new Date();
+        endDate.setHours(endParts[0], endParts[1], endParts[2]);
+
+        const now = new Date();
+
+        return now >= startDate && now <= endDate;
+    };
+
+    const ShowModal = (status, item) => {
+        dispatch(showModals({show: true, status, item}))
     };
 
     return <div className="about-pharmacies">
         <Navbar/>
-        <div className="pharmaci-box">
+
+        {pharmacy && <div className="pharmaci-box">
             <div className="header">
-                <img src="./images/pharma.png" alt=""/>
+                <img src={pharmacy.image} alt=""/>
             </div>
             <div className="title-pahrma">
-                Oxymed
+                {pharmacy.translations[i18next.language].name}
             </div>
+
             <div className="section-commit">
                 <div className="raiting">
-                    4.9
+                    {pharmacy.avg_rating}
                 </div>
                 <div className="commit-count">
-                    324 ta izoh
+                    {pharmacy.comment_count} ta izoh
                 </div>
                 <span></span>
                 <div className="name">
                     Dorixona
                 </div>
             </div>
+
             <div className="section-commit">
-                <div className="commit-open">
-                    Ochiq
-                </div>
+                {pharmacy.open_24 ? <div
+                    className="open">Ochiq</div> : isPlaceOpen(pharmacy.start_time, pharmacy.end_time) ?
+                    <div className="open">Ochiq</div> :
+                    <div className="close">Yopiq</div>}
                 <span></span>
                 <div className="name">
-                    22:00 da yopiladi
+                    {pharmacy.open_24 ? "24 soat ochiq" : <>
+                        {pharmacy.start_time} dan
+                        &nbsp;
+                        {pharmacy.end_time} gacha
+                    </>}
                 </div>
             </div>
             <div className="map-locations">
                 <div className="map-side">
-                    <Map/>
+                    <MapAbout/>
                 </div>
                 <div className="information-location">
                     <div className="title">
@@ -56,115 +98,76 @@ const AboutPharma = () => {
                         Manzil
                     </div>
                     <div className="info">
-                        Shayxontohur tumani, Kichik Xalqa yo‘li,
+                        {pharmacy.translations[i18next.language].address}
                     </div>
-
                     <div className="title">
                         <img src="./images/time-pharma.png" alt=""/>
                         Ish vaqti
                     </div>
                     <div className="section-commit">
                         <div className="name">
-                            8:00 - 22:00
+                            {pharmacy.open_24 ? "24 soat ochiq" : <>
+                                {pharmacy.start_time} dan
+                                &nbsp;
+                                {pharmacy.end_time} gacha
+                            </>}
                         </div>
                     </div>
-
                     <div className="title">
                         <img src="./images/phone-pharma.png" alt=""/>
                         Bog'lanish
                     </div>
-
                     <div className="contact">
-                        +998 94 100 2002
-                    </div>
-
-                    <div className="social-medias">
-                        <div className="items">
-                            <img src="./images/globe-pahrma.png" alt=""/>
-                        </div>
-
-                        <div className="items">
-                            <img src="./images/instagram-pahrma.png" alt=""/>
-                        </div>
-
-                        <div className="items">
-                            <img src="./images/telegram-pahrma.png" alt=""/>
-                        </div>
+                        {pharmacy.phone1} <br/>
+                        {pharmacy.phone2}
                     </div>
                 </div>
-
             </div>
             <div className="comments-box">
                 <div className="header-commet">
                     <div className="counts">
                         <div className="raiting">
-                            4.9
+                            {pharmacy.avg_rating}
                         </div>
                         <div className="commit-count">
-                            324 ta izoh
+                            {pharmacy.comment_count} ta izoh
                         </div>
                     </div>
-
-                    <div onClick={() => ShowModal("commit")} className="btn-commit">
+                    <div onClick={() => ShowModal("commit", pharmacy.user)} className="btn-commit">
                         <img src="./images/comit.png" alt=""/>
                         Izoh yozib qoldirish
                     </div>
                 </div>
 
-                <div className="commits">
-                    <div className="header-commit">
-                        <div className="left-circle">
-                            D
-                        </div>
-                        <div className="right-names">
-                            <div className="name">Durdona Valiyeva <span>24-fevral, 2023</span></div>
-                            <div className="stars">
-                                <img src="./images/raiting1.png" alt=""/>
-                                <img src="./images/raiting1.png" alt=""/>
-                                <img src="./images/raiting1.png" alt=""/>
-                                <img src="./images/raiting1.png" alt=""/>
-                                <img src="./images/raiting2.png" alt=""/>
+                {comments.map((item, index) => {
+                    return <div key={index} className="commits">
+                        <div className="header-commit">
+                            <div className="left-circle">
+                                {item.name.slice(0, 1)}
+                            </div>
+                            <div className="right-names">
+                                <div className="name">
+                                    {item.name}
+                                    <span>{item.time}</span>
+                                </div>
+                                <div className="stars">
+                                    {Array.from({length: item.mark}).map((_, index) => (
+                                        <img key={index} src="./images/raiting1.png" alt="Rating 1"/>
+                                    ))}
+
+                                    {Array.from({length: 5 - item.mark}).map((_, index) => (
+                                        <img key={index} src="./images/raiting2.png" alt="Rating 2"/>
+                                    ))}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="text-commit">
-                        Chiroyli zamonaviy klinika. Men operatsiyani o‘tkazdim va keyin bir necha kun o‘sha erda
-                        qoldim. Yoqimli va sezgir tibbiyot xodimlari, sabrlari uchun ularga alohida rahmat! Va,
-                        albatta, davolovchi shifokor Rustam Ashurmatovga RAHMAT! Diqqatli va yoqimli
-                        shifokorlar, o‘z sohasining professionallari. Sizga katta rahmat!!!!
-                    </div>
-                </div>
-
-                <div className="commits">
-                    <div className="header-commit">
-                        <div className="left-circle">
-                            D
-                        </div>
-                        <div className="right-names">
-                            <div className="name">Durdona Valiyeva <span>24-fevral, 2023</span></div>
-                            <div className="stars">
-                                <img src="./images/raiting1.png" alt=""/>
-                                <img src="./images/raiting1.png" alt=""/>
-                                <img src="./images/raiting1.png" alt=""/>
-                                <img src="./images/raiting1.png" alt=""/>
-                                <img src="./images/raiting2.png" alt=""/>
-                            </div>
+                        <div className="text-commit">
+                            {item.text}
                         </div>
                     </div>
-                    <div className="text-commit">
-                        Chiroyli zamonaviy klinika. Men operatsiyani o‘tkazdim va keyin bir necha kun o‘sha erda
-                        qoldim. Yoqimli va sezgir tibbiyot xodimlari, sabrlari uchun ularga alohida rahmat! Va,
-                        albatta, davolovchi shifokor Rustam Ashurmatovga RAHMAT! Diqqatli va yoqimli
-                        shifokorlar, o‘z sohasining professionallari. Sizga katta rahmat!!!!
-                    </div>
-                </div>
-
-                <div onClick={() => navigate("/about-clinic")} className="more-btn">
-                    Ko'proq ko'rsatish
-                </div>
+                })}
             </div>
-        </div>
-
+        </div>}
         <Footer/>
     </div>
 };

@@ -8,13 +8,19 @@ import {useDispatch, useSelector} from "react-redux";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import {getLocation} from "../../redux/locationUser";
 import {show} from "../../redux/show-map";
+import {getPharmacies} from "../../redux/pharmacies";
 import MobileNavbar from "../mobile-navbar/MobileNavbar";
+import axios from "axios";
+import {useTranslation} from "react-i18next";
+import i18next from "i18next";
+import {getAboutMarker} from "../../redux/markerAbout";
 
 
 const Pharmacies = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const baseUrl = useSelector((store) => store.baseUrl.data);
+    const Pharmacies = useSelector((store) => store.Pharmacies.data);
     const location = useSelector((store) => store.LocationUser.data);
     const [like, setLike] = useState(false);
     const showMap = useSelector((store) => store.ShowMap.data);
@@ -38,19 +44,23 @@ const Pharmacies = () => {
         {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
     ];
 
-    useEffect(() => {
-        // axios.get(`${baseUrl}hospital-type/`).then((response) => {
-        //     setHospitalList(response.data)
-        // }).catch((error) => {
-        // });
-        //
-        // axios.get(`${baseUrl}speciality/`).then((response) => {
-        //     setServiceList(response.data)
-        // }).catch((error) => {});
-    }, []);
+    const isPlaceOpen = (startTime, endTime) => {
+        const startParts = startTime.split(':');
+        const endParts = endTime.split(':');
+
+        const startDate = new Date();
+        startDate.setHours(startParts[0], startParts[1], startParts[2]);
+
+        const endDate = new Date();
+        endDate.setHours(endParts[0], endParts[1], endParts[2]);
+
+        const now = new Date();
+
+        return now >= startDate && now <= endDate;
+    };
 
     useEffect(() => {
-        if (location.key) {
+        if (location.key + 1) {
             filterHospital(location.key + 1, working24);
             setRegion(location.key + 1)
             setRegionSelect(location.key)
@@ -67,10 +77,9 @@ const Pharmacies = () => {
             .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
             .join('&');
 
-        console.log(filterBox)
-        // axios.get(`${baseUrl}hospital/?${queryString}`).then((response) => {
-        //     dispatch(getClinics(response.data));
-        // })
+        axios.get(`${baseUrl}pharmacy/?${queryString}`).then((response) => {
+            dispatch(getPharmacies(response.data));
+        })
     };
 
     const changeRegion = (region, index) => {
@@ -111,7 +120,6 @@ const Pharmacies = () => {
                                     </FormControl>
                                 </div>
                             </div>
-
                             <div>
                                 <div className="dropdown-filter">
                                     <div onClick={() => {
@@ -127,257 +135,79 @@ const Pharmacies = () => {
 
                         {!showMap && <div className="pharmacies">
                             <div className="pharmacies-box">
-                                <div className="pharma">
-                                    <div className="left-side">
-                                        <img src="./images/pharma.jpeg" alt=""/>
-                                        <div className="like">
-                                            {
-                                                like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png"
-                                                         alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
-                                                         alt=""/>
-                                            }
-                                        </div>
-                                    </div>
-
-                                    <div className="right-side">
-                                        <div className="header-clinic">
-                                            <div className="name-clinic">
-                                                Oxymed
-                                            </div>
-
-                                            <div className="section-commit">
-                                                <div className="raiting">
-                                                    <img src="./images/star2.png" alt=""/>
-                                                    4.88
-                                                </div>
-                                                <span></span>
-                                                <div className="commit-count">
-                                                    (324)
+                                {
+                                    Pharmacies.map((item, index) => {
+                                        return <div key={index} className="pharma">
+                                            <div className="left-side">
+                                                <img src={item.image} alt=""/>
+                                                <div className="like">
+                                                    {
+                                                        like ?
+                                                            <img onClick={() => setLike(false)} src="./images/like.png"
+                                                                 alt=""/> :
+                                                            <img onClick={() => setLike(true)}
+                                                                 src="./images/no-like.png"
+                                                                 alt=""/>
+                                                    }
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div className="right-side">
+                                                <div className="header-clinic">
+                                                    <div className="name-clinic">
+                                                        {item.translations[i18next.language].name}
+                                                    </div>
 
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/icon.png" alt=""/>
-                                                Chilonzor tumani
-                                            </div>
-                                            <span></span>
-                                            <div className="time-open">
-                                                800m
-                                            </div>
-                                        </div>
-
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/time.png" alt=""/>
-                                                {/*<div className="open">Ochiq</div>*/}
-                                                <div className="close">Yopiq</div>
-                                            </div>
-                                            <span></span>
-                                            <div className="time-open">
-                                                9:00 - 15:00
-                                            </div>
-                                        </div>
-
-                                        <div className="buttons">
-                                            <div onClick={() => navigate("/about-pharmacies")} className="more-btn">
-                                                Ko'proq ko'rsatish
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="pharma">
-                                    <div className="left-side">
-                                        <img src="./images/pharma.jpeg" alt=""/>
-                                        <div className="like">
-                                            {
-                                                like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png"
-                                                         alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
-                                                         alt=""/>
-                                            }
-                                        </div>
-                                    </div>
-
-                                    <div className="right-side">
-                                        <div className="header-clinic">
-                                            <div className="name-clinic">
-                                                Oxymed
-                                            </div>
-
-                                            <div className="section-commit">
-                                                <div className="raiting">
-                                                    <img src="./images/star2.png" alt=""/>
-                                                    4.88
+                                                    <div className="section-commit">
+                                                        <div className="raiting">
+                                                            <img src="./images/star2.png" alt=""/>
+                                                            {item.avg_rating}
+                                                        </div>
+                                                        <span></span>
+                                                        <div className="commit-count">
+                                                            ({item.comment_count})
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <span></span>
-                                                <div className="commit-count">
-                                                    (324)
+                                                <div className="section-location">
+                                                    <div className="location">
+                                                        <img src="./images/icon.png" alt=""/>
+                                                        {item.translations[i18next.language].address}
+                                                    </div>
+                                                </div>
+
+                                                <div className="section-location">
+                                                    <div className="location">
+                                                        <img src="./images/time.png" alt=""/>
+                                                        {item.open_24 ? <div
+                                                            className="open">Ochiq</div> : isPlaceOpen(item.start_time, item.end_time) ?
+                                                            <div className="open">Ochiq</div> :
+                                                            <div className="close">Yopiq</div>}
+                                                    </div>
+
+                                                    <span></span>
+                                                    <div className="time-open">
+                                                        {item.open_24 ? "24 soat ochiq" : <>
+                                                            {item.start_time} dan
+                                                            &nbsp;
+                                                            {item.end_time} gacha
+                                                        </>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="buttons">
+                                                    <div onClick={() => {
+                                                        localStorage.setItem("pharmacyId", item.id);
+                                                        dispatch(getAboutMarker(item.location));
+                                                        navigate("/about-pharmacies")
+                                                    }}
+                                                         className="more-btn">
+                                                        Ko'proq ko'rsatish
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/icon.png" alt=""/>
-                                                Chilonzor tumani
-                                            </div>
-                                            <span></span>
-                                            <div className="time-open">
-                                                800m
-                                            </div>
-                                        </div>
-
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/time.png" alt=""/>
-                                                <div className="open">Ochiq</div>
-                                                {/*<div className="close">Yopiq</div>*/}
-                                            </div>
-                                            <span></span>
-                                            <div className="time-open">
-                                                9:00 - 15:00
-                                            </div>
-                                        </div>
-
-                                        <div className="buttons">
-                                            <div onClick={() => navigate("/about-clinic")} className="more-btn">
-                                                Ko'proq ko'rsatish
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="pharma">
-                                    <div className="left-side">
-                                        <img src="./images/pharma.jpeg" alt=""/>
-                                        <div className="like">
-                                            {
-                                                like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png"
-                                                         alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
-                                                         alt=""/>
-                                            }
-                                        </div>
-                                    </div>
-
-                                    <div className="right-side">
-                                        <div className="header-clinic">
-                                            <div className="name-clinic">
-                                                Oxymed
-                                            </div>
-
-                                            <div className="section-commit">
-                                                <div className="raiting">
-                                                    <img src="./images/star2.png" alt=""/>
-                                                    4.88
-                                                </div>
-                                                <span></span>
-                                                <div className="commit-count">
-                                                    (324)
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/icon.png" alt=""/>
-                                                Chilonzor tumani
-                                            </div>
-                                            <span></span>
-                                            <div className="time-open">
-                                                800m
-                                            </div>
-                                        </div>
-
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/time.png" alt=""/>
-                                                {/*<div className="open">Ochiq</div>*/}
-                                                <div className="close">Yopiq</div>
-                                            </div>
-                                            <span></span>
-                                            <div className="time-open">
-                                                9:00 - 15:00
-                                            </div>
-                                        </div>
-
-                                        <div className="buttons">
-                                            <div onClick={() => navigate("/about-clinic")} className="more-btn">
-                                                Ko'proq ko'rsatish
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="pharma">
-                                    <div className="left-side">
-                                        <img src="./images/pharma.jpeg" alt=""/>
-                                        <div className="like">
-                                            {
-                                                like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png"
-                                                         alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
-                                                         alt=""/>
-                                            }
-                                        </div>
-                                    </div>
-
-                                    <div className="right-side">
-                                        <div className="header-clinic">
-                                            <div className="name-clinic">
-                                                Oxymed
-                                            </div>
-
-                                            <div className="section-commit">
-                                                <div className="raiting">
-                                                    <img src="./images/star2.png" alt=""/>
-                                                    4.88
-                                                </div>
-                                                <span></span>
-                                                <div className="commit-count">
-                                                    (324)
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/icon.png" alt=""/>
-                                                Chilonzor tumani
-                                            </div>
-                                            <span></span>
-                                            <div className="time-open">
-                                                800m
-                                            </div>
-                                        </div>
-
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/time.png" alt=""/>
-                                                {/*<div className="open">Ochiq</div>*/}
-                                                <div className="close">Yopiq</div>
-                                            </div>
-                                            <span></span>
-                                            <div className="time-open">
-                                                9:00 - 15:00
-                                            </div>
-                                        </div>
-
-                                        <div className="buttons">
-                                            <div onClick={() => navigate("/about-clinic")} className="more-btn">
-                                                Ko'proq ko'rsatish
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    })
+                                }
                             </div>
                             <Footer/>
                         </div>}
@@ -390,7 +220,7 @@ const Pharmacies = () => {
             </div>
 
             <div onClick={() => dispatch(show(!showMap))} className="map-mobile">
-                {showMap ?  <img className="prev-to" src="./images/next-btn.png" alt=""/> :
+                {showMap ? <img className="prev-to" src="./images/next-btn.png" alt=""/> :
                     <img src="./images/map-mobile.png" alt=""/>}
                 {showMap ? "Orqaga" : "Xaritadan"}
             </div>

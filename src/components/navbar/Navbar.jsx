@@ -73,7 +73,6 @@ const Navbar = () => {
         if (!event.target.matches('.click-profile')) {
             setProfile(false)
         }
-
     };
 
     const ChangeMenu = (url) => {

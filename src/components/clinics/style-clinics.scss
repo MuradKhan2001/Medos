@@ -326,7 +326,7 @@
 
               .section-location {
                 margin-top: 10px;
-                display: flex;
+                display: block;
                 align-items: center;
 
                 .location {
@@ -341,16 +341,8 @@
                   color: rgba(38, 45, 51, 1);
                 }
 
-                span {
-                  width: 3px;
-                  height: 3px;
-                  background-color: rgba(133, 145, 158, 1);
-                  margin-right: 10px;
-                  margin-left: 10px;
-                  border-radius: 50%;
-                }
-
                 .time-open {
+                  margin-top: 10px;
                   display: flex;
                   align-items: center;
 

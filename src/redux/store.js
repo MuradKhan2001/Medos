@@ -7,6 +7,7 @@ import Clinics from "./clinics";
 import ModalContent from "./ModalContent";
 import Alerts from  "./AlertsBox";
 import Doctors from "./doctors";
+import MarkerAbout from "./markerAbout";
 import Pharmacies from "./pharmacies";
 
 
@@ -20,6 +21,7 @@ export const store = configureStore({
         Doctors,
         Pharmacies,
         Alerts,
-        Clinics
+        Clinics,
+        MarkerAbout
     }
 });

@@ -1,5 +1,5 @@
 import {useEffect, useState, useMemo} from "react";
-import {GoogleMap,useLoadScript} from "@react-google-maps/api";
+import {GoogleMap, useLoadScript} from "@react-google-maps/api";
 import i18next from "i18next";
 import {GOOGLE_MAPS_API_KEY} from "./googleMapsApi";
 import axios from "axios";
@@ -11,10 +11,11 @@ import {useNavigate} from "react-router-dom";
 import ClinicMarkers from "./ClinicMarkers";
 import DoctorMarkers from "./DoctorMarkers";
 import PharmaciesMarkers from "./PharmaciesMarkers";
+import AboutMarker from "./AboutMarker";
 
 const libraries = ["places"];
 
-const Clinics = () => {
+const Map = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [onloadMap, setOnloadMap] = useState(false)
@@ -50,13 +51,13 @@ const Clinics = () => {
         []
     );
 
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const {latitude, longitude} = position.coords;
-            let locMy = {lat: Number(latitude), lng: Number(longitude)}
-            setCenter(locMy)
-        });
-    }, []);
+    // useEffect(() => {
+    //     navigator.geolocation.getCurrentPosition((position) => {
+    //         const {latitude, longitude} = position.coords;
+    //         let locMy = {lat: Number(latitude), lng: Number(longitude)}
+    //         setCenter(locMy)
+    //     });
+    // }, []);
 
     useEffect(() => {
         if (isLoaded) {
@@ -90,7 +91,7 @@ const Clinics = () => {
     return <>
         <GoogleMap
             zoom={9}
-            center={{lat: 41.295695, lng: 69.239730}}
+            center={center}
             options={options}
             mapContainerClassName="map"
             onLoad={() => setOnloadMap(true)}
@@ -103,11 +104,11 @@ const Clinics = () => {
                 <img className={showMap ? "hide-img" : ""} src="./images/Vector.png" alt=""/>
             </div>
 
-            {onloadMap && (window.location.pathname === "/about-clinic" || window.location.pathname === "/") && <ClinicMarkers/>}
-            {onloadMap && (window.location.pathname === "/about-doctor" || window.location.pathname === "/doctors") && <DoctorMarkers/>}
-            {onloadMap && (window.location.pathname === "/about-pharmacies" || window.location.pathname === "/pharmacies") && <PharmaciesMarkers/>}
+            {onloadMap && window.location.pathname === "/" && <ClinicMarkers/>}
+            {onloadMap && window.location.pathname === "/doctors" && <DoctorMarkers/>}
+            {onloadMap && window.location.pathname === "/pharmacies" && <PharmaciesMarkers/>}
         </GoogleMap>
     </>
 };
 
-export default Clinics
+export default Map

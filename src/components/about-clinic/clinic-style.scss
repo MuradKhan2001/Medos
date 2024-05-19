@@ -1,293 +1,4 @@
 .about-clinic-box {
-
-  .alert-enter {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  .alert-enter-active {
-    opacity: 1;
-    transform: translateX(0);
-    transition: opacity 300ms, transform 300ms;
-  }
-
-  .alert-exit {
-    opacity: 1;
-  }
-
-  .alert-exit-active {
-    opacity: 0;
-    transform: scale(0.9);
-    transition: opacity 300ms, transform 300ms;
-  }
-
-  .modal-sloy {
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0, 0, 0, 0.4);
-    z-index: 100;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-
-    .modal-card {
-      width: max-content;
-      height: max-content;
-      background-color: white;
-      box-shadow: 0 33px 97px 0 #002C5714;
-      border-radius: 12px;
-
-      .send-sms {
-        width: 380px;
-        padding: 20px;
-
-        .header {
-          width: 100%;
-          display: flex;
-          justify-content: flex-end;
-
-          .xbtn {
-            img {
-              width: 20px;
-              cursor: pointer;
-            }
-          }
-        }
-
-        .title {
-          font-size: 24px;
-          font-weight: bold;
-          text-align: center;
-        }
-
-        .description {
-          margin-top: 15px;
-          text-align: center;
-          color: rgba(133, 145, 158, 1);
-        }
-
-        .inputs-box {
-          input {
-            background-color: rgba(180, 192, 204, 0.16);
-            border: none;
-            height: 45px;
-            width: 100%;
-            padding-left: 15px;
-
-            &::placeholder {
-              color: rgba(133, 145, 158, 1);
-              font-size: 16px;
-            }
-
-            border-radius: 10px;
-            margin-top: 20px;
-
-            &:focus {
-              outline: 1px solid rgba(0, 173, 173, 1);
-            }
-          }
-
-          textarea {
-            background-color: rgba(180, 192, 204, 0.16);
-            border: none;
-            height: 80px;
-            width: 100%;
-
-            &::placeholder {
-              color: rgba(133, 145, 158, 1);
-              font-size: 16px;
-            }
-
-            border-radius: 5px;
-            margin-top: 20px;
-            padding: 7px;
-
-            &:focus {
-              outline: 1px solid rgba(0, 173, 173, 1);
-            }
-          }
-        }
-
-        .buttons-box {
-          margin-top: 20px;
-          display: flex;
-          width: 100%;
-          justify-content: space-around;
-
-          .cancel-btn {
-            background-color: rgba(180, 192, 204, 0.16);
-            border-radius: 10px;
-            padding: 10px 30px;
-            color: rgba(38, 45, 51, 1);
-            cursor: pointer;
-          }
-
-          .send-btn {
-            background-color: rgba(0, 173, 173, 1);
-            border-radius: 10px;
-            padding: 8px 30px;
-            color: white;
-            cursor: pointer;
-          }
-        }
-      }
-
-      .contact {
-        width: 380px;
-        padding: 20px;
-
-        .header {
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
-
-          .xbtn {
-            img {
-              width: 20px;
-              cursor: pointer;
-            }
-          }
-
-          .title {
-            font-size: 18px;
-            font-weight: bold;
-            color: rgba(38, 45, 51, 1);
-          }
-        }
-
-        .title-contact {
-          margin-top: 15px;
-          color: rgba(133, 145, 158, 1);
-          font-size: 14px;
-        }
-
-        .content {
-          color: rgba(38, 45, 51, 1);
-          font-size: 16px;
-
-          .phone {
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 24px;
-            color: rgba(38, 45, 51, 1);
-            font-weight: bold;
-          }
-
-          a {
-            text-decoration: none;
-            color: rgba(38, 45, 51, 1);
-          }
-        }
-      }
-
-      .send-commit {
-        width: 380px;
-        padding: 20px;
-
-        .header {
-          width: 100%;
-          display: flex;
-          justify-content: flex-end;
-
-          .xbtn {
-            img {
-              width: 20px;
-              cursor: pointer;
-            }
-          }
-        }
-
-        .title {
-          font-size: 24px;
-          font-weight: bold;
-          text-align: center;
-        }
-
-        .stars {
-          margin-top: 10px;
-          width: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .description {
-          margin-top: 15px;
-          text-align: center;
-          color: rgba(133, 145, 158, 1);
-        }
-
-        .inputs-box {
-          input {
-            background-color: rgba(180, 192, 204, 0.16);
-            border: none;
-            height: 45px;
-            width: 100%;
-            padding-left: 15px;
-
-            &::placeholder {
-              color: rgba(133, 145, 158, 1);
-              font-size: 16px;
-            }
-
-            border-radius: 10px;
-            margin-top: 20px;
-
-            &:focus {
-              outline: 1px solid rgba(0, 173, 173, 1);
-            }
-          }
-
-          textarea {
-            background-color: rgba(180, 192, 204, 0.16);
-            border: none;
-            height: 80px;
-            width: 100%;
-
-            &::placeholder {
-              color: rgba(133, 145, 158, 1);
-              font-size: 16px;
-            }
-
-            border-radius: 5px;
-            margin-top: 20px;
-            padding: 7px;
-
-            &:focus {
-              outline: 1px solid rgba(0, 173, 173, 1);
-            }
-          }
-
-          .description {
-            margin-top: 5px;
-            font-size: 12px;
-            text-align: start;
-            color: rgba(133, 145, 158, 1);
-          }
-        }
-
-        .send-btn {
-          margin-top: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: rgba(0, 173, 173, 1);
-          border-radius: 10px;
-          padding: 10px 30px;
-          color: white;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
-
   .about-hospital {
     padding-left: 80px;
     padding-right: 80px;
@@ -425,31 +136,11 @@
         height: 300px;
         display: flex;
 
-        .images-box {
-          width: max-content;
-          height: 100%;
-          display: flex;
-          overflow-x: auto;
-          padding: 10px;
-
-          .image-hospital {
-            width: 320px;
-            height: 100%;
-            margin-right: 10px;
-
-            img {
-              object-fit: cover;
-              width: 100%;
-              height: 100%;
-              border-radius: 10px;
-            }
-          }
-        }
-
         .location-box {
           padding: 10px;
           width: 50%;
           height: 100%;
+
           .map {
             width: 100%;
             height: 100%;
@@ -1280,6 +971,625 @@
           }
         }
       }
+    }
+  }
+
+  .mobile-navbar-container {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-clinic-box {
+    .about-hospital {
+      padding-left: 15px;
+      padding-right: 15px;
+
+      .header {
+        width: 100%;
+        margin-top: 30px;
+        display: block;
+
+        .title {
+          text-align: center;
+          width: 100%;
+          font-size: 20px;
+          font-weight: bold;
+        }
+
+        .buttons {
+          margin-top: 15px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+        }
+      }
+
+      .body {
+        width: 100%;
+        margin-bottom: 60px;
+
+        .images-location {
+          margin-top: 20px;
+          width: 100%;
+          height: max-content;
+          display: block;
+          padding: 0;
+          .images-box {
+            width: 100%;
+            height: 220px;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            img{
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+
+          .location-box {
+            margin-top: 20px;
+            padding: 5px;
+            width: 100%;
+            height: 350px;
+
+            .map {
+              width: 100%;
+              height: 100%;
+              position: relative;
+
+              .gm-style-iw-c {
+                margin-top: -50px;
+                box-shadow: rgba(230, 230, 230, 0.16) 0px 10px 36px 0px, rgba(255, 255, 255, 0.06) 0px 0px 0px 1px;
+              }
+
+              .gm-style-iw-tc {
+                margin-top: -50px;
+              }
+
+              .info-box-clinic {
+                display: none;
+                width: 200px;
+
+                .photo-clinic {
+                  width: 100%;
+                  height: 20%;
+                  display: flex;
+                  justify-content: center;
+
+                  img {
+                    width: 80%;
+                    height: 100%;
+                    object-fit: cover;
+                  }
+                }
+
+                .content {
+                  width: 100%;
+                  height: 50%;
+
+                  .title {
+                    text-align: center;
+                    font-size: 14px;
+                    margin-top: 7px;
+                    font-weight: bold;
+                  }
+
+                  .header-clinic {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+
+
+                    .name-clinic {
+                      color: #262D33;
+                      font-weight: 600;
+                      font-size: 18px;
+                    }
+
+                    .buttons {
+                      display: flex;
+
+                      .button-call {
+                        padding: 8px 15px;
+                        border-radius: 10px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: #EDF7F7;
+                        color: #00ADAD;
+                        margin-right: 10px;
+                        cursor: pointer;
+                      }
+
+                      .button-send {
+                        cursor: pointer;
+                        padding: 8px 15px;
+                        border-radius: 10px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: #00ADAD;
+                        color: white;
+                      }
+                    }
+                  }
+
+                  .section-commit {
+                    margin-top: 5px;
+                    display: flex;
+                    align-items: center;
+
+                    .raiting {
+                      width: max-content;
+                      background: rgb(255, 221, 140);
+                      background: linear-gradient(107deg, rgba(255, 221, 140, 1) 0%, rgba(219, 157, 22, 1) 100%);
+                      padding: 2px 10px;
+                      color: white;
+                      border-radius: 10px;
+                      margin-right: 10px;
+                    }
+
+                    .commit-count {
+                      color: rgba(133, 145, 158, 1);
+                      font-size: 14px;
+                      margin-right: 10px;
+                    }
+
+                    span {
+                      width: 3px;
+                      height: 3px;
+                      background-color: rgba(133, 145, 158, 1);
+                      margin-right: 10px;
+                      border-radius: 50%;
+                    }
+
+                    .name {
+                      color: rgba(133, 145, 158, 1);
+                      font-size: 14px;
+                    }
+                  }
+
+                  .section-location {
+                    margin-top: 10px;
+                    display: flex;
+                    align-items: center;
+
+                    .time-open {
+                      display: flex;
+                      align-items: center;
+
+                      img {
+                        width: 15px;
+                        margin-right: 5px;
+                      }
+
+                      color: rgba(38, 45, 51, 1);
+                    }
+                  }
+
+                  .more-btn {
+                    cursor: pointer;
+                    margin-top: 10px;
+                    width: max-content;
+                    color: rgba(0, 173, 173, 1);
+                    font-size: 14px;
+                    border-bottom: 1px dashed rgba(0, 173, 173, 1);
+                  }
+                }
+              }
+
+              .show-hide-btn {
+                display: none;
+              }
+
+              .my-location {
+                position: absolute;
+                right: 60px;
+                bottom: 22px;
+                width: 40px;
+                height: 40px;
+                background-color: white;
+                box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+
+                img {
+                  width: 60%;
+                }
+              }
+            }
+          }
+        }
+        .tab-hospital {
+          .tab {
+            font-size: 14px;
+            margin-right: 15px;
+          }
+        }
+
+        .all-info {
+          margin-top: 30px;
+          width: 100%;
+
+          .all-info-hospital {
+            .title {
+              color: rgba(38, 45, 51, 1);
+              font-weight: 600;
+              font-size: 22px;
+            }
+
+            .des {
+              margin-top: 10px;
+              color: rgba(38, 45, 51, 1);
+              font-weight: 400;
+              font-size: 16px;
+            }
+          }
+
+          .service-hospital {
+            .title {
+              margin-top: 40px;
+              color: rgba(38, 45, 51, 1);
+              font-weight: 600;
+              font-size: 22px;
+            }
+            .contents {
+              .service {
+                margin-right: 10px;
+                width: max-content;
+              }
+            }
+            .more-btn {
+              cursor: pointer;
+              margin-top: 10px;
+              width: max-content;
+              color: rgba(0, 173, 173, 1);
+              font-size: 16px;
+              border-bottom: 1px dashed rgba(0, 173, 173, 1);
+            }
+          }
+
+          .comments-box {
+            margin-top: 30px;
+            width: 100%;
+
+            .header-commet {
+              width: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+
+              .counts {
+                display: flex;
+                align-items: center;
+
+                .raiting {
+                  padding: 3px 8px;
+                  color: white;
+                  margin-right: 8px;
+                }
+
+                .commit-count {
+                  font-size: 14px;
+                  margin-right: 6px;
+                }
+              }
+              .btn-commit {
+                padding: 7px 15px;
+              }
+            }
+
+            .commits {
+              margin-top: 20px;
+              width: 100%;
+              .header-commit {
+                display: flex;
+                align-items: center;
+
+                .left-circle {
+                  width: 40px;
+                  height: 40px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: white;
+                  border-radius: 50%;
+                  background-color: rgba(250, 128, 66, 1);
+                  margin-right: 15px;
+                }
+                .right-names {
+                  .name {
+                    font-size: 14px;
+                  }
+                }
+              }
+              .text-commit {
+                font-size: 12px;
+              }
+            }
+          }
+        }
+
+        .doctors {
+          width: 100%;
+          margin-top: 30px;
+
+          .doctor {
+            padding: 10px;
+            margin: 0;
+            width: 100%;
+            display: block;
+
+            .left-side {
+              margin: 0 auto;
+              width: 55%;
+              height: 250px;
+
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+            }
+
+            .right-side {
+              display: block;
+              margin-top: 15px;
+              width: 100%;
+              height: 100%;
+              padding: 10px;
+
+              .header-clinic {
+                width: 100%;
+                display: flex;
+
+
+                .name-clinic {
+                  color: #262D33;
+                  font-weight: 600;
+                  font-size: 18px;
+                }
+
+                .section-commit {
+                  margin-left: 20px;
+                  display: flex;
+                  align-items: center;
+
+                  .raiting {
+                    display: flex;
+                    align-items: center;
+                    color: rgba(253, 102, 112, 1);
+                    margin-right: 10px;
+
+                    img {
+                      width: 20px;
+                      margin-right: 10px;
+                    }
+                  }
+
+                  .commit-count {
+                    color: rgba(133, 145, 158, 1);
+                    font-size: 14px;
+                    margin-right: 10px;
+                  }
+
+                  span {
+                    width: 3px;
+                    height: 3px;
+                    background-color: rgba(133, 145, 158, 1);
+                    margin-right: 10px;
+                    border-radius: 50%;
+                  }
+
+                  .name {
+                    color: rgba(133, 145, 158, 1);
+                    font-size: 14px;
+                  }
+                }
+              }
+
+              .section-location {
+                margin-top: 10px;
+                display: flex;
+                align-items: center;
+
+                .location {
+                  display: flex;
+                  align-items: center;
+
+                  img {
+                    width: 17px;
+                    margin-right: 5px;
+                  }
+
+                  color: rgba(38, 45, 51, 1);
+                }
+
+                span {
+                  width: 3px;
+                  height: 3px;
+                  background-color: rgba(133, 145, 158, 1);
+                  margin-right: 10px;
+                  margin-left: 10px;
+                  border-radius: 50%;
+                }
+
+                .time-open {
+                  display: flex;
+                  align-items: center;
+
+                  img {
+                    width: 17px;
+                    margin-right: 5px;
+                  }
+
+                  color: rgba(38, 45, 51, 1);
+                }
+              }
+
+              .services {
+                display: flex;
+                flex-wrap: wrap;
+
+                .service {
+                  margin-top: 10px;
+                  border-radius: 20px;
+                  padding: 5px 12px;
+                  color: rgba(38, 45, 51, 1);
+                  font-size: 12px;
+                  margin-right: 6px;
+                  background-color: rgba(180, 192, 204, 0.16);
+                }
+              }
+
+              .prices {
+                width: 100%;
+                margin-top: 10px;
+                padding-top: 5px;
+                border-top: 1px solid rgba(180, 192, 204, 0.28);
+
+                .item-price {
+                  margin-top: 8px;
+                  width: 100%;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  border-bottom: 2px dotted rgba(133, 145, 158, 1);
+
+                  .title {
+                    background-color: white;
+                    color: rgba(133, 145, 158, 1);
+                    margin-bottom: -6px;
+                    padding-right: 5px;
+                  }
+
+                  .number {
+                    background-color: white;
+                    margin-bottom: -6px;
+                    font-weight: bold;
+                    color: rgba(38, 45, 51, 1);
+                    padding-left: 5px;
+                  }
+                }
+              }
+
+              .buttons {
+                margin-top: 15px;
+                display: flex;
+                justify-content: flex-end;
+
+                .left-btn {
+                  display: none;
+                }
+
+                .more-btn {
+                  cursor: pointer;
+                  margin-top: 10px;
+                  width: max-content;
+                  color: rgba(0, 173, 173, 1);
+                  font-size: 14px;
+                  border-bottom: 1px dashed rgba(0, 173, 173, 1);
+                }
+              }
+            }
+
+          }
+        }
+
+        .all-commits {
+          margin-top: 20px;
+          width: 100%;
+
+          .header-commet {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .counts {
+              display: flex;
+              align-items: center;
+
+              .raiting {
+                padding: 3px 8px;
+                color: white;
+                margin-right: 8px;
+              }
+
+              .commit-count {
+                font-size: 14px;
+                margin-right: 6px;
+              }
+            }
+            .btn-commit {
+              padding: 7px 15px;
+            }
+          }
+
+          .commits {
+            margin-top: 20px;
+            width: 100%;
+            .header-commit {
+              display: flex;
+              align-items: center;
+
+              .left-circle {
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                border-radius: 50%;
+                background-color: rgba(250, 128, 66, 1);
+                margin-right: 15px;
+              }
+              .right-names {
+                .name {
+                  font-size: 14px;
+                }
+              }
+            }
+            .text-commit {
+              font-size: 12px;
+            }
+          }
+        }
+
+        .service-box {
+          .one-service {
+            margin-top: 20px;
+            width: 100%;
+
+            .title {
+              font-size: 16px;
+            }
+
+            .service {
+              margin-top: 20px;
+              .name {
+                font-size: 14px;
+              }
+              .value {
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .mobile-navbar-container {
+      width: 100%;
+      display: flex;
     }
   }
 }

@@ -1,9 +1,17 @@
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import "./style-services.scss"
-
+import {useEffect, useState} from "react";
+import axios from "axios";
+import {useTranslation} from "react-i18next";
+import i18next from "i18next"
+import {getAboutMarker} from "../../redux/markerAbout";
+import {useSelector} from "react-redux";
 
 const Service = () => {
+    const {t} = useTranslation();
+    const baseUrl = useSelector((store) => store.baseUrl.data);
+    const [services, setServices] = useState([])
     const Category = [
         {id: 1, name: "Barchasi", count: 14},
         {id: 2, name: "Narkologlar", count: 4},
@@ -16,6 +24,15 @@ const Service = () => {
         {id: 4, name: "Mammolog", count: 2},
     ];
 
+
+    useEffect(() => {
+
+        axios.get(`${baseUrl}services/`).then((response) => {
+            setServices(response.data);
+        });
+
+    }, []);
+
     return <div className="service-container">
         <Navbar/>
 
@@ -26,111 +43,36 @@ const Service = () => {
 
             <div className="services-tab">
                 {
-                    Category.map((item, index) => {
+                    services.map((item, index) => {
                         return <div key={index}>
                             <div className="category-name">
-                                {item.name} <span></span> {item.count}
+                                {item.translations[i18next.language].name} <span></span> {item.hospital_count}
                             </div>
                         </div>
                     })
                 }
             </div>
 
-            <div className="service-content">
-                <div className="title-service">
-                    Angiyografiya <span></span>
-                    <div className="num">
-                        9
+            {services.map((item, index) => {
+                return <div key={index} className="service-content">
+                    <div className="title-service">
+                        {item.translations[i18next.language].name} <span></span>
+                        <div className="num">
+                            {item.hospital_count}
+                        </div>
                     </div>
-                </div>
-                <div className="services">
-                    <div className="service">
-                        Qorin bo‘lgan angiografiyasi
-                    </div>
-                    <div className="service">
-                        Miya angiografiyasi
-                    </div>
-                    <div className="service">
-                        Ko‘krak qafasi angiografiyasi
-                    </div>
-                    <div className="service">
-                        Qorin bo‘lgan angiografiyasi
-                    </div>
-                    <div className="service">
-                        Miya angiografiyasi
-                    </div>
-                    <div className="service">
-                        Ko‘krak qafasi angiografiyasi
-                    </div>
-                </div>
-                <div className="more-btn">
-                    Ko‘proq ko‘rsatish
-                </div>
-            </div>
 
-            <div className="service-content">
-                <div className="title-service">
-                    Doppler (ultratovushli doppler) <span></span>
-                    <div className="num">
-                        20
-                    </div>
-                </div>
-                <div className="services">
-                    <div className="service">
-                        Qorin bo‘lgan angiografiyasi
-                    </div>
-                    <div className="service">
-                        Miya angiografiyasi
-                    </div>
-                    <div className="service">
-                        Ko‘krak qafasi angiografiyasi
-                    </div>
-                    <div className="service">
-                        Qorin bo‘lgan angiografiyasi
-                    </div>
-                    <div className="service">
-                        Miya angiografiyasi
-                    </div>
-                    <div className="service">
-                        Ko‘krak qafasi angiografiyasi
-                    </div>
-                </div>
-                <div className="more-btn">
-                    Ko‘proq ko‘rsatish
-                </div>
-            </div>
+                    <div className="services">
+                        {item.sub_service_list.map((item, index) => {
+                            return <div className="service">
+                                {item.translations[i18next.language].name}
+                            </div>
+                        })}
 
-            <div className="service-content">
-                <div className="title-service">
-                    Dupleks skanerlash <span></span>
-                    <div className="num">
-                        22
                     </div>
                 </div>
-                <div className="services">
-                    <div className="service">
-                        Qorin bo‘lgan angiografiyasi
-                    </div>
-                    <div className="service">
-                        Miya angiografiyasi
-                    </div>
-                    <div className="service">
-                        Ko‘krak qafasi angiografiyasi
-                    </div>
-                    <div className="service">
-                        Qorin bo‘lgan angiografiyasi
-                    </div>
-                    <div className="service">
-                        Miya angiografiyasi
-                    </div>
-                    <div className="service">
-                        Ko‘krak qafasi angiografiyasi
-                    </div>
-                </div>
-                <div className="more-btn">
-                    Ko‘proq ko‘rsatish
-                </div>
-            </div>
+            })}
+
 
         </div>
         <Footer/>

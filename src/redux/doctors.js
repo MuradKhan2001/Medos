@@ -3,7 +3,7 @@ import {createSlice} from "@reduxjs/toolkit"
 export const Doctors = createSlice({
     name: "Doctors",
     initialState: {
-        data: [{id: 1, latitude: "41.311153", longitude: "69.279729"}]
+        data: []
     },
     reducers: {
         getDoctor: (state, {payload}) => {

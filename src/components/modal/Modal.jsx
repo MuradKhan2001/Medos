@@ -5,9 +5,11 @@ import ReactStars from "react-stars";
 import {hideModal, showModals} from "../../redux/ModalContent";
 import "./style.scss";
 import {useFormik} from "formik";
-import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import {addAlert, delAlert} from "../../redux/AlertsBox";
+import i18next from "i18next";
+import axios from "axios";
+import {useTranslation} from "react-i18next";
 
 const Modal = () => {
     const {t} = useTranslation();
@@ -17,6 +19,7 @@ const Modal = () => {
     const modalContent = useSelector((store) => store.ModalContent.data);
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [raidCount, setRaidCount] = useState();
+
 
     const validate = (values) => {
         const errors = {};
@@ -33,6 +36,7 @@ const Modal = () => {
         }
         return errors;
     };
+
     const formReception = useFormik({
         initialValues: {
             name: "",
@@ -43,64 +47,50 @@ const Modal = () => {
         onSubmit: (values) => {
             let reception = {
                 ...values,
-                user: modalContent.id
+                user: modalContent.item
             };
 
             let rate = {
                 ...values,
-                user: modalContent.id,
+                user: modalContent.item,
                 mark: raidCount
             };
 
             if (modalContent.status === "sms") {
-                console.log(reception)
-
-                let idAlert = Date.now();
-                let alert = {
-                    id: idAlert,
-                    text: "Xabar yuborildi!",
-                    img: "./images/green.svg",
-                    color: "#EDFFFA",
-                };
-                dispatch(addAlert(alert));
-                setTimeout(() => {
-                    dispatch(delAlert(idAlert));
-                }, 5000);
-                dispatch(hideModal({show: false}))
-                formReception.resetForm()
-
-                // axios.post(`${baseUrl}patient/`, reception).then((response) => {
-                //     setSuccess(true)
-                //     setTimeout(() => {
-                //         setSuccess(false)
-                //     }, 4000)
-                //     formik.resetForm()
-                // });
+                console.log(reception);
+                axios.post(`${baseUrl}patient/`, reception).then((response) => {
+                    let idAlert = Date.now();
+                    let alert = {
+                        id: idAlert,
+                        text: "Xabar yuborildi!",
+                        img: "./images/green.svg",
+                        color: "#EDFFFA",
+                    };
+                    dispatch(addAlert(alert));
+                    setTimeout(() => {
+                        dispatch(delAlert(idAlert));
+                    }, 5000);
+                    dispatch(hideModal({show: false}));
+                    formReception.resetForm();
+                });
             }
 
             if (modalContent.status === "commit") {
-                console.log(rate)
-
-                let idAlert = Date.now();
-                let alert = {
-                    id: idAlert,
-                    text: "Baxolandi!",
-                    img: "./images/green.svg",
-                    color: "#EDFFFA",
-                };
-                dispatch(addAlert(alert));
-                setTimeout(() => {
-                    dispatch(delAlert(idAlert));
-                }, 5000);
-                dispatch(hideModal({show: false}))
-                formReception.resetForm()
-                // axios.post(`${baseUrl}comment/`, rate).then((response) => {
-                //     setSuccess(true)
-                //     setTimeout(() => {
-                //         setSuccess(false)
-                //     }, 4000)
-                //     formik.resetForm()
-                // });
+                axios.post(`${baseUrl}comment/`, rate).then((response) => {
+                    let idAlert = Date.now();
+                    let alert = {
+                        id: idAlert,
+                        text: "Baxolandi!",
+                        img: "./images/green.svg",
+                        color: "#EDFFFA",
+                    };
+                    dispatch(addAlert(alert));
+                    setTimeout(() => {
+                        dispatch(delAlert(idAlert));
+                    }, 5000);
+                    dispatch(hideModal({show: false}))
+                    formReception.resetForm()
+                });
             }
         },
     });
@@ -163,7 +153,14 @@ const Modal = () => {
                     <div className="contact">
                         <div className="header">
                             <div className="title">
-                                Akfa medline
+                                {modalContent.item.translations[i18next.language].name ?
+                                    modalContent.item.translations[i18next.language].name :
+                                    <>
+                                        {modalContent.item.translations[i18next.language].first_name} &nbsp;
+                                        {modalContent.item.translations[i18next.language].last_name} &nbsp;
+                                        {modalContent.item.translations[i18next.language].middle_name}
+                                    </>
+                                }
                             </div>
                             <div className="xbtn">
                                 <img onClick={() => dispatch(hideModal({show: false}))} src="./images/cancel.png"
@@ -172,16 +169,20 @@ const Modal = () => {
                         </div>
                         <div className="title-contact">Ish vaqti</div>
                         <div className="content">
-                            Har kuni: 08:00 dan 18:00 gacha
+                            {modalContent.item.open_24 ? "24 soat ochiq" : <>
+                                {modalContent.item.start_time} dan
+                                &nbsp;
+                                {modalContent.item.end_time} gacha
+                            </>}
                         </div>
 
                         <div className="title-contact">Bog‘lanish uchun telefon raqmalar</div>
                         <div className="content">
                             <div className="phone">
-                                +998 90 000 00 00
+                                {modalContent.item.phone1 ? modalContent.item.phone1 : modalContent.item.phone}
                             </div>
                             <div className="phone">
-                                +998 90 000 00 00
+                                {modalContent.item.phone2}
                             </div>
                         </div>
                     </div>}

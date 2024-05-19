@@ -1,8 +1,13 @@
 import {InfoWindow, MarkerF} from "@react-google-maps/api";
 import {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
+import i18next from "i18next";
+import {getAboutMarker} from "../../redux/markerAbout";
+import {useNavigate} from "react-router-dom";
 
 const ClinicMarkers = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const clinics = useSelector((store) => store.Clinics.data);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [clinicActiveId, setClinicActiveId] = useState(null);
@@ -22,7 +27,7 @@ const ClinicMarkers = () => {
         {clinics.map((item, index) => {
             return <MarkerF
                 key={index}
-                position={{lat: Number(item.latitude), lng: Number(item.longitude)}}
+                position={{lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])}}
                 icon={clinicActiveId === item.id ? icon2 : icon}
                 onClick={() => {
                     onMarkerClick(item);
@@ -33,48 +38,46 @@ const ClinicMarkers = () => {
 
         {selectedLocation && (<InfoWindow
             position={{
-                lat: Number(selectedLocation.latitude),
-                lng: Number(selectedLocation.longitude)
+                lat: Number(selectedLocation.location.split(",")[0]),
+                lng: Number(selectedLocation.location.split(",")[1])
             }}
             onCloseClick={onCloseClick}
         >
             <div className="info-box-clinic">
                 <div className="info-text">
                     <div className="photo-clinic">
-                        <img src="./images/clinic.png" alt=""/>
+                        <img src={selectedLocation.image} alt=""/>
                     </div>
                     <div className="content">
-                        <div className="title">Respublika ixtisoslashtirilgan
-                            kardiologiya markazi
+                        <div className="title">
+                            {selectedLocation.translations[i18next.language].name}
                         </div>
-
-
                         <div className="section-commit">
                             <div className="raiting">
-                                4.9
+                                {selectedLocation.avg_rating}
                             </div>
                             <div className="commit-count">
-                                324 ta izoh
-                            </div>
-                            <span></span>
-                            <div className="name">
-                                Kasalxona
+                                {selectedLocation.comment_count} ta izoh
                             </div>
                         </div>
-
                         <div className="section-location">
                             <div className="time-open">
                                 <img src="./images/clock.png" alt=""/>
-                                08:00 dan 18:00 gacha
+                                {selectedLocation.open_24 ? "24 soat ochiq" : <>
+                                    {selectedLocation.start_time} dan
+                                    &nbsp;
+                                    {selectedLocation.end_time} gacha
+                                </>}
                             </div>
                         </div>
-
-                        <div className="more-btn">
+                        <div onClick={() => {
+                            navigate("/about-clinic");
+                            localStorage.setItem("clinicId", selectedLocation.id);
+                            dispatch(getAboutMarker(selectedLocation.location))
+                        }} className="more-btn">
                             Ko'proq ko'rsatish
                         </div>
-
                     </div>
-
                 </div>
             </div>
         </InfoWindow>)}

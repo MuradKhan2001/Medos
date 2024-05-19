@@ -2,14 +2,17 @@ import "./style-clinics.scss";
 import Navbar from "../navbar/Navbar";
 import {useEffect, useState, useMemo, useRef} from "react";
 import {MenuItem, InputLabel, FormControl, Select} from "@mui/material";
+import {useTranslation} from "react-i18next";
+import i18next from "i18next";
 import {useNavigate} from "react-router-dom";
 import Footer from "../footer/Footer";
 import {useDispatch, useSelector} from "react-redux";
 import Map from "../map/Map";
 import {showModals} from "../../redux/ModalContent";
 import axios from "axios";
-import i18next from "i18next";
 import {getLocation} from "../../redux/locationUser";
+import {getClinics} from "../../redux/clinics";
+import {getAboutMarker} from "../../redux/markerAbout";
 import MobileNavbar from "../mobile-navbar/MobileNavbar";
 import {show} from "../../redux/show-map";
 
@@ -17,14 +20,15 @@ import {show} from "../../redux/show-map";
 const Clinics = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const {t} = useTranslation();
+    const clinics = useSelector((store) => store.Clinics.data);
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const showMap = useSelector((store) => store.ShowMap.data);
     const location = useSelector((store) => store.LocationUser.data);
     const [like, setLike] = useState(false);
     const [serviceList, setServiceList] = useState([]);
     const [regionSelect, setRegionSelect] = useState("");
-
-    const [hospitalList, setHospitalList] = useState([{name: "test", id: 1}]);
+    const [hospitalList, setHospitalList] = useState([]);
     const [hospitalType, setHospitalType] = useState("");
     const [region, setRegion] = useState("");
     const [type, setType] = useState("")
@@ -49,26 +53,27 @@ const Clinics = () => {
     ];
 
     useEffect(() => {
-        // axios.get(`${baseUrl}hospital-type/`).then((response) => {
-        //     setHospitalList(response.data)
-        // }).catch((error) => {
-        // });
-        //
-        // axios.get(`${baseUrl}speciality/`).then((response) => {
-        //     setServiceList(response.data)
-        // }).catch((error) => {});
+        axios.get(`${baseUrl}hospital-type/`).then((response) => {
+            setHospitalList(response.data)
+        }).catch((error) => {
+        });
+
+        axios.get(`${baseUrl}speciality/`).then((response) => {
+            setServiceList(response.data)
+        }).catch((error) => {
+        });
     }, []);
 
     useEffect(() => {
-        if (location.key) {
+        if (location.key + 1) {
             filterHospital(hospitalType, location.key + 1, type, speciality, working24, disable);
-            setRegion(location.key + 1)
+            setRegion(location.key + 1);
             setRegionSelect(location.key)
         }
     }, [location]);
 
-    const ShowModal = (status) => {
-        dispatch(showModals({show: true, status}))
+    const ShowModal = (status, item) => {
+        dispatch(showModals({show: true, status, item}))
     };
 
     const filterHospital = (hospital_type_key, region_key, type_key, speciality_key, open_24_key, disabled_key) => {
@@ -85,10 +90,9 @@ const Clinics = () => {
             .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
             .join('&');
 
-        console.log(filterBox)
-        // axios.get(`${baseUrl}hospital/?${queryString}`).then((response) => {
-        //     dispatch(getClinics(response.data));
-        // })
+        axios.get(`${baseUrl}hospital/?${queryString}`).then((response) => {
+            dispatch(getClinics(response.data));
+        })
     };
 
     const changeRegion = (region, index) => {
@@ -109,15 +113,13 @@ const Clinics = () => {
                                     filterHospital(item.id, region, type, speciality, working24, disable);
                                 }}
                                      className={`category-name ${hospitalType === item.id ? "active" : ""}`}>
-                                    {/*{item.translations[i18next.language].name}*/}
-                                    {item.name}
+                                    {item.translations[i18next.language].name}
                                 </div>
                             </div>
                         })
                     }
                 </div>
                 <div className="bottom-content">
-
                     <div className={showMap ? "left-side-hide" : "left-side"}>
                         <div className="category-wrapper">
                             <div>
@@ -184,9 +186,11 @@ const Clinics = () => {
                                                 setSpeciality(e.target.value)
                                             }}
                                         >
-                                            <MenuItem value={1}>Stamatolog</MenuItem>
-                                            <MenuItem value={2}>Terapvt</MenuItem>
-                                            <MenuItem value={3}>Lor</MenuItem>
+                                            {serviceList.map((item, index) => {
+                                                return <MenuItem key={index} value={item.id}>
+                                                    {item.translations[i18next.language].name}
+                                                </MenuItem>
+                                            })}
                                         </Select>
                                     </FormControl>
                                 </div>
@@ -218,94 +222,90 @@ const Clinics = () => {
                         </div>
 
                         {!showMap && <div className="clinics">
-                            <div className="clinic">
-                                <div className="left-side">
-                                    <img src="./images/clinic.png" alt=""/>
-                                    <div className="like">
-                                        {
-                                            like ?
-                                                <img onClick={() => setLike(false)} src="./images/like.png" alt=""/> :
-                                                <img onClick={() => setLike(true)} src="./images/no-like.png" alt=""/>
-                                        }
-
+                            {clinics.map((item, index) => {
+                                return <div key={index} className="clinic">
+                                    <div className="left-side">
+                                        <img src={item.image} alt=""/>
+                                        <div className="like">
+                                            {
+                                                like ?
+                                                    <img onClick={() => setLike(false)} src="./images/like.png"
+                                                         alt=""/> :
+                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
+                                                         alt=""/>
+                                            }
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="right-side">
-                                    <div className="header-clinic">
-                                        <div className="name-clinic">Akfa medline</div>
-                                        <div className="buttons">
-                                            <div onClick={() => ShowModal("contact")}
-                                                 className="button-call">Qo'ng'iroq qilish
+                                    <div className="right-side">
+                                        <div className="header-clinic">
+                                            <div className="name-clinic">
+                                                {item.translations[i18next.language].name}
                                             </div>
-                                            <div onClick={() => ShowModal("sms")} className="button-send">Yozish</div>
+                                            <div className="buttons">
+                                                <div onClick={() => ShowModal("contact", item)}
+                                                     className="button-call">Qo'ng'iroq qilish
+                                                </div>
+                                                <div onClick={() => ShowModal("sms", item.user)}
+                                                     className="button-send">Yozish
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="section-commit">
-                                        <div className="raiting">
-                                            4.9
+                                        <div className="section-commit">
+                                            <div className="raiting">
+                                                {item.avg_rating}
+                                            </div>
+                                            <div className="commit-count">
+                                                {item.comment_count} ta izoh
+                                            </div>
                                         </div>
-                                        <div className="commit-count">
-                                            324 ta izoh
-                                        </div>
-                                        <span></span>
-                                        <div className="name">
-                                            Kasalxona
-                                        </div>
-                                    </div>
-                                    <div className="section-location">
-                                        <div className="location">
-                                            <img src="./images/icon.png" alt=""/>
-                                            Olmazor tumani
-                                        </div>
-                                        <span></span>
-                                        <div className="time-open">
-                                            <img src="./images/clock.png" alt=""/>
-                                            08:00 dan 18:00 gacha
-                                        </div>
-                                    </div>
 
-                                    <div className="services">
-                                        <div className="service">
-                                            Stress testlari
+                                        <div className="section-location">
+                                            <div className="location">
+                                                <img src="./images/icon.png" alt=""/>
+                                                {item.translations[i18next.language].address}
+                                            </div>
+                                            <div className="time-open">
+                                                <img src="./images/clock.png" alt=""/>
+
+                                                {item.open_24 ? "24 soat ochiq" : <>
+                                                    {item.start_time} dan
+                                                    &nbsp;
+                                                    {item.end_time} gacha
+                                                </>}
+
+                                            </div>
                                         </div>
-                                        <div className="service">
-                                            EKG
+
+                                        <div className="services">
+                                            {item.hospital_services.map((item, index) => {
+                                                return <div key={index} className="service">
+                                                    {item.service.translations[i18next.language].name}
+                                                </div>
+                                            })}
                                         </div>
-                                        <div className="service">
-                                            Reografiya
+
+                                        <div onClick={() => {
+                                            navigate("/about-clinic");
+                                            localStorage.setItem("clinicId", item.id);
+                                            dispatch(getAboutMarker(item.location))
+                                        }} className="more-btn">
+                                            Ko'proq ko'rsatish
                                         </div>
-                                        <div className="service">
-                                            Exo KG
-                                        </div>
-                                        <div className="service">
-                                            Stress testlari
-                                        </div>
-                                        <div className="service">
-                                            Stress testlari
-                                        </div>
-                                        <div className="service">
-                                            Stress testlari
-                                        </div>
-                                    </div>
-                                    <div onClick={() => navigate("/about-clinic")} className="more-btn">
-                                        Ko'proq ko'rsatish
                                     </div>
                                 </div>
-                            </div>
+                            })}
                             <Footer/>
                         </div>}
                     </div>
-
                     <div className={`right-side ${showMap ? "show-map" : ""}`}>
                         <Map/>
                     </div>
-
                 </div>
             </div>
 
             <div onClick={() => dispatch(show(!showMap))} className="map-mobile">
-                {showMap ?  <img className="prev-to" src="./images/next-btn.png" alt=""/> :
+                {showMap ? <img className="prev-to" src="./images/next-btn.png" alt=""/> :
                     <img src="./images/map-mobile.png" alt=""/>}
                 {showMap ? "Orqaga" : "Xaritadan"}
             </div>
