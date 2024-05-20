@@ -22,6 +22,7 @@ const Clinics = () => {
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const clinics = useSelector((store) => store.Clinics.data);
+    const filterService = useSelector((store) => store.Menu.data);
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const showMap = useSelector((store) => store.ShowMap.data);
     const location = useSelector((store) => store.LocationUser.data);
@@ -31,10 +32,11 @@ const Clinics = () => {
     const [hospitalList, setHospitalList] = useState([]);
     const [hospitalType, setHospitalType] = useState("");
     const [region, setRegion] = useState("");
-    const [type, setType] = useState("")
+    const [type, setType] = useState("");
     const [speciality, setSpeciality] = useState("");
     const [working24, setWorking24] = useState("");
     const [disable, setDisable] = useState("");
+    const [savedPosts, setSavedPosts] = useState([]);
 
     const regions = [
         {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
@@ -62,10 +64,12 @@ const Clinics = () => {
             setServiceList(response.data)
         }).catch((error) => {
         });
+
+        setSavedPosts(getSavedPosts())
     }, []);
 
     useEffect(() => {
-        if (location.key + 1) {
+        if (location.key + 1 && !filterService) {
             filterHospital(hospitalType, location.key + 1, type, speciality, working24, disable);
             setRegion(location.key + 1);
             setRegionSelect(location.key)
@@ -98,6 +102,24 @@ const Clinics = () => {
     const changeRegion = (region, index) => {
         const location = {key: index, "city": region.name, "latitude": region.latitude, "longitude": region.longitude};
         dispatch(getLocation(location));
+    };
+
+    const getSavedPosts = () => {
+        const savedPosts = localStorage.getItem('hospital_saved');
+        return savedPosts ? JSON.parse(savedPosts) : [];
+    };
+
+    const handleSaveClick = (postId) => {
+        let updatedSavedPosts = [...savedPosts];
+
+        if (savedPosts.includes(postId)) {
+            updatedSavedPosts = updatedSavedPosts.filter(id => id !== postId);
+        } else {
+            updatedSavedPosts.push(postId);
+        }
+
+        localStorage.setItem('hospital_saved', JSON.stringify(updatedSavedPosts));
+        setSavedPosts(updatedSavedPosts);
     };
 
     return <>
@@ -227,13 +249,9 @@ const Clinics = () => {
                                     <div className="left-side">
                                         <img src={item.image} alt=""/>
                                         <div className="like">
-                                            {
-                                                like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png"
-                                                         alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
-                                                         alt=""/>
-                                            }
+                                            <img onClick={() => handleSaveClick(item.id)}
+                                                 src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
+                                                 alt=""/>
                                         </div>
                                     </div>
                                     <div className="right-side">

@@ -18,8 +18,8 @@ import "@reach/combobox/styles.css";
 import Loader from "../../loader/Loader";
 import i18next from "i18next";
 import {useTranslation} from "react-i18next";
-import {useSelector,useDispatch} from "react-redux";
-import { delAlert, addAlert } from "../../../redux/AlertsBox";
+import {useSelector, useDispatch} from "react-redux";
+import {delAlert, addAlert} from "../../../redux/AlertsBox";
 
 
 const libraries = ["places"];
@@ -548,15 +548,10 @@ const ProfileHospital = () => {
                             {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
                                 <img className="logo-camera" src="./images/Exclude.png" alt=""/>
                             }
-
                         </div>
 
-                        {logoHospital && <div className="cancel-logo">
-                            <img onClick={() => setLogoHospital(null)} src="./images/cancel.png" alt=""/>
-                        </div>}
-
                         <div className="label">
-                            Logo qo‘shish
+                            Rasmni o'zgartirish
                             <input onChange={getInputPhoto} type="file"/>
                         </div>
                     </div>
@@ -987,14 +982,12 @@ const ProfileHospital = () => {
             </div>}
 
             <div className="btn-box">
-                <div onClick={() => setPageNumber(2)} className="prev-btn">
-                    <img src="./images/prev-btn.png" alt=""/>
+                <div onClick={() => navigate("/")} className="prev-btn">
                     Bekor qilish
                 </div>
 
                 <div onClick={sendAllInfo} className="next-page-btn">
                     O'zgarishlarni tasdiqlash
-                    <img src="./images/next-btn.png" alt=""/>
                 </div>
             </div>
 

@@ -90,7 +90,7 @@
       font-size: 16px;
       transition: 0.3s;
 
-      &:hover{
+      &:hover {
         background-color: rgb(0, 146, 146);
       }
     }
@@ -100,4 +100,41 @@
     }
   }
 
+}
+
+@media (max-width: 768px) {
+  .register-container {
+    .logo {
+      img {
+        width: 100px;
+      }
+    }
+    .register-page-zero {
+      width: 100%;
+      box-shadow: none;
+      padding: 30px;
+      .xbtn {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        cursor: pointer;
+
+        img {
+          width: 20px;
+        }
+      }
+      .title {
+        font-size: 20px;
+      }
+      .des {
+        font-size: 14px;
+      }
+      .items {
+        width: 90%;
+        height: 60px;
+        justify-content: center;
+        padding-left: 0px;
+      }
+    }
+  }
 }

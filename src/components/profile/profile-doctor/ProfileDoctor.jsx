@@ -592,9 +592,6 @@ const ProfileDoctor = () => {
                             <img className="logo-camera" src="./images/Exclude.png" alt=""/>
                         }
                     </div>
-                    {logoHospital && <div className="cancel-logo">
-                        <img onClick={() => setLogoHospital(null)} src="./images/cancel.png" alt=""/>
-                    </div>}
                     <div className="label">
                         Logo qo‘shish
                         <input onChange={getInputPhoto} type="file"/>

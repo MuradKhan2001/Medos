@@ -18,17 +18,18 @@ import {getAboutMarker} from "../../redux/markerAbout";
 const Doctors = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const filterService = useSelector((store) => store.Menu.data);
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const Doctors = useSelector((store) => store.Doctors.data);
     const [like, setLike] = useState(false);
     const showMap = useSelector((store) => store.ShowMap.data);
     const [serviceList, setServiceList] = useState([]);
     const [regionSelect, setRegionSelect] = useState("");
-
     const [region, setRegion] = useState("");
     const [gender, setGender] = useState("");
     const [cost, setCost] = useState("");
     const [speciality, setSpeciality] = useState("");
+    const [savedPosts, setSavedPosts] = useState([]);
 
     const location = useSelector((store) => store.LocationUser.data);
 
@@ -53,10 +54,12 @@ const Doctors = () => {
             setServiceList(response.data)
         }).catch((error) => {
         });
+
+        setSavedPosts(getSavedPosts())
     }, []);
 
     useEffect(() => {
-        if (location.key + 1) {
+        if (location.key + 1 && !filterService) {
             filterHospital(location.key + 1, gender, cost, speciality);
             setRegion(location.key + 1);
             setRegionSelect(location.key)
@@ -87,6 +90,24 @@ const Doctors = () => {
 
     const ShowModal = (status, item) => {
         dispatch(showModals({show: true, status, item}))
+    };
+
+    const getSavedPosts = () => {
+        const savedPosts = localStorage.getItem('doctor_saved');
+        return savedPosts ? JSON.parse(savedPosts) : [];
+    };
+
+    const handleSaveClick = (postId) => {
+        let updatedSavedPosts = [...savedPosts];
+
+        if (savedPosts.includes(postId)) {
+            updatedSavedPosts = updatedSavedPosts.filter(id => id !== postId);
+        } else {
+            updatedSavedPosts.push(postId);
+        }
+
+        localStorage.setItem('doctor_saved', JSON.stringify(updatedSavedPosts));
+        setSavedPosts(updatedSavedPosts);
     };
 
     return <>
@@ -200,16 +221,11 @@ const Doctors = () => {
                                     <div className="left-side">
                                         <img src={item.image} alt=""/>
                                         <div className="like">
-                                            {
-                                                like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png"
-                                                         alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
-                                                         alt=""/>
-                                            }
+                                            <img onClick={() => handleSaveClick(item.id)}
+                                                 src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
+                                                 alt=""/>
                                         </div>
                                     </div>
-
                                     <div className="right-side">
                                         <div className="header-clinic">
                                             <div className="name-clinic">

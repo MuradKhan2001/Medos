@@ -536,6 +536,9 @@ const RegisterHospital = () => {
 
                     <div className={`line ${pageNumber === 3 ? "line-active" : ""}`}></div>
                 </div>
+                <div onClick={()=> navigate("/register")} className="prev-mobile">
+                    <img src="./images/arrow.png" alt=""/>
+                </div>
             </div>
 
             {pageNumber === 1 &&
@@ -679,7 +682,7 @@ const RegisterHospital = () => {
                             type="time"/>
                     </div>
                     <div className="select-sides">
-                        <label htmlFor="">Ish vaqti boshlanishi</label>
+                        <label htmlFor="">Ish vaqti tugashi</label>
                         <input
                             className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
                             name="end_time" onChange={formOne.handleChange} value={formOne.end_time} type="time"/>

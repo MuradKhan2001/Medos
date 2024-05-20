@@ -19,14 +19,15 @@ import {getAboutMarker} from "../../redux/markerAbout";
 const Pharmacies = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const filterService = useSelector((store) => store.Menu.data);
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const Pharmacies = useSelector((store) => store.Pharmacies.data);
     const location = useSelector((store) => store.LocationUser.data);
-    const [like, setLike] = useState(false);
     const showMap = useSelector((store) => store.ShowMap.data);
     const [regionSelect, setRegionSelect] = useState("");
     const [working24, setWorking24] = useState("");
     const [region, setRegion] = useState("");
+    const [savedPosts, setSavedPosts] = useState([]);
 
     const regions = [
         {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
@@ -60,12 +61,16 @@ const Pharmacies = () => {
     };
 
     useEffect(() => {
-        if (location.key + 1) {
+        if (location.key + 1 && !filterService) {
             filterHospital(location.key + 1, working24);
-            setRegion(location.key + 1)
+            setRegion(location.key + 1);
             setRegionSelect(location.key)
         }
     }, [location]);
+
+    useEffect(() => {
+        setSavedPosts(getSavedPosts())
+    }, []);
 
     const filterHospital = (region_key, open_24_key) => {
         let filterBox = {
@@ -85,6 +90,24 @@ const Pharmacies = () => {
     const changeRegion = (region, index) => {
         const location = {key: index, "city": region.name, "latitude": region.latitude, "longitude": region.longitude};
         dispatch(getLocation(location));
+    };
+
+    const getSavedPosts = () => {
+        const savedPosts = localStorage.getItem('pharmacy_saved');
+        return savedPosts ? JSON.parse(savedPosts) : [];
+    };
+
+    const handleSaveClick = (postId) => {
+        let updatedSavedPosts = [...savedPosts];
+
+        if (savedPosts.includes(postId)) {
+            updatedSavedPosts = updatedSavedPosts.filter(id => id !== postId);
+        } else {
+            updatedSavedPosts.push(postId);
+        }
+
+        localStorage.setItem('pharmacy_saved', JSON.stringify(updatedSavedPosts));
+        setSavedPosts(updatedSavedPosts);
     };
 
     return <>
@@ -141,14 +164,9 @@ const Pharmacies = () => {
                                             <div className="left-side">
                                                 <img src={item.image} alt=""/>
                                                 <div className="like">
-                                                    {
-                                                        like ?
-                                                            <img onClick={() => setLike(false)} src="./images/like.png"
-                                                                 alt=""/> :
-                                                            <img onClick={() => setLike(true)}
-                                                                 src="./images/no-like.png"
-                                                                 alt=""/>
-                                                    }
+                                                    <img onClick={() => handleSaveClick(item.id)}
+                                                         src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
+                                                         alt=""/>
                                                 </div>
                                             </div>
                                             <div className="right-side">

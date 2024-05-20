@@ -9,14 +9,16 @@
 
     .left-side {
       padding-top: 20px;
-      width: 70%;
+      width: 100%;
       height: 100%;
       padding-left: 80px;
+      padding-right: 80px;
 
       .title {
         text-align: center;
         font-weight: bold;
         font-size: 28px;
+        color: rgba(133, 145, 158, 1);
       }
 
       .messages {
@@ -31,7 +33,7 @@
           padding: 15px;
           width: 300px;
           height: 200px;
-          border-top-left-radius: 20px;
+          border-radius: 10px;
           box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
           position: relative;
 
@@ -67,7 +69,8 @@
               width: 55%;
               cursor: pointer;
               transition: 0.3s;
-              &:hover{
+
+              &:hover {
                 transform: scale(1.1);
               }
             }
@@ -110,57 +113,46 @@
 
 
     }
+  }
 
-    .right-side {
-      padding-right: 80px;
-      width: 30%;
-      height: 100%;
+  .mobile-navbar-container {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .messages-wrapper {
+    width: 100%;
+    height: 100vh;
+
+    .bottom-contents {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100%;
+      height: calc(100% - 120px);
 
-      .my-information-card {
-        padding: 40px 20px;
-        width: 320px;
-        height: auto;
-        border-left: 1px solid #d0d0d0;
-        .img-box {
-          width: 100%;
-          height: 220px;
-          border-radius: 8px;
-          overflow: hidden;
+      .left-side {
+        padding-left: 15px;
+        padding-right: 15px;
 
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-
+        .title {
+          font-size: 22px;
         }
-        .info-box {
-          .name {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
+        .messages {
+          margin-top: 20px;
 
-          }
-
-          .info {
-            display: flex;
-            align-items: center;
-
-            img {
-              margin-right: 8px;
-            }
-
-            margin-top: 15px;
-            font-size: 20px;
+          .message-box {
+            margin: 10px auto;
+            padding: 15px;
+            width: 90%;
+            height: 200px;
           }
         }
       }
     }
+
+    .mobile-navbar-container {
+      width: 100%;
+      display: flex;
+    }
   }
-
-
 }

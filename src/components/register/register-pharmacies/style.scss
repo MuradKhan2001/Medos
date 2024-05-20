@@ -87,6 +87,9 @@
           color: white;
         }
       }
+      .prev-mobile {
+        display: none;
+      }
     }
 
     .register-page-one {
@@ -101,6 +104,7 @@
         text-align: center;
         color: rgba(38, 45, 51, 1);
       }
+
       .des-input {
         padding-left: 10px;
         margin-top: 0;
@@ -156,7 +160,7 @@
           margin: -12px auto 0 auto;
           z-index: 120;
 
-          img{
+          img {
             width: 100%;
             cursor: pointer;
           }
@@ -242,7 +246,8 @@
               width: 23px;
               cursor: pointer;
               transition: 0.3s;
-              &:hover{
+
+              &:hover {
                 transform: scale(1.2);
               }
             }
@@ -519,6 +524,7 @@
             font-size: 18px;
           }
         }
+
         .working_time_required {
           border: 1px solid red !important;
         }
@@ -752,5 +758,382 @@
       }
     }
   }
+}
 
+@media (max-width: 768px) {
+  .register-pharmacies-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+    .logo {
+      display: none;
+    }
+
+    .xbtn {
+      display: none;
+    }
+
+    .register-page {
+      margin-top: 15px;
+      padding-bottom: 20px;
+      width: 100%;
+
+      .header-register {
+        border-bottom: 1px solid #f1f1f1;
+        background-color: white;
+        position: sticky;
+        top: 0;
+        width: 100%;
+        height: auto;
+        display: block;
+        z-index: 100;
+
+        .line-page-numbers {
+          width: 100%;
+          display: flex;
+          align-items: center;
+
+          .line {
+            width: 33%;
+            height: 5px;
+            border-radius: 0;
+          }
+
+          .line-active {
+            background-color: rgba(0, 173, 173, 1);
+            transition: 0.5s linear;
+          }
+
+          .num {
+            display: none;
+          }
+        }
+
+        .prev-mobile {
+          display: block;
+          margin-left: 10px;
+          margin-top: 10px;
+
+          img {
+            width: 30px;
+          }
+        }
+      }
+
+      .register-page-one {
+        margin-top: 15px;
+        width: 100%;
+        height: auto;
+        padding: 30px 20px;
+
+        .title {
+          font-size: 20px;
+        }
+
+        .des {
+          font-size: 14px;
+        }
+
+        .des-input {
+          padding-left: 0;
+        }
+
+        .logo-hospital {
+          margin-top: 20px;
+          width: 100%;
+
+          .logo-image {
+            width: 80px;
+            height: 80px;
+          }
+
+          .label {
+            margin: 10px auto;
+          }
+        }
+
+        .inputs-box {
+          margin-top: 0px;
+
+          .textField {
+            margin-left: 0;
+
+            .MuiOutlinedInput-root {
+              &:hover {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+            }
+
+            .MuiOutlinedInput-root.Mui-focused {
+              .MuiOutlinedInput-notchedOutline {
+                border: 1px solid rgba(0, 173, 173, 1);
+              }
+            }
+
+            .MuiInputLabel-root.Mui-focused {
+              color: rgba(0, 173, 173, 1);
+            }
+          }
+        }
+
+        .inputs-box-link {
+          width: 100%;
+
+          .inputs-social-media {
+            display: flex;
+            align-items: center;
+
+            .textField {
+              width: 100%;
+            }
+
+            .del-icon {
+              img {
+                width: 23px;
+                cursor: pointer;
+                transition: 0.3s;
+
+                &:hover {
+                  transform: scale(1.2);
+                }
+              }
+            }
+          }
+
+          .des {
+            width: 100%;
+          }
+
+          .add-social-media {
+            width: 100%;
+            padding-left: 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            display: flex;
+
+            .social-mdeia-icon {
+              margin-right: 8px;
+              border: 1px solid rgba(0, 173, 173, 1);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 42px;
+              height: 42px;
+              border-radius: 6px;
+              cursor: pointer;
+              position: relative;
+              overflow: hidden;
+
+              &:hover {
+                .sloy {
+                  top: 0;
+                }
+              }
+
+              .sloy {
+                transition: 0.3s;
+                z-index: 10;
+                position: absolute;
+                top: -100%;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                img {
+                  width: 40%;
+                }
+              }
+
+              img {
+                width: 65%;
+              }
+            }
+          }
+        }
+
+        .select-box {
+          width: 100%;
+          display: block;
+
+          .select-sides {
+            width: 100%;
+
+            .selectMui {
+              margin-left: 0;
+            }
+
+            .on-of {
+              margin-top: 6px;
+              margin-bottom: 12px;
+            }
+
+            .textField {
+              padding: 0;
+              margin: 10px 0;
+            }
+
+            .check-box {
+              margin-top: 15px;
+              margin-bottom: 15px;
+            }
+          }
+        }
+
+        .label-text {
+          margin-top: 10px;
+          width: 100%;
+          font-size: 14px;
+          display: block;
+
+          .sides {
+            width: 100% !important;
+            padding-left: 0;
+
+            .label-bold {
+              margin-top: 5px;
+              font-size: 16px;
+            }
+          }
+        }
+
+        .select-box-working-time {
+          margin-top: 10px;
+          padding-left: 10px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .select-sides {
+            width: 100%;
+
+            label {
+              color: rgba(38, 45, 51, 1);
+              font-size: 14px;
+              font-weight: 400;
+            }
+
+            input {
+              padding: 15px;
+              margin-top: 10px;
+              width: 100%;
+              height: 40px;
+              border-radius: 10px;
+              border: none;
+              background-color: rgba(180, 192, 204, 0.16);
+
+              &:focus {
+                outline: 1px solid rgba(0, 173, 173, 1);
+              }
+
+              font-size: 18px;
+            }
+
+
+          }
+        }
+
+        .btn-box {
+          margin-top: 40px;
+          width: 100%;
+          display: flex;
+          justify-content: flex-end;
+
+          .next-page-btn {
+            padding: 8px 10px;
+            font-size: 14px;
+          }
+        }
+      }
+
+      .register-page-two {
+        margin-top: 15px;
+        width: 100%;
+        height: auto;
+        padding: 30px 20px;
+
+        .title {
+          font-size: 20px;
+        }
+
+        .des {
+          font-size: 14px;
+        }
+
+        .label-address {
+          margin-top: 30px;
+          color: rgba(38, 45, 51, 1);
+          font-size: 14px;
+        }
+
+        .address-box {
+          width: 100%;
+          height: 50px;
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        .address-container {
+          margin-top: 20px;
+          width: 100%;
+          height: 350px;
+
+          .map-box {
+            .search-address {
+              top: 10px;
+              left: 3%;
+            }
+          }
+        }
+
+        .select-box {
+          width: 100%;
+          display: block;
+
+          .select-sides {
+            width: 100%;
+
+            .selectMui {
+              margin-left: 0;
+            }
+
+            .on-of {
+              margin-top: 6px;
+              margin-bottom: 12px;
+            }
+
+            .textField {
+              padding: 0;
+              margin: 10px 0;
+            }
+
+          }
+        }
+
+        .btn-box {
+          margin-top: 40px;
+          width: 100%;
+
+          .prev-btn {
+            padding: 8px 10px;
+            font-size: 14px;
+          }
+
+          .next-page-btn {
+            padding: 8px 10px;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
 }

@@ -5,37 +5,35 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {useTranslation} from "react-i18next";
 import i18next from "i18next"
-import {getAboutMarker} from "../../redux/markerAbout";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import MobileNavbar from "../mobile-navbar/MobileNavbar";
+import {getClinics} from "../../redux/clinics";
+import {changeMenu} from "../../redux/menu";
+import {useNavigate} from "react-router-dom";
 
 const Service = () => {
+    const dispatch = useDispatch();
     const {t} = useTranslation();
+    const navigate = useNavigate();
     const baseUrl = useSelector((store) => store.baseUrl.data);
-    const [services, setServices] = useState([])
-    const Category = [
-        {id: 1, name: "Barchasi", count: 14},
-        {id: 2, name: "Narkologlar", count: 4},
-        {id: 3, name: "Dermatolog", count: 8},
-        {id: 4, name: "Embriolog", count: 1},
-        {id: 4, name: "Travmatolog", count: 6},
-        {id: 4, name: "Pediatr", count: 5},
-        {id: 4, name: "Terapevt", count: 7},
-        {id: 4, name: "Urolog", count: 9},
-        {id: 4, name: "Mammolog", count: 2},
-    ];
-
+    const [services, setServices] = useState([]);
 
     useEffect(() => {
-
         axios.get(`${baseUrl}services/`).then((response) => {
             setServices(response.data);
         });
-
     }, []);
+
+    const filterHospital = (id) => {
+        axios.post(`${baseUrl}filter-hospital/`, {sub_service: id}).then((response) => {
+            dispatch(getClinics(response.data));
+            dispatch(changeMenu(true));
+            navigate("/")
+        });
+    };
 
     return <div className="service-container">
         <Navbar/>
-
         <div className="service-box">
             <div className="title">
                 Xizmatlar
@@ -52,7 +50,6 @@ const Service = () => {
                     })
                 }
             </div>
-
             {services.map((item, index) => {
                 return <div key={index} className="service-content">
                     <div className="title-service">
@@ -64,16 +61,16 @@ const Service = () => {
 
                     <div className="services">
                         {item.sub_service_list.map((item, index) => {
-                            return <div className="service">
+                            return <div onClick={() => filterHospital(item.id)} key={index} className="service">
                                 {item.translations[i18next.language].name}
                             </div>
                         })}
-
                     </div>
                 </div>
             })}
-
-
+        </div>
+        <div className="mobile-navbar-container">
+            <MobileNavbar/>
         </div>
         <Footer/>
     </div>

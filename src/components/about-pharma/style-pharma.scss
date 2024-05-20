@@ -1,5 +1,4 @@
 .about-pharmacies {
-
   .pharmaci-box {
     padding-left: 80px;
     padding-right: 80px;
@@ -41,6 +40,31 @@
       color: rgba(38, 45, 51, 1);
       font-size: 30px;
       font-weight: 600;
+
+
+    }
+
+    .like {
+      cursor: pointer;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      padding: 5px 10px;
+      border: 1px solid rgba(180, 192, 204, 0.26);
+      width: max-content;
+      border-radius: 20px;
+
+      img {
+        width: 17px;
+        cursor: pointer;
+        margin-right: 5px;
+      }
+
+      .name {
+        padding: 0;
+        margin: 0;
+        font-size: 16px;
+      }
     }
 
     .section-commit {
@@ -82,6 +106,7 @@
         margin-right: 10px;
         font-weight: bold;
       }
+
       .close {
         color: red;
         margin-right: 10px;
@@ -527,5 +552,135 @@
       }
     }
 
+  }
+
+  .mobile-navbar-container {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-pharmacies {
+
+    .pharmaci-box {
+      padding-left: 15px;
+      padding-right: 15px;
+      .header {
+        margin-top: 20px;
+        height: 200px;
+      }
+
+      .title-pahrma {
+        margin-top: 30px;
+        font-size: 24px;
+      }
+
+      .section-commit {
+        .raiting {
+          padding: 3px 8px;
+          color: white;
+          margin-right: 8px;
+        }
+
+        .commit-count {
+          font-size: 14px;
+          margin-right: 6px;
+        }
+      }
+
+      .map-locations {
+        margin-top: 20px;
+        width: 100%;
+        height: max-content;
+        display: block;
+        .map-side {
+          width: 100%;
+          height: 300px;
+        }
+
+        .information-location {
+          width: 100%;
+          .info {
+            font-size: 14px;
+          }
+
+          .section-commit {
+            .name {
+              font-size: 14px;
+            }
+          }
+
+          .contact {
+            margin-top: 5px;
+            font-size: 16px;
+          }
+        }
+      }
+
+      .comments-box {
+        margin-top: 40px;
+        margin-bottom: 60px;
+        width: 100%;
+        .header-commet {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .counts {
+            display: flex;
+            align-items: center;
+
+            .raiting {
+              padding: 3px 8px;
+              color: white;
+              margin-right: 8px;
+            }
+
+            .commit-count {
+              font-size: 14px;
+              margin-right: 6px;
+            }
+          }
+          .btn-commit {
+            padding: 7px 15px;
+          }
+        }
+        .commits {
+          margin-top: 20px;
+          width: 100%;
+          .header-commit {
+            display: flex;
+            align-items: center;
+
+            .left-circle {
+              width: 40px;
+              height: 40px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              border-radius: 50%;
+              background-color: rgba(250, 128, 66, 1);
+              margin-right: 15px;
+            }
+            .right-names {
+              .name {
+                font-size: 14px;
+              }
+            }
+          }
+          .text-commit {
+            font-size: 12px;
+          }
+        }
+      }
+
+    }
+
+    .mobile-navbar-container {
+      width: 100%;
+      display: flex;
+    }
   }
 }

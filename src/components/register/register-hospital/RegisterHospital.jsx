@@ -481,6 +481,9 @@ const RegisterHospital = () => {
 
                     <div className={`line ${pageNumber === 3 ? "line-active" : ""}`}></div>
                 </div>
+                <div onClick={()=> navigate("/register")} className="prev-mobile">
+                    <img src="./images/arrow.png" alt=""/>
+                </div>
             </div>
 
             {pageNumber === 1 && <div className="register-page-one">

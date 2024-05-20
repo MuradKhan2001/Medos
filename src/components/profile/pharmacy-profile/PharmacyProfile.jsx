@@ -186,7 +186,7 @@ const PharmacyProfile = () => {
             }).catch((error) => {
             });
 
-            setLogoHospital(`http://192.168.0.102:8000` + response.data.image)
+            setLogoHospital(`http://138.197.97.98` + response.data.image)
 
             setRegion(response.data.region)
 
@@ -433,10 +433,6 @@ const PharmacyProfile = () => {
                         }
 
                     </div>
-
-                    {logoHospital && <div className="cancel-logo">
-                        <img onClick={() => setLogoHospital(null)} src="./images/cancel.png" alt=""/>
-                    </div>}
 
                     <div className="label">
                         Logo qo‘shish

@@ -1,8 +1,6 @@
 import "./clinic-doctor.scss"
 import Navbar from "../navbar/Navbar";
-import {useEffect, useRef, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import Map from "../map/Map";
+import {useEffect, useState} from "react";
 import Footer from "../footer/Footer";
 import {showModals} from "../../redux/ModalContent";
 import {useSelector, useDispatch} from "react-redux";
@@ -11,6 +9,7 @@ import {useTranslation} from "react-i18next";
 import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
 import MapAbout from "../map/MapAbout";
+import MobileNavbar from "../mobile-navbar/MobileNavbar";
 
 
 const AboutDoctor = () => {
@@ -18,10 +17,10 @@ const AboutDoctor = () => {
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [like, setLike] = useState(false);
     const [doctor, setDoctor] = useState("");
-    const [similarDoctors, setSimilarDoctors] = useState()
+    const [similarDoctors, setSimilarDoctors] = useState();
     const [comments, setComments] = useState([]);
+    const [savedPosts, setSavedPosts] = useState([]);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`${baseUrl}doctor/${localStorage.getItem("doctorId")}/`).then((response) => {
@@ -35,11 +34,29 @@ const AboutDoctor = () => {
         axios.get(`${baseUrl}doctor/${localStorage.getItem("doctorId")}/similar/`).then((response) => {
             setSimilarDoctors(response.data)
         });
-
+        setSavedPosts(getSavedPosts())
     }, []);
 
     const ShowModal = (status, item) => {
         dispatch(showModals({show: true, status, item}))
+    };
+
+    const getSavedPosts = () => {
+        const savedPosts = localStorage.getItem('doctor_saved');
+        return savedPosts ? JSON.parse(savedPosts) : [];
+    };
+
+    const handleSaveClick = (postId) => {
+        let updatedSavedPosts = [...savedPosts];
+
+        if (savedPosts.includes(postId)) {
+            updatedSavedPosts = updatedSavedPosts.filter(id => id !== postId);
+        } else {
+            updatedSavedPosts.push(postId);
+        }
+
+        localStorage.setItem('doctor_saved', JSON.stringify(updatedSavedPosts));
+        setSavedPosts(updatedSavedPosts);
     };
 
     return <div className="about-doctor-box">
@@ -91,13 +108,9 @@ const AboutDoctor = () => {
                         })}
                     </div>
 
-                    <div className="like">
-                        {
-                            like ?
-                                <img onClick={() => setLike(false)} src="./images/like.png" alt=""/> :
-                                <img onClick={() => setLike(true)} src="./images/no-like.png" alt=""/>
-                        }
-
+                    <div onClick={() => handleSaveClick(doctor.id)} className="like">
+                        <img src={savedPosts.includes(doctor.id) ? "./images/like.png" : "./images/no-like.png"}
+                             alt=""/>
                         <div className="name">Saqlash</div>
                     </div>
                 </div>
@@ -230,20 +243,15 @@ const AboutDoctor = () => {
                     <div className="title">
                         O'xshash doctorlar
                     </div>
-
                     {
                         similarDoctors && similarDoctors.map((item, index) => {
                             return <div key={index} className="doctor">
                                 <div className="left-side">
                                     <img src={"http://138.197.97.98" + item.image} alt=""/>
                                     <div className="like">
-                                        {
-                                            like ?
-                                                <img onClick={() => setLike(false)} src="./images/like.png"
-                                                     alt=""/> :
-                                                <img onClick={() => setLike(true)} src="./images/no-like.png"
-                                                     alt=""/>
-                                        }
+                                        <img onClick={() => handleSaveClick(item.id)}
+                                             src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
+                                             alt=""/>
                                     </div>
                                 </div>
 
@@ -357,11 +365,13 @@ const AboutDoctor = () => {
                             </div>
                         })
                     }
-
                 </div>
             </div>
         </div>}
 
+        <div className="mobile-navbar-container">
+            <MobileNavbar/>
+        </div>
         <Footer/>
     </div>
 };

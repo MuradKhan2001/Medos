@@ -1,8 +1,7 @@
 import "./clinic-style.scss"
 import Navbar from "../navbar/Navbar";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import Map from "../map/Map";
 import Footer from "../footer/Footer";
 import {showModals} from "../../redux/ModalContent";
 import {useDispatch, useSelector} from "react-redux";
@@ -17,9 +16,7 @@ import MapAbout from "../map/MapAbout";
 const AboutClinic = () => {
     const {t} = useTranslation();
     const baseUrl = useSelector((store) => store.baseUrl.data);
-    const [like, setLike] = useState(false);
     const [tabActive, setTabActive] = useState(1);
-    const [category, setCategory] = useState(1);
     const [clinic, setClinic] = useState("");
     const [comments, setComments] = useState([]);
     const [doctors, setDoctors] = useState([]);
@@ -32,6 +29,7 @@ const AboutClinic = () => {
         {id: 3, name: "Izohlar"},
         {id: 4, name: "Xizmatlar va narxlar"}
     ];
+    const [savedPosts, setSavedPosts] = useState([]);
 
     useEffect(() => {
         axios.get(`${baseUrl}hospital/${localStorage.getItem("clinicId")}/`).then((response) => {
@@ -51,25 +49,36 @@ const AboutClinic = () => {
                 setServices(response.data)
             })
         });
+
+        setSavedPosts(getSavedPosts())
     }, []);
 
     const ShowModal = (status, item) => {
         dispatch(showModals({show: true, status, item}))
     };
-    const Category = [
-        {id: 1, name: "Barchasi", count: 14},
-        {id: 2, name: "Narkologlar", count: 4},
-        {id: 3, name: "Dermatolog", count: 8},
-        {id: 4, name: "Embriolog", count: 1},
-        {id: 4, name: "Travmatolog", count: 6},
-        {id: 4, name: "Pediatr", count: 5},
-        {id: 4, name: "Terapevt", count: 7},
-        {id: 4, name: "Urolog", count: 9},
-        {id: 4, name: "Mammolog", count: 2},
-    ];
+
+    const getSavedPosts = () => {
+        const savedPosts = localStorage.getItem('hospital_saved');
+        return savedPosts ? JSON.parse(savedPosts) : [];
+    };
+
+    const handleSaveClick = (postId) => {
+        let updatedSavedPosts = [...savedPosts];
+
+        if (savedPosts.includes(postId)) {
+            updatedSavedPosts = updatedSavedPosts.filter(id => id !== postId);
+        } else {
+            updatedSavedPosts.push(postId);
+        }
+
+        localStorage.setItem('hospital_saved', JSON.stringify(updatedSavedPosts));
+        setSavedPosts(updatedSavedPosts);
+    };
 
     return <div className="about-clinic-box">
         <Navbar/>
+
+        {clinic &&
         <div className="about-hospital">
             <div className="header">
                 <div className="title">
@@ -78,11 +87,9 @@ const AboutClinic = () => {
 
                 <div className="buttons">
                     <div className="like">
-                        {
-                            like ?
-                                <img onClick={() => setLike(false)} src="./images/like.png" alt=""/> :
-                                <img onClick={() => setLike(true)} src="./images/no-like.png" alt=""/>
-                        }
+                        <img onClick={() => handleSaveClick(clinic.id)}
+                             src={savedPosts.includes(clinic.id) ? "./images/like.png" : "./images/no-like.png"}
+                             alt=""/>
                     </div>
 
                     <div onClick={() => ShowModal("contact", clinic)}
@@ -205,8 +212,8 @@ const AboutClinic = () => {
                         {
                             doctors.services.map((item, index) => {
                                 return <div key={index}>
-                                    <div onClick={() => setCategory(item.id)}
-                                         className="category-name active">
+                                    <div
+                                        className="category-name active">
                                         {item.translations[i18next.language].name} <span></span> {item.doctor_count}
                                     </div>
                                 </div>
@@ -220,15 +227,6 @@ const AboutClinic = () => {
                                 return <div key={index} className="doctor">
                                     <div className="left-side">
                                         <img src={"http://138.197.97.98" + item.image} alt=""/>
-                                        <div className="like">
-                                            {
-                                                like ?
-                                                    <img onClick={() => setLike(false)} src="./images/like.png"
-                                                         alt=""/> :
-                                                    <img onClick={() => setLike(true)} src="./images/no-like.png"
-                                                         alt=""/>
-                                            }
-                                        </div>
                                     </div>
 
                                     <div className="right-side">
@@ -393,8 +391,8 @@ const AboutClinic = () => {
                         {
                             services.services_count.map((item, index) => {
                                 return <div key={index}>
-                                    <div onClick={() => setCategory(item.id)}
-                                         className="category-name active">
+                                    <div
+                                        className="category-name active">
                                         {item.translations[i18next.language].name} <span></span> {item.service_count}
                                     </div>
                                 </div>
@@ -418,7 +416,8 @@ const AboutClinic = () => {
 
                 </div>}
             </div>
-        </div>
+        </div>}
+
         <div className="mobile-navbar-container">
             <MobileNavbar/>
         </div>

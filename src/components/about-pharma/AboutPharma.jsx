@@ -1,24 +1,22 @@
 import "./style-pharma.scss"
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
-import Map from "../map/Map";
 import {showModals} from "../../redux/ModalContent";
 import axios from "axios";
 import {useTranslation} from "react-i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
 import i18next from "i18next";
 import MapAbout from "../map/MapAbout";
+import MobileNavbar from "../mobile-navbar/MobileNavbar";
 
 const AboutPharma = () => {
     const {t} = useTranslation();
     const baseUrl = useSelector((store) => store.baseUrl.data);
-    const [like, setLike] = useState(false);
     const [pharmacy, setPharmacy] = useState("");
     const [comments, setComments] = useState([]);
-    const navigate = useNavigate();
+    const [savedPosts, setSavedPosts] = useState([]);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -29,6 +27,7 @@ const AboutPharma = () => {
             });
             dispatch(getAboutMarker(response.data.location));
         });
+        setSavedPosts(getSavedPosts())
     }, []);
 
     const isPlaceOpen = (startTime, endTime) => {
@@ -50,9 +49,26 @@ const AboutPharma = () => {
         dispatch(showModals({show: true, status, item}))
     };
 
+    const getSavedPosts = () => {
+        const savedPosts = localStorage.getItem('pharmacy_saved');
+        return savedPosts ? JSON.parse(savedPosts) : [];
+    };
+
+    const handleSaveClick = (postId) => {
+        let updatedSavedPosts = [...savedPosts];
+
+        if (savedPosts.includes(postId)) {
+            updatedSavedPosts = updatedSavedPosts.filter(id => id !== postId);
+        } else {
+            updatedSavedPosts.push(postId);
+        }
+
+        localStorage.setItem('pharmacy_saved', JSON.stringify(updatedSavedPosts));
+        setSavedPosts(updatedSavedPosts);
+    };
+
     return <div className="about-pharmacies">
         <Navbar/>
-
         {pharmacy && <div className="pharmaci-box">
             <div className="header">
                 <img src={pharmacy.image} alt=""/>
@@ -61,6 +77,13 @@ const AboutPharma = () => {
                 {pharmacy.translations[i18next.language].name}
             </div>
 
+            <div onClick={() => handleSaveClick(pharmacy.id)} className="like">
+                <img
+                    src={savedPosts.includes(pharmacy.id) ? "./images/like.png" : "./images/no-like.png"}
+                    alt=""/>
+
+                <div className="name">Saqlash</div>
+            </div>
             <div className="section-commit">
                 <div className="raiting">
                     {pharmacy.avg_rating}
@@ -73,7 +96,6 @@ const AboutPharma = () => {
                     Dorixona
                 </div>
             </div>
-
             <div className="section-commit">
                 {pharmacy.open_24 ? <div
                     className="open">Ochiq</div> : isPlaceOpen(pharmacy.start_time, pharmacy.end_time) ?
@@ -168,6 +190,9 @@ const AboutPharma = () => {
                 })}
             </div>
         </div>}
+        <div className="mobile-navbar-container">
+            <MobileNavbar/>
+        </div>
         <Footer/>
     </div>
 };

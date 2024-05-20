@@ -126,8 +126,8 @@ const RegisterPharmacies = () => {
             hospital_type: "",
             phone1: "",
             phone2: "",
-            start_time: "",
-            end_time: "",
+            start_time: null,
+            end_time: null,
             working_days: [],
         },
         validate,
@@ -336,7 +336,9 @@ const RegisterPharmacies = () => {
             region: region
         };
         axios.post(`${baseUrl}auth/register/pharmacy/`, allInfoHospital).then((response) => {
-            window.location.pathname = "/login"
+            window.location.pathname = "/login";
+        }).catch((error)=>{
+            console.log(error)
         });
     };
 
@@ -371,6 +373,9 @@ const RegisterPharmacies = () => {
                     </div>
 
                     <div className={`line ${pageNumber === 2 ? "line-active" : ""}`}></div>
+                </div>
+                <div onClick={()=> navigate("/register")} className="prev-mobile">
+                    <img src="./images/arrow.png" alt=""/>
                 </div>
             </div>
 
