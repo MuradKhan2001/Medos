@@ -44,11 +44,10 @@ const App = () => {
             const {latitude, longitude} = position.coords;
             const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&lan=en`;
             axios.get(`${url}`, {headers: {"Accept-Language": i18next.language}}).then((res) => {
-
                 const location = {
                     key: regions.findIndex(region => region.name === res.data.address.city),
                     "city": res.data.address.city, "latitude": Number(latitude), "longitude": Number(longitude)
-                }
+                };
                 dispatch(getLocation(location))
             });
         });

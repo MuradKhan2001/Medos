@@ -1,6 +1,6 @@
 import "./style.scss";
 import {useNavigate} from "react-router-dom";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import axios from "axios";
 import {
     TextField, MenuItem, InputLabel, FormControl, Select, Checkbox, OutlinedInput,
@@ -38,6 +38,8 @@ const RegisterPharmacies = () => {
     const [region_validate, setRegion_validate] = useState(false);
     const [logoHospital, setLogoHospital] = useState(null);
     const [weekend, setWeekend] = useState([]);
+    const [logoValidate, setLogoValidate] = useState(false);
+    const ref2 = useRef(null);
     const [daysList, setDaysList] = useState([]);
 
     const ITEM_HEIGHT = 48;
@@ -98,9 +100,13 @@ const RegisterPharmacies = () => {
 
         if (!values.phone1) {
             errors.phone1 = "Required";
+        } else if (isNaN(Number(values.phone1))) {
+            errors.phone1 = "Required";
         }
 
         if (!values.phone2) {
+            errors.phone2 = "Required";
+        } else if (isNaN(Number(values.phone2))) {
             errors.phone2 = "Required";
         }
 
@@ -132,11 +138,19 @@ const RegisterPharmacies = () => {
         },
         validate,
         onSubmit: (values) => {
-            setPageNumber(2);
+            if (logoHospital) {
+                setPageNumber(2);
+            } else {
+                ref2.current?.scrollIntoView({
+                    behavior: "smooth",
+                });
+                setLogoValidate(true)
+            }
         },
     });
 
     const getInputPhoto = (event) => {
+        setLogoValidate(false);
         const {target: {files}} = event;
         const file = files[0];
 
@@ -337,7 +351,7 @@ const RegisterPharmacies = () => {
         };
         axios.post(`${baseUrl}auth/register/pharmacy/`, allInfoHospital).then((response) => {
             window.location.pathname = "/login";
-        }).catch((error)=>{
+        }).catch((error) => {
             console.log(error)
         });
     };
@@ -374,35 +388,35 @@ const RegisterPharmacies = () => {
 
                     <div className={`line ${pageNumber === 2 ? "line-active" : ""}`}></div>
                 </div>
-                <div onClick={()=> navigate("/register")} className="prev-mobile">
+                <div onClick={() => navigate("/register")} className="prev-mobile">
                     <img src="./images/arrow.png" alt=""/>
                 </div>
             </div>
 
             {pageNumber === 1 &&
             <div className="register-page-one">
-                <div className="title">
+                <div  ref={ref2} className="title">
                     Dorixona haqida ma'lumotlarni toldiring
                 </div>
                 <div className="des">
                     Dorixona akkountingizni ro‘yxatdan o‘tkazish uchun bu juda muhim
                 </div>
                 <div className="logo-hospital">
-                    <div className="logo-image">
+                    <div className={`logo-image ${logoValidate ? "required-logo" : ""}`}>
                         {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
                             <img className="logo-camera" src="./images/Exclude.png" alt=""/>
                         }
-
                     </div>
 
-                    {logoHospital && <div className="cancel-logo">
-                        <img onClick={() => setLogoHospital(null)} src="./images/cancel.png" alt=""/>
+                    {!logoHospital && <div className="label">
+                        Rasm qo‘shish
+                        <input onChange={getInputPhoto} type="file"/>
                     </div>}
 
-                    <div className="label">
-                        Logo qo‘shish
-                        <input onChange={getInputPhoto} type="file"/>
-                    </div>
+                    {logoHospital && <div onClick={() => setLogoHospital(null)} className="label">
+                        Rasmni ochirish
+                        <img src="./images/cancel.png" alt=""/>
+                    </div>}
                 </div>
 
                 <div className="inputs-box">
@@ -412,7 +426,7 @@ const RegisterPharmacies = () => {
                                name="nameUz"
                                sx={{m: 1, minWidth: "100%"}} size="small"
                                id="outlined-basic"
-                               label="Shifoxona nomini kiriting (uz) " variant="outlined" className="textField"/>
+                               label="Dorixona nomini kiriting (uz) " variant="outlined" className="textField"/>
                 </div>
 
                 <div className="inputs-box">
@@ -420,11 +434,11 @@ const RegisterPharmacies = () => {
                                onChange={formOne.handleChange}
                                name="nameRu" sx={{m: 1, minWidth: "100%"}} size="small"
                                id="outlined-basic"
-                               label="Введите название больницы (ru) " variant="outlined" className="textField"/>
+                               label="Введите название аптеки (ru) " variant="outlined" className="textField"/>
                 </div>
 
                 <div className="des-input">
-                    Iltimos, shifoxona nomini rus tili va o'zbek tilida kiritng
+                    Iltimos, dorixona nomini rus tili va o'zbek tilida kiritng
                 </div>
 
                 <div className="label-text">
@@ -557,7 +571,7 @@ const RegisterPharmacies = () => {
                                     return <MenuItem key={index} onClick={() => {
                                         setRegion_validate(false)
                                         setCenter({lat: item.latitude, lng: item.longitude})
-                                    }} value={index+1}>{item.name}</MenuItem>
+                                    }} value={index + 1}>{item.name}</MenuItem>
                                 })}
 
                             </Select>

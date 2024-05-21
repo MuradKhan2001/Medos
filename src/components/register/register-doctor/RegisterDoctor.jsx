@@ -1,6 +1,6 @@
 import "./style.scss";
 import {useNavigate} from "react-router-dom";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import axios from "axios";
 import {
     TextField,
@@ -53,7 +53,8 @@ const RegisterHospital = () => {
     const [specialtyList, setSpecialtyList] = useState([]);
     const [subSpecialtyList, setSubSpecialtyList] = useState([]);
     const [hospitalList, setHospitalList] = useState([]);
-
+    const [logoValidate, setLogoValidate] = useState(false);
+    const ref2 = useRef(null);
     const [tg, setTg] = useState(false);
     const [ins, setIns] = useState(false);
     const [face, setFace] = useState(false);
@@ -137,17 +138,17 @@ const RegisterHospital = () => {
 
         if (!values.phone1) {
             errors.phone1 = "Required";
+        } else if (isNaN(Number(values.phone1))) {
+            errors.phone1 = "Required";
         }
 
         if (!values.specialty && pageNumber === 3) {
             errors.specialty = "Required";
         }
 
-        // if (!values.hospital && pageNumber === 2) {
-        //     errors.hospital = "Required";
-        // }
-
         if (!values.experience && pageNumber === 3) {
+            errors.experience = "Required";
+        } else if (isNaN(Number(values.experience))) {
             errors.experience = "Required";
         }
 
@@ -179,17 +180,23 @@ const RegisterHospital = () => {
         validate,
         onSubmit: (values) => {
             if (pageNumber === 1) {
-                setPageNumber(2);
+                if (logoHospital) {
+                    setPageNumber(2);
+                } else {
+                    ref2.current?.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                    setLogoValidate(true)
+                }
+
             }
 
             if (pageNumber === 2) {
-
                 if (region && (addressLocation || values.hospital)) {
                     setPageNumber(3)
                 } else {
                     if (!addressLocation) setAddress_validate(true);
                     if (!region) setRegion_validate(true)
-
                 }
             }
 
@@ -263,6 +270,7 @@ const RegisterHospital = () => {
     };
 
     const getInputPhoto = (event) => {
+        setLogoValidate(false);
         const {target: {files}} = event;
         const file = files[0];
 
@@ -536,14 +544,14 @@ const RegisterHospital = () => {
 
                     <div className={`line ${pageNumber === 3 ? "line-active" : ""}`}></div>
                 </div>
-                <div onClick={()=> navigate("/register")} className="prev-mobile">
+                <div onClick={() => navigate("/register")} className="prev-mobile">
                     <img src="./images/arrow.png" alt=""/>
                 </div>
             </div>
 
             {pageNumber === 1 &&
-            <div className="register-page-one">
-                <div className="title">
+            <div  className="register-page-one">
+                <div ref={ref2} className="title">
                     O'zingiz haqingizda aytib bering
                 </div>
                 <div className="des">
@@ -551,21 +559,21 @@ const RegisterHospital = () => {
                 </div>
 
                 <div className="logo-hospital">
-                    <div className="logo-image">
+                    <div  className={`logo-image ${logoValidate ? "required-logo" : ""}`}>
                         {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
                             <img className="logo-camera" src="./images/Exclude.png" alt=""/>
                         }
-
                     </div>
 
-                    {logoHospital && <div className="cancel-logo">
-                        <img onClick={() => setLogoHospital(null)} src="./images/cancel.png" alt=""/>
+                    {!logoHospital && <div className="label">
+                        Rasm qo‘shish
+                        <input onChange={getInputPhoto} type="file"/>
                     </div>}
 
-                    <div className="label">
-                        Logo qo‘shish
-                        <input onChange={getInputPhoto} type="file"/>
-                    </div>
+                    {logoHospital && <div onClick={() => setLogoHospital(null)} className="label">
+                        Rasmni ochirish
+                        <img src="./images/cancel.png" alt=""/>
+                    </div>}
                 </div>
 
                 <div className="select-box">

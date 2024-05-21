@@ -1,6 +1,6 @@
 import "./style.scss";
 import {useNavigate} from "react-router-dom";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import axios from "axios";
 import {useFormik} from "formik";
 import {
@@ -49,7 +49,8 @@ const RegisterHospital = () => {
     const [daysList, setDaysList] = useState([]);
     const [hospitalList, setHospitalList] = useState([]);
     const [serviceList, setServiceList] = useState([])
-
+    const [logoValidate, setLogoValidate] = useState(false);
+    const ref2 = useRef(null);
     const [tg, setTg] = useState(false)
     const [ins, setIns] = useState(false)
     const [face, setFace] = useState(false)
@@ -123,9 +124,13 @@ const RegisterHospital = () => {
 
         if (!values.phone1) {
             errors.phone1 = "Required";
+        } else if (isNaN(Number(values.phone1))) {
+            errors.phone1 = "Required";
         }
 
         if (!values.phone2) {
+            errors.phone2 = "Required";
+        } else if (isNaN(Number(values.phone2))) {
             errors.phone2 = "Required";
         }
 
@@ -141,7 +146,6 @@ const RegisterHospital = () => {
             errors.end_time = "Required";
         }
 
-
         return errors;
     };
 
@@ -150,7 +154,7 @@ const RegisterHospital = () => {
             nameUz: "",
             nameRu: "",
             hospital_type: "",
-            type:"",
+            type: "",
             phone1: "",
             phone2: "",
             start_time: "",
@@ -159,7 +163,14 @@ const RegisterHospital = () => {
         },
         validate,
         onSubmit: (values) => {
-            setPageNumber(2);
+            if (logoHospital) {
+                setPageNumber(2);
+            } else {
+                ref2.current?.scrollIntoView({
+                    behavior: "smooth",
+                });
+                setLogoValidate(true)
+            }
         },
     });
 
@@ -204,6 +215,7 @@ const RegisterHospital = () => {
     };
 
     const getInputPhoto = (event) => {
+        setLogoValidate(false);
         const {target: {files}} = event;
         const file = files[0];
 
@@ -442,7 +454,6 @@ const RegisterHospital = () => {
     if (!isLoaded) return <Loader/>;
 
     return <div className="register-hospital-container">
-
         <div className="logo">
             <img src="./images/logo.png" alt=""/>
         </div>
@@ -481,14 +492,14 @@ const RegisterHospital = () => {
 
                     <div className={`line ${pageNumber === 3 ? "line-active" : ""}`}></div>
                 </div>
-                <div onClick={()=> navigate("/register")} className="prev-mobile">
+                <div onClick={() => navigate("/register")} className="prev-mobile">
                     <img src="./images/arrow.png" alt=""/>
                 </div>
             </div>
 
             {pageNumber === 1 && <div className="register-page-one">
 
-                <div className="title">
+                <div ref={ref2} className="title">
                     Shifoxona haqida aytib bering
                 </div>
                 <div className="des">
@@ -496,21 +507,21 @@ const RegisterHospital = () => {
                 </div>
 
                 <div className="logo-hospital">
-                    <div className="logo-image">
+                    <div className={`logo-image ${logoValidate ? "required-logo" : ""}`}>
                         {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
                             <img className="logo-camera" src="./images/Exclude.png" alt=""/>
                         }
-
                     </div>
 
-                    {logoHospital && <div className="cancel-logo">
-                        <img onClick={() => setLogoHospital(null)} src="./images/cancel.png" alt=""/>
+                    {!logoHospital && <div className="label">
+                        Rasm qo‘shish
+                        <input onChange={getInputPhoto} type="file"/>
                     </div>}
 
-                    <div className="label">
-                        Logo qo‘shish
-                        <input onChange={getInputPhoto} type="file"/>
-                    </div>
+                    {logoHospital && <div onClick={() => setLogoHospital(null)} className="label">
+                        Rasmni ochirish
+                        <img src="./images/cancel.png" alt=""/>
+                    </div>}
                 </div>
 
                 <div className="inputs-box">
@@ -895,7 +906,7 @@ const RegisterHospital = () => {
                                         label="Xizmat turi"
                                         onChange={(e) => {
                                             item.service = e.target.value
-                                            item.options = serviceList.filter((item)=> item.id === e.target.value)[0].options;
+                                            item.options = serviceList.filter((item) => item.id === e.target.value)[0].options;
                                             let change = [...service];
                                             setService(change);
                                         }}
