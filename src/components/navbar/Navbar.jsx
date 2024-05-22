@@ -186,7 +186,7 @@ const Navbar = () => {
             }
             <div className="section-header">
                 <div className="location-user">
-                    <div><img src="./images/loaction.png" alt=""/></div>
+                    <div><img src="./images/address.png" alt=""/></div>
                     <div className="title">
                         {i18next.language === "uz" && location}
                         {i18next.language === "ru" && locationRu}
@@ -218,7 +218,7 @@ const Navbar = () => {
             <div className="section-menu">
                 <div className="left-side">
                     <div className="logo">
-                        <img src="./images/logo.png" alt=""/>
+                        <img onClick={() => navigate("/")} src="./images/logo2.png" alt=""/>
                     </div>
                     <div className="menu-wrapper">
                         {

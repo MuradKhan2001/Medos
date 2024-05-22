@@ -26,6 +26,7 @@ const Service = () => {
 
     const filterHospital = (id) => {
         axios.post(`${baseUrl}filter-hospital/`, {sub_service: id}).then((response) => {
+            console.log(response.data)
             dispatch(getClinics(response.data));
             dispatch(changeMenu(true));
             navigate("/")

@@ -70,46 +70,50 @@ const AboutPharma = () => {
     return <div className="about-pharmacies">
         <Navbar/>
         {pharmacy && <div className="pharmaci-box">
-            <div className="header">
-                <img src={pharmacy.image} alt=""/>
-            </div>
-            <div className="title-pahrma">
-                {pharmacy.translations[i18next.language].name}
+            <div className="header-wrapper">
+                <div className="header">
+                    <img src={pharmacy.image} alt=""/>
+                </div>
+                <div className="left-header">
+                    <div className="title-pahrma">
+                        {pharmacy.translations[i18next.language].name}
+                    </div>
+                    <div onClick={() => handleSaveClick(pharmacy.id)} className="like">
+                        <img
+                            src={savedPosts.includes(pharmacy.id) ? "./images/like.png" : "./images/no-like.png"}
+                            alt=""/>
+
+                        <div className="name">{t("save")}</div>
+                    </div>
+                    <div className="section-commit">
+                        <div className="raiting">
+                            {pharmacy.avg_rating}
+                        </div>
+                        <div className="commit-count">
+                            {pharmacy.comment_count} {t("comment")}
+                        </div>
+                        <span></span>
+                        <div className="name">
+                            {t("pharmacy")}
+                        </div>
+                    </div>
+                    <div className="section-commit">
+                        {pharmacy.open_24 ? <div
+                            className="open">{t("open")}</div> : isPlaceOpen(pharmacy.start_time, pharmacy.end_time) ?
+                            <div className="open">{t("open")}</div> :
+                            <div className="close">{t("close")}</div>}
+                        <span></span>
+                        <div className="name">
+                            {pharmacy.open_24 ? "24 soat ochiq" : <>
+                                {pharmacy.start_time} {t("from")}
+                                &nbsp;
+                                {pharmacy.end_time} {t("to")}
+                            </>}
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div onClick={() => handleSaveClick(pharmacy.id)} className="like">
-                <img
-                    src={savedPosts.includes(pharmacy.id) ? "./images/like.png" : "./images/no-like.png"}
-                    alt=""/>
-
-                <div className="name">{t("save")}</div>
-            </div>
-            <div className="section-commit">
-                <div className="raiting">
-                    {pharmacy.avg_rating}
-                </div>
-                <div className="commit-count">
-                    {pharmacy.comment_count} {t("comment")}
-                </div>
-                <span></span>
-                <div className="name">
-                    {t("pharmacy")}
-                </div>
-            </div>
-            <div className="section-commit">
-                {pharmacy.open_24 ? <div
-                    className="open">{t("open")}</div> : isPlaceOpen(pharmacy.start_time, pharmacy.end_time) ?
-                    <div className="open">{t("open")}</div> :
-                    <div className="close">{t("close")}</div>}
-                <span></span>
-                <div className="name">
-                    {pharmacy.open_24 ? "24 soat ochiq" : <>
-                        {pharmacy.start_time} {t("from")}
-                        &nbsp;
-                        {pharmacy.end_time} {t("to")}
-                    </>}
-                </div>
-            </div>
             <div className="map-locations">
                 <div className="map-side">
                     <MapAbout/>

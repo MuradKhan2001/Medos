@@ -225,7 +225,7 @@ const Saved = () => {
                     {doctors.length > 0 ? doctors.map((item, index) => {
                         return <div key={index} className="doctor">
                             <div className="left-side">
-                                <img src={item.image} alt=""/>
+                                <img src={"https://api.medos.uz/"+item.image} alt=""/>
                                 <div className="like">
                                     <img onClick={() => handleSaveClickDoctor(item.id)}
                                          src={savedPostsDoctor.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
@@ -283,6 +283,7 @@ const Saved = () => {
                                         <img src="./images/time.png" alt=""/>
                                         {item.working_days.map((item, index) => {
                                             return <p key={index}>
+                                                &nbsp;
                                                 {item.translations[i18next.language].day}
                                             </p>
                                         })}

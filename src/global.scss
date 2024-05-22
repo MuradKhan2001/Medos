@@ -19,3 +19,8 @@
     background-color: #00ADAD;
   }
 }
+
+body {
+  background: rgb(229,255,255);
+  background: radial-gradient(circle, rgba(229,255,255,0.1) 0%, rgba(180,247,247,0.2) 92%, rgba(0,173,173,0.15) 100%);
+}

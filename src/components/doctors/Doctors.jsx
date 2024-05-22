@@ -305,7 +305,7 @@ const Doctors = () => {
                                             <div className="item-price">
                                                 <div className="title">{t("first-consultation")}</div>
                                                 <div className="number">
-                                                    {item.consultation_fee ? <>{item.consultation_fee} so'm </> : "Kelishuv asosida"}
+                                                    {item.consultation_fee ? <>{item.consultation_fee} {t("sum")} </> : t("agreement")}
                                                 </div>
                                             </div>
                                             <div className="item-price">

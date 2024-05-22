@@ -3,7 +3,6 @@
   height: 100vh;
 
   .doctors-list {
-    background-color: #B4C0CC29;
     height: calc(100% - 120px);
 
     .bottom-content {
@@ -15,7 +14,6 @@
       .left-side {
         width: 60%;
         height: 100%;
-        background-color: white;
 
         .category-wrapper {
           width: 95%;
@@ -33,7 +31,7 @@
               .MuiOutlinedInput-root {
                 border-radius: 20px;
                 margin-right: 10px;
-                background-color: rgba(180, 192, 204, 0.16);
+                background-color: white;
 
                 &:hover {
                   .MuiOutlinedInput-notchedOutline {
@@ -59,7 +57,7 @@
               .MuiOutlinedInput-root {
                 border-radius: 20px;
                 margin-right: 10px;
-                background-color: rgba(180, 192, 204, 0.16);
+                background-color: white;
 
                 &:hover {
                   .MuiOutlinedInput-notchedOutline {
@@ -85,7 +83,7 @@
               .MuiOutlinedInput-root {
                 border-radius: 20px;
                 margin-right: 10px;
-                background-color: rgba(180, 192, 204, 0.16);
+                background-color: white;
 
                 &:hover {
                   .MuiOutlinedInput-notchedOutline {
@@ -112,7 +110,7 @@
               .MuiOutlinedInput-root {
                 border-radius: 20px;
                 margin-right: 10px;
-                background-color: rgba(180, 192, 204, 0.16);
+                background-color: white;
 
                 &:hover {
                   .MuiOutlinedInput-notchedOutline {
@@ -138,7 +136,7 @@
               padding: 8px 15px;
               margin-left: 10px;
               border-radius: 20px;
-              background-color: rgba(180, 192, 204, 0.16);
+              background-color: white;
               cursor: pointer;
               transition: 0.2s;
 
@@ -170,7 +168,7 @@
             margin-top: 20px;
             width: 97%;
             display: flex;
-            border-bottom: 1px solid #B4C0CC47;
+            border-bottom: 2px solid rgba(148, 160, 172, 0.5);
             padding-bottom: 20px;
             padding-right: 15px;
 
@@ -363,7 +361,7 @@
                   border-bottom: 2px dotted rgba(133, 145, 158, 1);
 
                   .title {
-                    background-color: white;
+                    background-color: rgb(239, 255, 253);
                     color: rgba(133, 145, 158, 1);
                     margin-bottom: -6px;
                     padding-right: 5px;
@@ -1108,16 +1106,17 @@
                   height: 100%;
                   object-fit: cover;
                 }
-                .like {
-                   right: 10px;
-                   top: 8px;
-                   position: absolute;
 
-                   img {
-                     width: 20px;
-                     cursor: pointer;
-                   }
-                 }
+                .like {
+                  right: 10px;
+                  top: 8px;
+                  position: absolute;
+
+                  img {
+                    width: 20px;
+                    cursor: pointer;
+                  }
+                }
               }
 
               .right-side {

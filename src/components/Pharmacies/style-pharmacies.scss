@@ -2,7 +2,6 @@
   width: 100%;
   height: 100vh;
   .pharmacies-list {
-    background-color: #B4C0CC29;
     height: calc(100% - 120px);
 
     .bottom-content {
@@ -14,7 +13,6 @@
       .left-side {
         width: 60%;
         height: 100%;
-        background-color: white;
 
         .category-wrapper {
           width: 95%;
@@ -32,7 +30,7 @@
               .MuiOutlinedInput-root {
                 border-radius: 20px;
                 margin-right: 10px;
-                background-color: rgba(180, 192, 204, 0.16);
+                background-color: white;
 
                 &:hover {
                   .MuiOutlinedInput-notchedOutline {
@@ -58,7 +56,7 @@
               .MuiOutlinedInput-root {
                 border-radius: 20px;
                 margin-right: 10px;
-                background-color: rgba(180, 192, 204, 0.16);
+                background-color: white;
 
                 &:hover {
                   .MuiOutlinedInput-notchedOutline {
@@ -84,7 +82,7 @@
               .MuiOutlinedInput-root {
                 border-radius: 20px;
                 margin-right: 10px;
-                background-color: rgba(180, 192, 204, 0.16);
+                background-color: white;
 
                 &:hover {
                   .MuiOutlinedInput-notchedOutline {
@@ -110,7 +108,7 @@
               padding: 8px 15px;
               margin-left: 10px;
               border-radius: 20px;
-              background-color: rgba(180, 192, 204, 0.16);
+              background-color: white;
               cursor: pointer;
               transition: 0.2s;
               &:hover{
@@ -942,9 +940,10 @@
 
               .pharma {
                 padding: 10px;
-                margin: 0;
+                margin: 20px 0 0 0;
                 width: 100%;
                 display: block;
+                border-bottom: 2px solid rgba(148, 160, 172, 0.5);
 
                 .left-side {
                   width: 100%;

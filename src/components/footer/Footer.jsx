@@ -61,7 +61,7 @@ const Footer = () => {
                     © 2024 medos.uz · {t("footer-text")}
                 </div>
                 <div className="uzb">
-                    <img src="./images/globe.png" alt=""/>
+                    <img src="./images/globe-pahrma.png" alt=""/>
                     {t("uzb")}
                 </div>
             </div>
