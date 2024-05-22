@@ -1,8 +1,10 @@
 import "./register-style.scss";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
+import {useTranslation} from "react-i18next";
 
 const Register = () => {
+    const {t} = useTranslation();
     const [direction, setDirection] = useState("");
     const navigate = useNavigate();
 
@@ -15,34 +17,32 @@ const Register = () => {
             <div className="xbtn">
                 <img onClick={() => navigate("/")} src="./images/cancel.png" alt=""/>
             </div>
-
             <div className="title">
-                Siz ro‘yxatdan qanday maqsad o‘tmoqchisiz?
+                {t("reason-register")}
             </div>
-
             <div className="des">
-                Ro‘yxatdan o‘tishni boshlashdan oldin pastdagi maqsadlardan birin tanlang
+                {t("register-text")}
             </div>
 
             <div onClick={() => setDirection("/register-doctor")} className={`items ${direction === "/register-doctor" ? "active" : ""}`}>
                 <img src="./images/Icons.png" alt=""/>
-                Shifokor akkountini ochish
+                {t("add-doctor")}
             </div>
 
             <div onClick={() => setDirection("/register-hospital")}
                  className={`items ${direction === "/register-hospital" ? "active" : ""}`}>
                 <img src="./images/pin-location.png" alt=""/>
-                Shifoxona akkountini ochish
+                {t("add-clinic")}
             </div>
 
             <div onClick={() => setDirection("/register-pharmacies")}
                  className={`items ${direction === "/register-pharmacies" ? "active" : ""}`}>
                 <img src="./images/pill.png" alt=""/>
-                Dorixona akkountini ochish
+                {t("add-pharmacy")}
             </div>
 
             <div onClick={() => navigate(direction)} className={`button-next ${!direction ? "button-next-disabled" : ""}`}>
-                Tasdiqlash va davom etish
+                {t("register-btn")}
             </div>
         </div>
     </div>

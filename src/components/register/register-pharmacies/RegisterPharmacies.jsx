@@ -18,7 +18,8 @@ import Loader from "../../loader/Loader";
 import i18next from "i18next";
 import {useTranslation} from "react-i18next";
 import {useFormik} from "formik";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {addAlert, delAlert} from "../../../redux/AlertsBox";
 
 const libraries = ["places"];
 
@@ -41,6 +42,8 @@ const RegisterPharmacies = () => {
     const [logoValidate, setLogoValidate] = useState(false);
     const ref2 = useRef(null);
     const [daysList, setDaysList] = useState([]);
+    const dispatch = useDispatch();
+    const [loader, setLoader] = useState(false);
 
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -53,19 +56,19 @@ const RegisterPharmacies = () => {
         },
     };
     const regions = [
-        {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
-        {name: "Buxoro", latitude: 39.767070, longitude: 64.455393},
-        {name: "Farg‘ona", latitude: 40.372379, longitude: 71.797770},
-        {name: "Jizzax", latitude: 40.119300, longitude: 67.880140},
-        {name: "Namangan", latitude: 41.004297, longitude: 71.642956},
-        {name: "Navoiy", latitude: 40.096634, longitude: 65.352255},
-        {name: "Qashqadaryo", latitude: 38.852124, longitude: 65.784203},
-        {name: "Samarqand", latitude: 39.649307, longitude: 66.965182},
-        {name: "Sirdaryo", latitude: 40.376986, longitude: 68.713159},
-        {name: "Surxondaryo", latitude: 37.931559, longitude: 67.564765},
-        {name: "Toshkent", latitude: 41.295695, longitude: 69.239730},
-        {name: "Xorazm", latitude: 41.522326, longitude: 60.623731},
-        {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
+        {name: t("Andijan"), latitude: 40.813616, longitude: 72.283463},
+        {name: t("Bukhara"), latitude: 39.767070, longitude: 64.455393},
+        {name: t("Ferghana"), latitude: 40.372379, longitude: 71.797770},
+        {name: t("Jizzakh"), latitude: 40.119300, longitude: 67.880140},
+        {name: t("Namangan"), latitude: 41.004297, longitude: 71.642956},
+        {name: t("Navoi"), latitude: 40.096634, longitude: 65.352255},
+        {name: t("Kashkadarya"), latitude: 38.852124, longitude: 65.784203},
+        {name: t("Samarkand"), latitude: 39.649307, longitude: 66.965182},
+        {name: t("SyrDarya"), latitude: 40.376986, longitude: 68.713159},
+        {name: t("Surkhandarya"), latitude: 37.931559, longitude: 67.564765},
+        {name: t("Tashkent"), latitude: 41.295695, longitude: 69.239730},
+        {name: t("Khorezm"), latitude: 41.522326, longitude: 60.623731},
+        {name: t("Karakalpakstan"), latitude: 43.730521, longitude: 59.064533}
     ];
 
     const selectAddressIcon = {
@@ -139,7 +142,25 @@ const RegisterPharmacies = () => {
         validate,
         onSubmit: (values) => {
             if (logoHospital) {
-                setPageNumber(2);
+                axios.post(`${baseUrl}checkuser/`, {phone: values.phone1}).then((response) => {
+
+                }).catch((error) => {
+                    if (error.response.status === 302) {
+                        let idAlert = Date.now();
+                        let alert = {
+                            id: idAlert,
+                            text: "Ushbu raqam ro'yxatdan o'tgan!",
+                            img: "./images/red.svg",
+                            color: "#ffefe7",
+                        };
+                        dispatch(addAlert(alert));
+                        setTimeout(() => {
+                            dispatch(delAlert(idAlert));
+                        }, 5000);
+                    } else {
+                        setPageNumber(2);
+                    }
+                });
             } else {
                 ref2.current?.scrollIntoView({
                     behavior: "smooth",
@@ -349,24 +370,26 @@ const RegisterPharmacies = () => {
             working_days: formOne.values.working_days,
             region: region
         };
+        setLoader(true);
         axios.post(`${baseUrl}auth/register/pharmacy/`, allInfoHospital).then((response) => {
             window.location.pathname = "/login";
+            setTimeout(() => {
+                setLoader(false)
+            }, 500);
         }).catch((error) => {
-            console.log(error)
+            setLoader(false);
         });
     };
 
     if (!isLoaded) return <Loader/>;
-
+    if (loader) return <Loader/>;
     return <div className="register-pharmacies-container">
-
         <div className="logo">
             <img src="./images/logo.png" alt=""/>
         </div>
         <div className="xbtn">
             <img onClick={() => navigate("/")} src="./images/cancel.png" alt=""/>
         </div>
-
         <div className="register-page">
             <div className="header-register">
                 <div className="line-page-numbers">

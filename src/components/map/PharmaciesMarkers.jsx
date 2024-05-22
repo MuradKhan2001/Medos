@@ -1,11 +1,11 @@
-import {InfoWindow, MarkerF} from "@react-google-maps/api";
+import {InfoWindow, MarkerClustererF, MarkerF} from "@react-google-maps/api";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
 
-const PharmaciesMarkers = ()=>{
+const PharmaciesMarkers = () => {
     const dispatch = useDispatch();
     const Pharmacies = useSelector((store) => store.Pharmacies.data);
     const navigate = useNavigate();
@@ -39,16 +39,22 @@ const PharmaciesMarkers = ()=>{
     };
 
     return <>
-        {Pharmacies.map((item, index) => {
-            return <MarkerF
-                key={index}
-                position={{lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])}}
-                icon={clinicActiveId === item.id ? icon2 : icon}
-                onClick={() => {
-                    onMarkerClick(item);
-                    setClinicActiveId(item.id)}}
-            />
-        })}
+        <MarkerClustererF gridSize={60}>
+            {(clusterer) => {
+                Pharmacies.map((item, index) => {
+                    return <MarkerF
+                        key={index}
+                        position={{lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])}}
+                        icon={clinicActiveId === item.id ? icon2 : icon}
+                        onClick={() => {
+                            onMarkerClick(item);
+                            setClinicActiveId(item.id)
+                        }}
+                        clusterer={clusterer}
+                    />
+                })
+            }}
+        </MarkerClustererF>
 
         {selectedLocation && (<InfoWindow
             position={{
@@ -107,7 +113,7 @@ const PharmaciesMarkers = ()=>{
                         </div>
 
                         <div className="buttons">
-                            <div onClick={()=> {
+                            <div onClick={() => {
                                 localStorage.setItem("pharmacyId", selectedLocation.id);
                                 dispatch(getAboutMarker(selectedLocation.location));
                                 navigate("/about-pharmacies")

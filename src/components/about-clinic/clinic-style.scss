@@ -136,6 +136,23 @@
         height: 300px;
         display: flex;
 
+        .images-box {
+          width: 300px;
+          height: 100%;
+
+          .image-hospital {
+            width: 100%;
+            height: 100%;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 7px;
+            }
+          }
+        }
+
         .location-box {
           padding: 10px;
           width: 50%;
@@ -1016,6 +1033,7 @@
           height: max-content;
           display: block;
           padding: 0;
+
           .images-box {
             width: 100%;
             height: 220px;
@@ -1025,7 +1043,8 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            img{
+
+            img {
               width: 100%;
               height: 100%;
               object-fit: cover;
@@ -1208,6 +1227,7 @@
             }
           }
         }
+
         .tab-hospital {
           .tab {
             font-size: 14px;
@@ -1241,12 +1261,14 @@
               font-weight: 600;
               font-size: 22px;
             }
+
             .contents {
               .service {
                 margin-right: 10px;
                 width: max-content;
               }
             }
+
             .more-btn {
               cursor: pointer;
               margin-top: 10px;
@@ -1282,6 +1304,7 @@
                   margin-right: 6px;
                 }
               }
+
               .btn-commit {
                 padding: 7px 15px;
               }
@@ -1290,6 +1313,7 @@
             .commits {
               margin-top: 20px;
               width: 100%;
+
               .header-commit {
                 display: flex;
                 align-items: center;
@@ -1305,12 +1329,14 @@
                   background-color: rgba(250, 128, 66, 1);
                   margin-right: 15px;
                 }
+
                 .right-names {
                   .name {
                     font-size: 14px;
                   }
                 }
               }
+
               .text-commit {
                 font-size: 12px;
               }
@@ -1529,6 +1555,7 @@
                 margin-right: 6px;
               }
             }
+
             .btn-commit {
               padding: 7px 15px;
             }
@@ -1537,6 +1564,7 @@
           .commits {
             margin-top: 20px;
             width: 100%;
+
             .header-commit {
               display: flex;
               align-items: center;
@@ -1552,12 +1580,14 @@
                 background-color: rgba(250, 128, 66, 1);
                 margin-right: 15px;
               }
+
               .right-names {
                 .name {
                   font-size: 14px;
                 }
               }
             }
+
             .text-commit {
               font-size: 12px;
             }
@@ -1575,9 +1605,11 @@
 
             .service {
               margin-top: 20px;
+
               .name {
                 font-size: 14px;
               }
+
               .value {
                 font-size: 14px;
               }

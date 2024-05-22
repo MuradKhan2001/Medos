@@ -16,10 +16,9 @@
         width: 60%;
         height: 100%;
         background-color: white;
-        padding-right: 20px;
 
         .category-wrapper {
-          width: 100%;
+          width: 95%;
           margin: 0 auto;
           height: 70px;
           overflow-x: auto;
@@ -672,17 +671,19 @@
                 }
 
                 .section-commit {
+                  margin-top: 10px;
                   display: flex;
                   align-items: center;
 
                   .raiting {
+
                     display: flex;
                     align-items: center;
                     color: rgba(253, 102, 112, 1);
                     margin-right: 10px;
 
                     img {
-                      width: 20px;
+                      width: 15px;
                       margin-right: 10px;
                     }
                   }

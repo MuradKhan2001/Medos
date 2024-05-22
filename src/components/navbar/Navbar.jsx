@@ -18,6 +18,7 @@ const Navbar = () => {
     const [searchList, setSearchList] = useState(false);
     const navigate = useNavigate();
     const [location, setLocation] = useState();
+    const [locationRu, setLocationRu] = useState();
     const [searchBox, setSearchBox] = useState([]);
     const [inputVal, setInputVal] = useState("");
     const [filterResult, setFilterResult] = useState([]);
@@ -25,14 +26,15 @@ const Navbar = () => {
     useEffect(() => {
         axios.get(`${baseUrl}search-options/`).then((response) => {
             setSearchBox(response.data);
-            console.log(response.data)
         });
-
         navigator.geolocation.getCurrentPosition((position) => {
             const {latitude, longitude} = position.coords;
             const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&lan=en`;
-            axios.get(`${url}`, {headers: {"Accept-Language": i18next.language}}).then((res) => {
+            axios.get(`${url}`, {headers: {"Accept-Language": "uz"}}).then((res) => {
                 setLocation(res.data.address.city)
+            });
+            axios.get(`${url}`, {headers: {"Accept-Language": "ru"}}).then((res) => {
+                setLocationRu(res.data.address.city)
             });
         });
     }, []);
@@ -177,7 +179,6 @@ const Navbar = () => {
         }
     };
 
-
     return <>
         <div className="navbar-wrapper">
             {
@@ -186,7 +187,10 @@ const Navbar = () => {
             <div className="section-header">
                 <div className="location-user">
                     <div><img src="./images/loaction.png" alt=""/></div>
-                    <div className="title">{location}</div>
+                    <div className="title">
+                        {i18next.language === "uz" && location}
+                        {i18next.language === "ru" && locationRu}
+                    </div>
                 </div>
                 <div className="languages-wrapper">
                     <div className="items mr">
@@ -204,7 +208,9 @@ const Navbar = () => {
 
                     <div className="items">
                         <div><img src="./images/hear.png" alt=""/></div>
-                        <div onClick={() => navigate("/saved")} className="title">Saqlanganlar</div>
+                        <div onClick={() => navigate("/saved")} className="title">
+                            {t("saved")}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -214,7 +220,6 @@ const Navbar = () => {
                     <div className="logo">
                         <img src="./images/logo.png" alt=""/>
                     </div>
-
                     <div className="menu-wrapper">
                         {
                             Menus.map((item, index) => {
@@ -226,21 +231,20 @@ const Navbar = () => {
                             })
                         }
                     </div>
-
                     <div className={`search-box ${searchList ? "active-search" : ""}`}>
                         <div className="icon-search">
                             <img src="./images/search.png" alt="search"/>
                         </div>
 
                         <input onChange={handleSearch} onClick={() => setSearchList(true)}
-                               placeholder="Ma'lumot izlash uchun..."
+                               placeholder={t("search-placeholder")}
                                type="text"/>
 
                         {searchList && <div
                             className={`search-list`}>
 
                             {inputVal && <div>
-                                {filterResult.services.length > 0 && <div className="search-title">Xizmatlar</div>}
+                                {filterResult.services.length > 0 && <div className="search-title">{t("nav4")}</div>}
                                 {filterResult.services && filterResult.services.map((item, index) => {
                                     return <div onClick={() => getInformation("service", item)} key={index}
                                                 className="search-result">
@@ -251,7 +255,7 @@ const Navbar = () => {
                                     </div>
                                 })}
 
-                                {filterResult.hospitals.length > 0 && <div className="search-title">Shifoxonalar</div>}
+                                {filterResult.hospitals.length > 0 && <div className="search-title">{t("nav1")}</div>}
                                 {filterResult.hospitals && filterResult.hospitals.map((item, index) => {
                                     return <div onClick={() => getInformation("hospital", item)} key={index}
                                                 className="search-result">
@@ -262,7 +266,7 @@ const Navbar = () => {
                                     </div>
                                 })}
 
-                                {filterResult.doctors.length > 0 && <div className="search-title">Shifokorlar</div>}
+                                {filterResult.doctors.length > 0 && <div className="search-title">{t("nav2")}</div>}
                                 {filterResult.doctors && filterResult.doctors.map((item, index) => {
                                     return <div onClick={() => getInformation("doctor", item)} key={index}
                                                 className="search-result">
@@ -274,7 +278,7 @@ const Navbar = () => {
                                     </div>
                                 })}
 
-                                {filterResult.pharmacy.length > 0 && <div className="search-title">Dorixonalar</div>}
+                                {filterResult.pharmacy.length > 0 && <div className="search-title">{t("nav3")}</div>}
                                 {filterResult.pharmacy && filterResult.pharmacy.map((item, index) => {
                                     return <div onClick={() => getInformation("pharmacy", item)} key={index}
                                                 className="search-result">
@@ -286,8 +290,8 @@ const Navbar = () => {
                                 })}
 
                                 {!filterResult.found && <div className="search-none">
-                                    <div className="title">Ma'lumot topilmadi</div>
-                                    <div className="des">Qaytadan boshqa so‘z orqali qidirib ko‘ring!</div>
+                                    <div className="title">{t("norFoundText1")}</div>
+                                    <div className="des">{t("norFoundText2")}</div>
                                 </div>}
                             </div>}
                         </div>}
@@ -296,7 +300,6 @@ const Navbar = () => {
                             <img src="./images/cancel.png" alt=""/>
                         </div>}
                     </div>
-
                 </div>
 
                 <div className={`profile ${profile ? "active-profile" : ""}`}>
@@ -324,7 +327,7 @@ const Navbar = () => {
                                             localStorage.getItem("userType") === "Pharmacy" && navigate("/profile-pharmacy");
                                         }} className="btns">
                                             <img src="./images/settings.png" alt=""/>
-                                            Sozlamalar
+                                            {t("settings")}
                                         </div>
 
                                         {(localStorage.getItem("userType") === "Doctor" ||
@@ -333,7 +336,7 @@ const Navbar = () => {
                                             navigate("/messages");
                                         }} className="btns">
                                             <img src="./images/email.png" alt=""/>
-                                            Murojaatlar
+                                            {t("messages")}
                                         </div>}
 
                                         <div onClick={() => {
@@ -344,19 +347,19 @@ const Navbar = () => {
                                             window.location.reload()
                                         }} className="btns">
                                             <img src="./images/log-out.png" alt=""/>
-                                            Profildan chiqish
+                                            {t("log-out")}
                                         </div>
 
                                     </div> :
                                     <div className="register-card">
-                                        <div onClick={() => navigate("/register")} className="register-btn">Ro'yxatdan
-                                            o'tish
+                                        <div onClick={() => navigate("/register")} className="register-btn">
+                                            {t("register")}
                                         </div>
                                         <div onClick={() => navigate("/login")} className="login-btn">
-                                            Profilga kirish
+                                            {t("login")}
                                         </div>
                                         <div className="des">
-                                            Shifoxaona, Shifokor yoki Dorixona qo'shish uchun ro'yxatdan o'ting!
+                                            {t("login-des")}
                                         </div>
                                     </div>}
                             </div>

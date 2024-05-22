@@ -5,10 +5,12 @@ import AuthCode from "react-auth-code-input";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {addAlert, delAlert} from "../../redux/AlertsBox";
 
 const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [phone, setPhone] = useState("");
     const [code, setCode] = useState("");
@@ -61,11 +63,31 @@ const Login = () => {
             })
             .catch((error) => {
                 if (error.response.status === 404) {
-                    alert("Bu raqamga sms yuborib bo'lmaydi")
+                    let idAlert = Date.now();
+                    let alert = {
+                        id: idAlert,
+                        text: "Bu raqamga sms yuborib bo'lmaydi!",
+                        img: "./images/red.svg",
+                        color: "#ffefe7",
+                    };
+                    dispatch(addAlert(alert));
+                    setTimeout(() => {
+                        dispatch(delAlert(idAlert));
+                    }, 5000);
                 }
 
                 if (error.response.status === 406) {
-                    alert("Bu raqam ro'yxatdan o'tmagan")
+                    let idAlert = Date.now();
+                    let alert = {
+                        id: idAlert,
+                        text: "Bu raqam ro'yxatdan o'tmagan!",
+                        img: "./images/red.svg",
+                        color: "#ffefe7",
+                    };
+                    dispatch(addAlert(alert));
+                    setTimeout(() => {
+                        dispatch(delAlert(idAlert));
+                    }, 5000);
                 }
             });
     };

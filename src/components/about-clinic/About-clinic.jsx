@@ -24,10 +24,10 @@ const AboutClinic = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const tabs = [
-        {id: 1, name: "Umumiy"},
-        {id: 2, name: "Shifokorlar"},
-        {id: 3, name: "Izohlar"},
-        {id: 4, name: "Xizmatlar va narxlar"}
+        {id: 1, name: t("all")},
+        {id: 2, name: t("nav2")},
+        {id: 3, name: t("comment")},
+        {id: 4, name: t("service-price")}
     ];
     const [savedPosts, setSavedPosts] = useState([]);
 
@@ -84,7 +84,6 @@ const AboutClinic = () => {
                 <div className="title">
                     {clinic && clinic.translations[i18next.language].name}
                 </div>
-
                 <div className="buttons">
                     <div className="like">
                         <img onClick={() => handleSaveClick(clinic.id)}
@@ -93,10 +92,12 @@ const AboutClinic = () => {
                     </div>
 
                     <div onClick={() => ShowModal("contact", clinic)}
-                         className="button-call">Qo'ng'iroq qilish
+                         className="button-call">
+                        {t("call")}
                     </div>
                     <div onClick={() => ShowModal("sms", clinic.user)}
-                         className="button-send">Yozish
+                         className="button-send">
+                        {t("acceptance2")}
                     </div>
                 </div>
             </div>
@@ -106,7 +107,7 @@ const AboutClinic = () => {
                         {clinic.avg_rating}
                     </div>
                     <div className="commit-count">
-                        {clinic.comment_count} ta izoh
+                        {clinic.comment_count} {t("comment")}
                     </div>
                 </div>
                 <div className="section-location">
@@ -117,10 +118,10 @@ const AboutClinic = () => {
                     <span></span>
                     <div className="time-open">
                         <img src="./images/clock.png" alt=""/>
-                        {clinic.open_24 ? "24 soat ochiq" : <>
-                            {clinic.start_time} dan
+                        {clinic.open_24 ? t("open24") : <>
+                            {clinic.start_time} {t("from")}
                             &nbsp;
-                            {clinic.end_time} gacha
+                            {clinic.end_time} {t("to")}
                         </>}
                     </div>
                 </div>
@@ -146,7 +147,7 @@ const AboutClinic = () => {
                 {tabActive === 1 && <div className="all-info">
                     <div className="service-hospital">
                         <div className="title">
-                            Shifokorlarning ixtisoslashuvi
+                            {t("nav4")}
                         </div>
                         <div className="contents">
                             {clinic && clinic.hospital_services.map((item, index) => {
@@ -163,13 +164,13 @@ const AboutClinic = () => {
                                     {clinic.avg_rating}
                                 </div>
                                 <div className="commit-count">
-                                    {clinic.comment_count} ta izoh
+                                    {clinic.comment_count} {t("comment")}
                                 </div>
                             </div>
 
                             <div onClick={() => ShowModal("commit", clinic.user)} className="btn-commit">
                                 <img src="./images/comit.png" alt=""/>
-                                Izoh yozib qoldirish
+                                {t("comment-btn")}
                             </div>
                         </div>
                         {comments.map((item, index) => {
@@ -202,7 +203,7 @@ const AboutClinic = () => {
                             }
                         })}
                         <div onClick={() => setTabActive(3)} className="more-btn">
-                            Ko'proq ko'rsatish
+                            {t("more")}
                         </div>
                     </div>
                 </div>}
@@ -226,7 +227,7 @@ const AboutClinic = () => {
                             doctors.doctors.map((item, index) => {
                                 return <div key={index} className="doctor">
                                     <div className="left-side">
-                                        <img src={"http://138.197.97.98" + item.image} alt=""/>
+                                        <img src={"https://api.medos.uz/" + item.image} alt=""/>
                                     </div>
 
                                     <div className="right-side">
@@ -243,7 +244,7 @@ const AboutClinic = () => {
                                                 </div>
                                                 <span></span>
                                                 <div className="commit-count">
-                                                    {item.comment_count} ta izoh
+                                                    {item.comment_count} {t("comment")}
                                                 </div>
                                             </div>
                                         </div>
@@ -255,7 +256,7 @@ const AboutClinic = () => {
                                             </div>
                                             <span></span>
                                             <div className="time-open">
-                                                {item.experience} yillik tajriba
+                                                {item.experience} {t("experience")}
                                             </div>
                                         </div>
 
@@ -285,9 +286,9 @@ const AboutClinic = () => {
                                             </div>
                                             <span></span>
                                             <div className="time-open">
-                                                {item.start_time} dan
+                                                {item.start_time} {t("from")}
                                                 &nbsp;
-                                                {item.end_time} gacha
+                                                {item.end_time} {t("to")}
                                             </div>
                                         </div>
 
@@ -301,18 +302,19 @@ const AboutClinic = () => {
 
                                         <div className="prices">
                                             <div className="item-price">
-                                                <div className="title">Birinchi konsultatsiya</div>
+                                                <div className="title">{t("first-consultation")}</div>
                                                 <div className="number">
-                                                    {item.consultation_fee ? <>{item.consultation_fee} so'm </> : "Kelishuv asosida"}
+                                                    {item.consultation_fee ? <>{item.consultation_fee} {t("sum")} </> : t("agreement")}
+
                                                 </div>
                                             </div>
 
                                             <div className="item-price">
-                                                <div className="title">Takroriy konsultatsiya</div>
+                                                <div className="title">{t("second-consultation")}</div>
                                                 <div className="number">
                                                     {item.second_consultation_fee ?
-                                                        <>{item.second_consultation_fee} so'm </> :
-                                                        "Kelishuv asosida"}
+                                                        <>{item.second_consultation_fee} {t("sum")} </> :
+                                                        t("agreement")}
                                                 </div>
                                             </div>
                                         </div>
@@ -321,15 +323,15 @@ const AboutClinic = () => {
                                             <div className="left-btn">
                                                 <div onClick={() => ShowModal("sms", item.user)}
                                                      className="button-send">
-                                                    Qabuliga yozilish
+                                                    {t("acceptance")}
                                                 </div>
                                                 <div onClick={() => ShowModal("contact", item)}
-                                                     className="button-call">Qo'ng'iroq
-                                                    qilish
+                                                     className="button-call">
+                                                    {t("call")}
                                                 </div>
                                             </div>
                                             <div onClick={() => navigate("/about-clinic")} className="more-btn">
-                                                Ko'proq ko'rsatish
+                                                {t("more")}
                                             </div>
                                         </div>
                                     </div>
@@ -346,13 +348,13 @@ const AboutClinic = () => {
                                 {clinic.avg_rating}
                             </div>
                             <div className="commit-count">
-                                {clinic.comment_count} ta izoh
+                                {clinic.comment_count} {t("comment")}
                             </div>
                         </div>
 
                         <div onClick={() => ShowModal("commit", clinic.user)} className="btn-commit">
                             <img src="./images/comit.png" alt=""/>
-                            Izoh yozib qoldirish
+                            {t("comment-btn")}
                         </div>
                     </div>
 
@@ -408,7 +410,7 @@ const AboutClinic = () => {
                             {item.sub_services_list.map((item, index) => {
                                 return <div key={index} className="service">
                                     <div className="name">{item.sub_service.translations[i18next.language].name}</div>
-                                    <div className="value">{item.price} so‘m</div>
+                                    <div className="value">{item.price} {t("sum")}</div>
                                 </div>
                             })}
                         </div>

@@ -13,15 +13,16 @@ import {getDoctor} from "../../redux/doctors";
 import axios from "axios";
 import MobileNavbar from "../mobile-navbar/MobileNavbar";
 import i18next from "i18next";
+import {useTranslation} from "react-i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
 
 const Doctors = () => {
+    const {t} = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const filterService = useSelector((store) => store.Menu.data);
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const Doctors = useSelector((store) => store.Doctors.data);
-    const [like, setLike] = useState(false);
     const showMap = useSelector((store) => store.ShowMap.data);
     const [serviceList, setServiceList] = useState([]);
     const [regionSelect, setRegionSelect] = useState("");
@@ -34,19 +35,19 @@ const Doctors = () => {
     const location = useSelector((store) => store.LocationUser.data);
 
     const regions = [
-        {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
-        {name: "Buxoro", latitude: 39.767070, longitude: 64.455393},
-        {name: "Farg‘ona", latitude: 40.372379, longitude: 71.797770},
-        {name: "Jizzax", latitude: 40.119300, longitude: 67.880140},
-        {name: "Namangan", latitude: 41.004297, longitude: 71.642956},
-        {name: "Navoiy", latitude: 40.096634, longitude: 65.352255},
-        {name: "Qashqadaryo", latitude: 38.852124, longitude: 65.784203},
-        {name: "Samarqand", latitude: 39.649307, longitude: 66.965182},
-        {name: "Sirdaryo", latitude: 40.376986, longitude: 68.713159},
-        {name: "Surxondaryo", latitude: 37.931559, longitude: 67.564765},
-        {name: "Toshkent", latitude: 41.295695, longitude: 69.239730},
-        {name: "Xorazm", latitude: 41.522326, longitude: 60.623731},
-        {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
+        {name: t("Andijan"), latitude: 40.813616, longitude: 72.283463},
+        {name: t("Bukhara"), latitude: 39.767070, longitude: 64.455393},
+        {name: t("Ferghana"), latitude: 40.372379, longitude: 71.797770},
+        {name: t("Jizzakh"), latitude: 40.119300, longitude: 67.880140},
+        {name: t("Namangan"), latitude: 41.004297, longitude: 71.642956},
+        {name: t("Navoi"), latitude: 40.096634, longitude: 65.352255},
+        {name: t("Kashkadarya"), latitude: 38.852124, longitude: 65.784203},
+        {name: t("Samarkand"), latitude: 39.649307, longitude: 66.965182},
+        {name: t("SyrDarya"), latitude: 40.376986, longitude: 68.713159},
+        {name: t("Surkhandarya"), latitude: 37.931559, longitude: 67.564765},
+        {name: t("Tashkent"), latitude: 41.295695, longitude: 69.239730},
+        {name: t("Khorezm"), latitude: 41.522326, longitude: 60.623731},
+        {name: t("Karakalpakstan"), latitude: 43.730521, longitude: 59.064533}
     ];
 
     useEffect(() => {
@@ -121,12 +122,12 @@ const Doctors = () => {
                                 <div className="dropdown-filter">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
                                                  className="selectProfessional">
-                                        <InputLabel id="demo-select-large-label">Viloyat</InputLabel>
+                                        <InputLabel id="demo-select-large-label">{t("region")}</InputLabel>
                                         <Select
                                             labelId="demo-select-small-label"
                                             id="demo-select-small"
                                             value={regionSelect}
-                                            label="Viloyat"
+                                            label={t("region")}
                                             onChange={(e) => {
                                                 setRegion(e.target.value)
                                                 setRegionSelect(e.target.value)
@@ -148,19 +149,19 @@ const Doctors = () => {
                                 <div className="dropdown-filter">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
                                                  className="selectHospitalType">
-                                        <InputLabel id="demo-select-large-label">Jinsi</InputLabel>
+                                        <InputLabel id="demo-select-large-label">{t("gender")}</InputLabel>
                                         <Select
                                             labelId="demo-select-small-label"
                                             id="demo-select-small"
                                             value={gender}
-                                            label="Jinsi"
+                                            label={t("gender")}
                                             onChange={(e) => {
                                                 filterHospital(region, e.target.value, cost, speciality);
                                                 setGender(e.target.value)
                                             }}
                                         >
-                                            <MenuItem value={true}>Erkak</MenuItem>
-                                            <MenuItem value={false}>Ayol</MenuItem>
+                                            <MenuItem value={true}>{t("men")}</MenuItem>
+                                            <MenuItem value={false}>{t("women")}</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </div>
@@ -170,19 +171,19 @@ const Doctors = () => {
                                 <div className="dropdown-filter">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
                                                  className="price">
-                                        <InputLabel id="demo-select-large-label">Narx</InputLabel>
+                                        <InputLabel id="demo-select-large-label">{t("price")}</InputLabel>
                                         <Select
                                             labelId="demo-select-small-label"
                                             id="demo-select-small"
                                             value={cost}
-                                            label="Narx"
+                                            label={"price"}
                                             onChange={(e) => {
                                                 filterHospital(region, gender, e.target.value, speciality);
                                                 setCost(e.target.value)
                                             }}
                                         >
-                                            <MenuItem value={true}>Arzondan- qimmatgacha</MenuItem>
-                                            <MenuItem value={false}>Qimmatdan- arzongacha</MenuItem>
+                                            <MenuItem value={true}>{t("cheap")}</MenuItem>
+                                            <MenuItem value={false}>{t("expensive")}</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </div>
@@ -192,12 +193,12 @@ const Doctors = () => {
                                 <div className="dropdown-filter">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
                                                  className="selectProfessional">
-                                        <InputLabel id="demo-select-large-label">Mutaxasislik</InputLabel>
+                                        <InputLabel id="demo-select-large-label">{t("expertise")}</InputLabel>
                                         <Select
                                             labelId="demo-select-small-label"
                                             id="demo-select-small"
                                             value={speciality}
-                                            label="Mutaxasislik"
+                                            label={t("expertise")}
                                             onChange={(e) => {
                                                 filterHospital(region, gender, cost, e.target.value);
                                                 setSpeciality(e.target.value)
@@ -240,7 +241,7 @@ const Doctors = () => {
                                                 </div>
                                                 <span></span>
                                                 <div className="commit-count">
-                                                    {item.comment_count} ta izoh
+                                                    {item.comment_count} {t("comment")}
                                                 </div>
                                             </div>
                                         </div>
@@ -252,7 +253,7 @@ const Doctors = () => {
                                             </div>
                                             <span></span>
                                             <div className="time-open">
-                                                {item.experience} yillik tajriba
+                                                {item.experience} {t("experience")}
                                             </div>
                                         </div>
 
@@ -283,9 +284,9 @@ const Doctors = () => {
                                             </div>
                                             <span></span>
                                             <div className="time-open">
-                                                {item.start_time} dan
+                                                {item.start_time} {t("from")}
                                                 &nbsp;
-                                                {item.end_time} gacha
+                                                {item.end_time} {t("to")}
                                             </div>
                                         </div>
 
@@ -299,18 +300,17 @@ const Doctors = () => {
 
                                         <div className="prices">
                                             <div className="item-price">
-                                                <div className="title">Birinchi konsultatsiya</div>
+                                                <div className="title">{t("first-consultation")}</div>
                                                 <div className="number">
                                                     {item.consultation_fee ? <>{item.consultation_fee} so'm </> : "Kelishuv asosida"}
                                                 </div>
                                             </div>
-
                                             <div className="item-price">
-                                                <div className="title">Takroriy konsultatsiya</div>
+                                                <div className="title">{t("second-consultation")}</div>
                                                 <div className="number">
                                                     {item.second_consultation_fee ?
-                                                        <>{item.second_consultation_fee} so'm </> :
-                                                        "Kelishuv asosida"}
+                                                        <>{item.second_consultation_fee} {t("sum")} </> :
+                                                        t("agreement")}
                                                 </div>
                                             </div>
                                         </div>
@@ -319,19 +319,20 @@ const Doctors = () => {
                                             <div className="left-btn">
                                                 <div onClick={() => ShowModal("sms", item.user)}
                                                      className="button-send">
-                                                    Qabuliga yozilish
+                                                    {t("acceptance")}
                                                 </div>
                                                 <div onClick={() => ShowModal("contact", item)}
-                                                     className="button-call">Qo'ng'iroq
-                                                    qilish
+                                                     className="button-call">
+                                                    {t("call")}
                                                 </div>
                                             </div>
+
                                             <div onClick={() => {
                                                 localStorage.setItem("doctorId", item.id)
                                                 navigate("/about-doctor")
                                                 dispatch(getAboutMarker(item.location ? item.location : item.hospital.location))
                                             }} className="more-btn">
-                                                Ko'proq ko'rsatish
+                                                {t("more")}
                                             </div>
                                         </div>
                                     </div>
@@ -370,13 +371,11 @@ const Doctors = () => {
                     </div>
                 </div>
             </div>
-
             <div onClick={() => dispatch(show(!showMap))} className="map-mobile">
                 {showMap ? <img className="prev-to" src="./images/next-btn.png" alt=""/> :
                     <img src="./images/map-mobile.png" alt=""/>}
-                {showMap ? "Orqaga" : "Xaritadan"}
+                {showMap ? t("prev") : t("map")}
             </div>
-
             <div className="mobile-navbar-container">
                 <MobileNavbar/>
             </div>

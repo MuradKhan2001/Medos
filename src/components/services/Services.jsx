@@ -36,7 +36,7 @@ const Service = () => {
         <Navbar/>
         <div className="service-box">
             <div className="title">
-                Xizmatlar
+                {t("nav4")}
             </div>
 
             <div className="services-tab">

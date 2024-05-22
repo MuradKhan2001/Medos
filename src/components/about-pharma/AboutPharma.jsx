@@ -82,31 +82,31 @@ const AboutPharma = () => {
                     src={savedPosts.includes(pharmacy.id) ? "./images/like.png" : "./images/no-like.png"}
                     alt=""/>
 
-                <div className="name">Saqlash</div>
+                <div className="name">{t("save")}</div>
             </div>
             <div className="section-commit">
                 <div className="raiting">
                     {pharmacy.avg_rating}
                 </div>
                 <div className="commit-count">
-                    {pharmacy.comment_count} ta izoh
+                    {pharmacy.comment_count} {t("comment")}
                 </div>
                 <span></span>
                 <div className="name">
-                    Dorixona
+                    {t("pharmacy")}
                 </div>
             </div>
             <div className="section-commit">
                 {pharmacy.open_24 ? <div
-                    className="open">Ochiq</div> : isPlaceOpen(pharmacy.start_time, pharmacy.end_time) ?
-                    <div className="open">Ochiq</div> :
-                    <div className="close">Yopiq</div>}
+                    className="open">{t("open")}</div> : isPlaceOpen(pharmacy.start_time, pharmacy.end_time) ?
+                    <div className="open">{t("open")}</div> :
+                    <div className="close">{t("close")}</div>}
                 <span></span>
                 <div className="name">
                     {pharmacy.open_24 ? "24 soat ochiq" : <>
-                        {pharmacy.start_time} dan
+                        {pharmacy.start_time} {t("from")}
                         &nbsp;
-                        {pharmacy.end_time} gacha
+                        {pharmacy.end_time} {t("to")}
                     </>}
                 </div>
             </div>
@@ -117,27 +117,27 @@ const AboutPharma = () => {
                 <div className="information-location">
                     <div className="title">
                         <img src="./images/loaction-pharma.png" alt=""/>
-                        Manzil
+                        {t("address-pharmacy")}
                     </div>
                     <div className="info">
                         {pharmacy.translations[i18next.language].address}
                     </div>
                     <div className="title">
                         <img src="./images/time-pharma.png" alt=""/>
-                        Ish vaqti
+                        {t("working-time")}
                     </div>
                     <div className="section-commit">
                         <div className="name">
-                            {pharmacy.open_24 ? "24 soat ochiq" : <>
-                                {pharmacy.start_time} dan
+                            {pharmacy.open_24 ? t("open24") : <>
+                                {pharmacy.start_time} {t("from")}
                                 &nbsp;
-                                {pharmacy.end_time} gacha
+                                {pharmacy.end_time} {t("to")}
                             </>}
                         </div>
                     </div>
                     <div className="title">
                         <img src="./images/phone-pharma.png" alt=""/>
-                        Bog'lanish
+                        {t("contact")}
                     </div>
                     <div className="contact">
                         {pharmacy.phone1} <br/>
@@ -152,12 +152,12 @@ const AboutPharma = () => {
                             {pharmacy.avg_rating}
                         </div>
                         <div className="commit-count">
-                            {pharmacy.comment_count} ta izoh
+                            {pharmacy.comment_count}{t("comment")}
                         </div>
                     </div>
                     <div onClick={() => ShowModal("commit", pharmacy.user)} className="btn-commit">
                         <img src="./images/comit.png" alt=""/>
-                        Izoh yozib qoldirish
+                        {t("comment-btn")}
                     </div>
                 </div>
 

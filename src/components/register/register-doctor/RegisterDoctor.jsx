@@ -24,6 +24,7 @@ import CyrillicToTranslit from 'cyrillic-to-translit-js';
 import {useFormik} from "formik";
 import Textarea from '@mui/joy/Textarea';
 import {useDispatch, useSelector} from "react-redux";
+import {addAlert, delAlert} from "../../../redux/AlertsBox";
 
 
 const libraries = ["places"];
@@ -32,6 +33,7 @@ const libraries = ["places"];
 const RegisterHospital = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const cyrillicToTranslit = new CyrillicToTranslit();
     const [hospitalType, setHospitalType] = useState('');
@@ -54,6 +56,7 @@ const RegisterHospital = () => {
     const [subSpecialtyList, setSubSpecialtyList] = useState([]);
     const [hospitalList, setHospitalList] = useState([]);
     const [logoValidate, setLogoValidate] = useState(false);
+    const [loader, setLoader] = useState(false);
     const ref2 = useRef(null);
     const [tg, setTg] = useState(false);
     const [ins, setIns] = useState(false);
@@ -72,19 +75,19 @@ const RegisterHospital = () => {
     };
 
     const regions = [
-        {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
-        {name: "Buxoro", latitude: 39.767070, longitude: 64.455393},
-        {name: "Farg‘ona", latitude: 40.372379, longitude: 71.797770},
-        {name: "Jizzax", latitude: 40.119300, longitude: 67.880140},
-        {name: "Namangan", latitude: 41.004297, longitude: 71.642956},
-        {name: "Navoiy", latitude: 40.096634, longitude: 65.352255},
-        {name: "Qashqadaryo", latitude: 38.852124, longitude: 65.784203},
-        {name: "Samarqand", latitude: 39.649307, longitude: 66.965182},
-        {name: "Sirdaryo", latitude: 40.376986, longitude: 68.713159},
-        {name: "Surxondaryo", latitude: 37.931559, longitude: 67.564765},
-        {name: "Toshkent", latitude: 41.295695, longitude: 69.239730},
-        {name: "Xorazm", latitude: 41.522326, longitude: 60.623731},
-        {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
+        {name: t("Andijan"), latitude: 40.813616, longitude: 72.283463},
+        {name: t("Bukhara"), latitude: 39.767070, longitude: 64.455393},
+        {name: t("Ferghana"), latitude: 40.372379, longitude: 71.797770},
+        {name: t("Jizzakh"), latitude: 40.119300, longitude: 67.880140},
+        {name: t("Namangan"), latitude: 41.004297, longitude: 71.642956},
+        {name: t("Navoi"), latitude: 40.096634, longitude: 65.352255},
+        {name: t("Kashkadarya"), latitude: 38.852124, longitude: 65.784203},
+        {name: t("Samarkand"), latitude: 39.649307, longitude: 66.965182},
+        {name: t("SyrDarya"), latitude: 40.376986, longitude: 68.713159},
+        {name: t("Surkhandarya"), latitude: 37.931559, longitude: 67.564765},
+        {name: t("Tashkent"), latitude: 41.295695, longitude: 69.239730},
+        {name: t("Khorezm"), latitude: 41.522326, longitude: 60.623731},
+        {name: t("Karakalpakstan"), latitude: 43.730521, longitude: 59.064533}
     ];
 
     const {isLoaded} = useLoadScript({
@@ -167,8 +170,8 @@ const RegisterHospital = () => {
             bio_uz: "",
             bio_ru: "",
             phone1: "",
-            start_time: "",
-            end_time: "",
+            start_time: null,
+            end_time: null,
             working_days: [],
             consultation_fee: null,
             second_consultation_fee: null,
@@ -181,14 +184,32 @@ const RegisterHospital = () => {
         onSubmit: (values) => {
             if (pageNumber === 1) {
                 if (logoHospital) {
-                    setPageNumber(2);
+                    axios.post(`${baseUrl}checkuser/`, {phone: values.phone1}).then((response) => {
+
+                    }).catch((error) => {
+                        if (error.response.status === 302) {
+                            let idAlert = Date.now();
+                            let alert = {
+                                id: idAlert,
+                                text: "Ushbu raqam ro'yxatdan o'tgan!",
+                                img: "./images/red.svg",
+                                color: "#ffefe7",
+                            };
+                            dispatch(addAlert(alert));
+                            setTimeout(() => {
+                                dispatch(delAlert(idAlert));
+                            }, 5000);
+                        } else {
+                            setPageNumber(2);
+                        }
+                    })
+
                 } else {
                     ref2.current?.scrollIntoView({
                         behavior: "smooth",
                     });
                     setLogoValidate(true)
                 }
-
             }
 
             if (pageNumber === 2) {
@@ -494,16 +515,19 @@ const RegisterHospital = () => {
             sub_speciality: formOne.values.sub_speciality,
             experience: formOne.values.experience
         };
-
+        setLoader(true);
         axios.post(`${baseUrl}auth/register/doctor/`, allInfoHospital).then((response) => {
-            window.location.pathname = "/login"
+            window.location.pathname = "/login";
+            setTimeout(() => {
+                setLoader(false)
+            }, 500);
         }).catch((error) => {
-            console.log(error)
+            setLoader(false)
         });
-        console.log(allInfoHospital)
     };
 
     if (!isLoaded) return <Loader/>;
+    if (loader) return <Loader/>;
 
     return <div className="register-doctor-container">
         <div className="logo">
@@ -512,7 +536,6 @@ const RegisterHospital = () => {
         <div className="xbtn">
             <img onClick={() => navigate("/")} src="./images/cancel.png" alt=""/>
         </div>
-
         <div className="register-page">
             <div className="header-register">
                 <div className="line-page-numbers">
@@ -550,7 +573,7 @@ const RegisterHospital = () => {
             </div>
 
             {pageNumber === 1 &&
-            <div  className="register-page-one">
+            <div className="register-page-one">
                 <div ref={ref2} className="title">
                     O'zingiz haqingizda aytib bering
                 </div>
@@ -559,7 +582,7 @@ const RegisterHospital = () => {
                 </div>
 
                 <div className="logo-hospital">
-                    <div  className={`logo-image ${logoValidate ? "required-logo" : ""}`}>
+                    <div className={`logo-image ${logoValidate ? "required-logo" : ""}`}>
                         {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
                             <img className="logo-camera" src="./images/Exclude.png" alt=""/>
                         }

@@ -1,4 +1,4 @@
-import {InfoWindow, MarkerF} from "@react-google-maps/api";
+import {InfoWindow, MarkerClustererF, MarkerF} from "@react-google-maps/api";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -23,21 +23,29 @@ const DoctorMarkers = () => {
     };
 
     return <>
-        {Doctors.map((item, index) => {
-            return <MarkerF
-                key={index}
-                position={
-                    item.location ?
-                        {lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])} :
-                        {lat: Number(item.hospital.location.split(",")[0]), lng: Number(item.hospital.location.split(",")[1])}}
-                icon={clinicActiveId === item.id ? icon2 : icon}
-                onClick={() => {
-                    onMarkerClick(item);
-                    setClinicActiveId(item.id)
-                }
-                }
-            />
-        })}
+        <MarkerClustererF gridSize={60}>
+            {(clusterer) => {
+                Doctors.map((item, index) => {
+                    return <MarkerF
+                        key={index}
+                        position={
+                            item.location ?
+                                {lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])} :
+                                {
+                                    lat: Number(item.hospital.location.split(",")[0]),
+                                    lng: Number(item.hospital.location.split(",")[1])
+                                }}
+                        icon={clinicActiveId === item.id ? icon2 : icon}
+                        onClick={() => {
+                            onMarkerClick(item);
+                            setClinicActiveId(item.id)
+                        }}
+                        clusterer={clusterer}
+                    />
+                })
+            }
+            }
+        </MarkerClustererF>
 
         {selectedLocation && (<InfoWindow
             position={

@@ -69,19 +69,19 @@ const ProfileHospital = () => {
     };
 
     const regions = [
-        {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
-        {name: "Buxoro", latitude: 39.767070, longitude: 64.455393},
-        {name: "Farg‘ona", latitude: 40.372379, longitude: 71.797770},
-        {name: "Jizzax", latitude: 40.119300, longitude: 67.880140},
-        {name: "Namangan", latitude: 41.004297, longitude: 71.642956},
-        {name: "Navoiy", latitude: 40.096634, longitude: 65.352255},
-        {name: "Qashqadaryo", latitude: 38.852124, longitude: 65.784203},
-        {name: "Samarqand", latitude: 39.649307, longitude: 66.965182},
-        {name: "Sirdaryo", latitude: 40.376986, longitude: 68.713159},
-        {name: "Surxondaryo", latitude: 37.931559, longitude: 67.564765},
-        {name: "Toshkent", latitude: 41.295695, longitude: 69.239730},
-        {name: "Xorazm", latitude: 41.522326, longitude: 60.623731},
-        {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
+        {name: t("Andijan"), latitude: 40.813616, longitude: 72.283463},
+        {name: t("Bukhara"), latitude: 39.767070, longitude: 64.455393},
+        {name: t("Ferghana"), latitude: 40.372379, longitude: 71.797770},
+        {name: t("Jizzakh"), latitude: 40.119300, longitude: 67.880140},
+        {name: t("Namangan"), latitude: 41.004297, longitude: 71.642956},
+        {name: t("Navoi"), latitude: 40.096634, longitude: 65.352255},
+        {name: t("Kashkadarya"), latitude: 38.852124, longitude: 65.784203},
+        {name: t("Samarkand"), latitude: 39.649307, longitude: 66.965182},
+        {name: t("SyrDarya"), latitude: 40.376986, longitude: 68.713159},
+        {name: t("Surkhandarya"), latitude: 37.931559, longitude: 67.564765},
+        {name: t("Tashkent"), latitude: 41.295695, longitude: 69.239730},
+        {name: t("Khorezm"), latitude: 41.522326, longitude: 60.623731},
+        {name: t("Karakalpakstan"), latitude: 43.730521, longitude: 59.064533}
     ];
 
     const selectAddressIcon = {
@@ -204,9 +204,11 @@ const ProfileHospital = () => {
             }).catch((error) => {
             });
 
+            setHospital(response.data.type)
+
             setInvalidService(response.data.gender);
 
-            setLogoHospital(`http://192.168.0.102:8000` + response.data.image)
+            setLogoHospital(`https://api.medos.uz/` + response.data.image)
 
             setRegion(response.data.region)
 
@@ -482,6 +484,8 @@ const ProfileHospital = () => {
             },
             base64_image: logoHospital,
             disabled: invalidService,
+            type: formOne.values.type,
+            hospital_type: formOne.values.hospital_type,
             phone1: formOne.values.phone1,
             phone2: formOne.values.phone2,
             start_time: formOne.values.start_time,

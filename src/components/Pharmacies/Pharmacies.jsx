@@ -17,6 +17,7 @@ import {getAboutMarker} from "../../redux/markerAbout";
 
 
 const Pharmacies = () => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const filterService = useSelector((store) => store.Menu.data);
@@ -30,19 +31,19 @@ const Pharmacies = () => {
     const [savedPosts, setSavedPosts] = useState([]);
 
     const regions = [
-        {name: "Andijon", latitude: 40.813616, longitude: 72.283463},
-        {name: "Buxoro", latitude: 39.767070, longitude: 64.455393},
-        {name: "Farg‘ona", latitude: 40.372379, longitude: 71.797770},
-        {name: "Jizzax", latitude: 40.119300, longitude: 67.880140},
-        {name: "Namangan", latitude: 41.004297, longitude: 71.642956},
-        {name: "Navoiy", latitude: 40.096634, longitude: 65.352255},
-        {name: "Qashqadaryo", latitude: 38.852124, longitude: 65.784203},
-        {name: "Samarqand", latitude: 39.649307, longitude: 66.965182},
-        {name: "Sirdaryo", latitude: 40.376986, longitude: 68.713159},
-        {name: "Surxondaryo", latitude: 37.931559, longitude: 67.564765},
-        {name: "Toshkent", latitude: 41.295695, longitude: 69.239730},
-        {name: "Xorazm", latitude: 41.522326, longitude: 60.623731},
-        {name: "Qoraqalpog‘iston", latitude: 43.730521, longitude: 59.064533}
+        {name: t("Andijan"), latitude: 40.813616, longitude: 72.283463},
+        {name: t("Bukhara"), latitude: 39.767070, longitude: 64.455393},
+        {name: t("Ferghana"), latitude: 40.372379, longitude: 71.797770},
+        {name: t("Jizzakh"), latitude: 40.119300, longitude: 67.880140},
+        {name: t("Namangan"), latitude: 41.004297, longitude: 71.642956},
+        {name: t("Navoi"), latitude: 40.096634, longitude: 65.352255},
+        {name: t("Kashkadarya"), latitude: 38.852124, longitude: 65.784203},
+        {name: t("Samarkand"), latitude: 39.649307, longitude: 66.965182},
+        {name: t("SyrDarya"), latitude: 40.376986, longitude: 68.713159},
+        {name: t("Surkhandarya"), latitude: 37.931559, longitude: 67.564765},
+        {name: t("Tashkent"), latitude: 41.295695, longitude: 69.239730},
+        {name: t("Khorezm"), latitude: 41.522326, longitude: 60.623731},
+        {name: t("Karakalpakstan"), latitude: 43.730521, longitude: 59.064533}
     ];
 
     const isPlaceOpen = (startTime, endTime) => {
@@ -121,12 +122,12 @@ const Pharmacies = () => {
                                 <div className="dropdown-filter">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
                                                  className="selectProfessional">
-                                        <InputLabel id="demo-select-large-label">Viloyat</InputLabel>
+                                        <InputLabel id="demo-select-large-label">{t("region")}</InputLabel>
                                         <Select
                                             labelId="demo-select-small-label"
                                             id="demo-select-small"
                                             value={regionSelect}
-                                            label="Viloyat"
+                                            label={t("region")}
                                             onChange={(e) => {
                                                 setRegion(e.target.value)
                                                 setRegionSelect(e.target.value)
@@ -150,7 +151,7 @@ const Pharmacies = () => {
                                         setWorking24(!working24)
                                     }}
                                          className={`button-filter ${working24 ? "active-filter-btn" : ""}`}>
-                                        24 soat ochiq
+                                        {t("open24")}
                                     </div>
                                 </div>
                             </div>
@@ -174,7 +175,6 @@ const Pharmacies = () => {
                                                     <div className="name-clinic">
                                                         {item.translations[i18next.language].name}
                                                     </div>
-
                                                     <div className="section-commit">
                                                         <div className="raiting">
                                                             <img src="./images/star2.png" alt=""/>
@@ -192,26 +192,23 @@ const Pharmacies = () => {
                                                         {item.translations[i18next.language].address}
                                                     </div>
                                                 </div>
-
                                                 <div className="section-location">
                                                     <div className="location">
                                                         <img src="./images/time.png" alt=""/>
                                                         {item.open_24 ? <div
-                                                            className="open">Ochiq</div> : isPlaceOpen(item.start_time, item.end_time) ?
-                                                            <div className="open">Ochiq</div> :
-                                                            <div className="close">Yopiq</div>}
+                                                            className="open">{t("open")}</div> : isPlaceOpen(item.start_time, item.end_time) ?
+                                                            <div className="open">{t("open")}</div> :
+                                                            <div className="close">{t("close")}</div>}
                                                     </div>
-
                                                     <span></span>
                                                     <div className="time-open">
                                                         {item.open_24 ? "24 soat ochiq" : <>
-                                                            {item.start_time} dan
+                                                            {item.start_time} {t("from")}
                                                             &nbsp;
-                                                            {item.end_time} gacha
+                                                            {item.end_time} {t("to")}
                                                         </>}
                                                     </div>
                                                 </div>
-
                                                 <div className="buttons">
                                                     <div onClick={() => {
                                                         localStorage.setItem("pharmacyId", item.id);
@@ -219,7 +216,7 @@ const Pharmacies = () => {
                                                         navigate("/about-pharmacies")
                                                     }}
                                                          className="more-btn">
-                                                        Ko'proq ko'rsatish
+                                                        {t("more")}
                                                     </div>
                                                 </div>
                                             </div>
@@ -230,19 +227,16 @@ const Pharmacies = () => {
                             <Footer/>
                         </div>}
                     </div>
-
                     <div className={`right-side ${showMap ? "show-map" : ""}`}>
                         <Map/>
                     </div>
                 </div>
             </div>
-
             <div onClick={() => dispatch(show(!showMap))} className="map-mobile">
                 {showMap ? <img className="prev-to" src="./images/next-btn.png" alt=""/> :
                     <img src="./images/map-mobile.png" alt=""/>}
-                {showMap ? "Orqaga" : "Xaritadan"}
+                {showMap ? t("prev") : t("map")}
             </div>
-
             <div className="mobile-navbar-container">
                 <MobileNavbar/>
             </div>
