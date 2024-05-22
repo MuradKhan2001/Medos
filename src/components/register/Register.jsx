@@ -24,8 +24,9 @@ const Register = () => {
                 {t("register-text")}
             </div>
 
+
             <div onClick={() => setDirection("/register-doctor")} className={`items ${direction === "/register-doctor" ? "active" : ""}`}>
-                <img src="./images/Icons.png" alt=""/>
+                <img src="./images/icons.png" alt=""/>
                 {t("add-doctor")}
             </div>
 
