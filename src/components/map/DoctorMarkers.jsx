@@ -1,4 +1,4 @@
-import {InfoWindow, MarkerClustererF, MarkerF} from "@react-google-maps/api";
+import {InfoWindow, MarkerF, MarkerClustererF} from "@react-google-maps/api";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -6,13 +6,14 @@ import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
 
 const DoctorMarkers = () => {
-    const Doctors = useSelector((store) => store.Doctors.data);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const Doctors = useSelector((store) => store.Doctors.data);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [clinicActiveId, setClinicActiveId] = useState(null);
     const icon = {url: './images/pin-Doctor.png', scaledSize: {width: 50, height: 55}};
     const icon2 = {url: './images/doctor-pin-active.png', scaledSize: {width: 40, height: 55}};
+
     const onMarkerClick = (location) => {
         setSelectedLocation(location);
     };
@@ -24,27 +25,24 @@ const DoctorMarkers = () => {
 
     return <>
         <MarkerClustererF gridSize={60}>
-            {(clusterer) => {
-                Doctors.map((item, index) => {
-                    return <MarkerF
-                        key={index}
-                        position={
-                            item.location ?
-                                {lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])} :
-                                {
-                                    lat: Number(item.hospital.location.split(",")[0]),
-                                    lng: Number(item.hospital.location.split(",")[1])
-                                }}
-                        icon={clinicActiveId === item.id ? icon2 : icon}
-                        onClick={() => {
-                            onMarkerClick(item);
-                            setClinicActiveId(item.id)
-                        }}
-                        clusterer={clusterer}
-                    />
-                })
-            }
-            }
+            {(clusterer) => Doctors.map((item, index) => {
+                return <MarkerF
+                    key={index}
+                    position={
+                        item.location ?
+                            {lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])} :
+                            {
+                                lat: Number(item.hospital.location.split(",")[0]),
+                                lng: Number(item.hospital.location.split(",")[1])
+                            }}
+                    icon={clinicActiveId === item.id ? icon2 : icon}
+                    onClick={() => {
+                        onMarkerClick(item);
+                        setClinicActiveId(item.id)
+                    }}
+                    clusterer={clusterer}
+                />
+            })}
         </MarkerClustererF>
 
         {selectedLocation && (<InfoWindow

@@ -1,5 +1,5 @@
 import {InfoWindow, MarkerF, MarkerClustererF} from "@react-google-maps/api";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useSelector, useDispatch} from "react-redux";
 import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";

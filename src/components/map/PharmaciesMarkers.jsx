@@ -7,8 +7,8 @@ import {getAboutMarker} from "../../redux/markerAbout";
 
 const PharmaciesMarkers = () => {
     const dispatch = useDispatch();
-    const Pharmacies = useSelector((store) => store.Pharmacies.data);
     const navigate = useNavigate();
+    const Pharmacies = useSelector((store) => store.Pharmacies.data);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [clinicActiveId, setClinicActiveId] = useState(null);
     const icon = {url: './images/pharma-pin.png', scaledSize: {width: 50, height: 55}};
@@ -40,20 +40,18 @@ const PharmaciesMarkers = () => {
 
     return <>
         <MarkerClustererF gridSize={60}>
-            {(clusterer) => {
-                Pharmacies.map((item, index) => {
-                    return <MarkerF
-                        key={index}
-                        position={{lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])}}
-                        icon={clinicActiveId === item.id ? icon2 : icon}
-                        onClick={() => {
-                            onMarkerClick(item);
-                            setClinicActiveId(item.id)
-                        }}
-                        clusterer={clusterer}
-                    />
-                })
-            }}
+            {(clusterer) => Pharmacies.map((item, index) => {
+                return <MarkerF
+                    key={index}
+                    position={{lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])}}
+                    icon={clinicActiveId === item.id ? icon2 : icon}
+                    onClick={() => {
+                        onMarkerClick(item);
+                        setClinicActiveId(item.id)
+                    }}
+                    clusterer={clusterer}
+                />
+            })}
         </MarkerClustererF>
 
         {selectedLocation && (<InfoWindow
