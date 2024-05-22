@@ -228,7 +228,7 @@
                     margin-right: 10px;
 
                     img {
-                      width: 20px;
+                      width: 13px;
                       margin-right: 10px;
                     }
                   }
@@ -260,6 +260,46 @@
                 align-items: center;
 
                 .location {
+                  display: flex;
+                  align-items: center;
+
+                  img {
+                    width: 17px;
+                    margin-right: 5px;
+                  }
+
+                  color: rgba(38, 45, 51, 1);
+                }
+
+                span {
+                  width: 3px;
+                  height: 3px;
+                  background-color: rgba(133, 145, 158, 1);
+                  margin-right: 10px;
+                  margin-left: 10px;
+                  border-radius: 50%;
+                }
+
+                .time-open {
+                  display: flex;
+                  align-items: center;
+
+                  img {
+                    width: 17px;
+                    margin-right: 5px;
+                  }
+
+                  color: rgba(38, 45, 51, 1);
+                }
+              }
+
+              .section-location-working-days {
+                margin-top: 10px;
+                display: block;
+
+                .location {
+                  width: 100%;
+                  overflow: hidden;
                   display: flex;
                   align-items: center;
 
@@ -1068,6 +1108,16 @@
                   height: 100%;
                   object-fit: cover;
                 }
+                .like {
+                   right: 10px;
+                   top: 8px;
+                   position: absolute;
+
+                   img {
+                     width: 20px;
+                     cursor: pointer;
+                   }
+                 }
               }
 
               .right-side {
@@ -1079,7 +1129,7 @@
 
                 .header-clinic {
                   width: 100%;
-                  display: flex;
+                  display: block;
 
 
                   .name-clinic {
@@ -1100,7 +1150,7 @@
                       margin-right: 10px;
 
                       img {
-                        width: 20px;
+                        width: 12px;
                         margin-right: 10px;
                       }
                     }
@@ -1325,12 +1375,14 @@
 
             .info-box-clinic {
               width: auto;
+
               .photo-clinic {
                 width: 100%;
                 height: 30%;
                 display: flex;
                 justify-content: center;
               }
+
               .content {
                 width: 100%;
                 height: 50%;

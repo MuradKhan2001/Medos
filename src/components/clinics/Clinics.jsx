@@ -290,6 +290,7 @@ const Clinics = () => {
 
                                             </div>
                                         </div>
+
                                         <div className="services">
                                             {item.hospital_services.map((item, index) => {
                                                 return <div key={index} className="service">

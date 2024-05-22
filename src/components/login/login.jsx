@@ -93,10 +93,7 @@ const Login = () => {
     };
 
     const CheckCode = () => {
-        axios.post(`${baseUrl}auth/register/verify/`, {
-            user: localStorage.getItem("userId"),
-            code,
-        })
+        axios.post(`${baseUrl}auth/register/verify/`, {user: localStorage.getItem("userId"),code,})
             .then((response) => {
                 localStorage.setItem("token", response.data.token);
                 localStorage.setItem("userType", response.data.user_type);

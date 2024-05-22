@@ -237,6 +237,7 @@ const Doctors = () => {
 
                                             <div className="section-commit">
                                                 <div className="raiting">
+                                                    <img src="./images/star.png" alt=""/>
                                                     {item.avg_rating}
                                                 </div>
                                                 <span></span>
@@ -273,17 +274,19 @@ const Doctors = () => {
                                                 </> : ""}
                                         </div>
 
-                                        <div className="section-location">
+                                        <div className="section-location-working-days">
                                             <div className="location">
                                                 <img src="./images/time.png" alt=""/>
                                                 {item.working_days.map((item, index) => {
                                                     return <p key={index}>
-                                                        {item.translations[i18next.language].day}
+                                                        &nbsp;
+                                                        {item.translations[i18next.language].day},
                                                     </p>
                                                 })}
                                             </div>
-                                            <span></span>
+                                            <br/>
                                             <div className="time-open">
+                                                <img src="./images/clock.png" alt=""/>
                                                 {item.start_time} {t("from")}
                                                 &nbsp;
                                                 {item.end_time} {t("to")}

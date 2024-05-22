@@ -9,6 +9,7 @@
       justify-content: space-between;
 
       .photo-doctor {
+        margin: 10px auto;
         width: 200px;
         height: 200px;
         border-radius: 50%;
@@ -84,6 +85,7 @@
           margin-bottom: 20px;
           font-size: 16px;
           color: rgba(38, 45, 51, 1);
+          
         }
 
         .skills {
@@ -92,6 +94,7 @@
           align-items: center;
 
           .skill {
+            margin-top: 10px;
             color: rgba(38, 45, 51, 1);
             font-size: 14px;
             background-color: rgba(180, 192, 204, 0.16);
@@ -142,6 +145,8 @@
           font-weight: 400;
           display: flex;
           align-items: center;
+          width: 100%;
+          overflow: hidden;
 
           img {
             width: 20px;

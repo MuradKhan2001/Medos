@@ -124,6 +124,7 @@ const AboutDoctor = () => {
                         <img src="./images/calendar.png" alt=""/>
                         {doctor.working_days.map((item, index) => {
                             return <p key={index}>
+                                &nbsp;
                                 {item.translations[i18next.language].day}
                             </p>
                         })}
@@ -146,7 +147,7 @@ const AboutDoctor = () => {
                         <div className="item-price">
                             <div className="title">{t("first-consultation")}</div>
                             <div className="number">
-                                {doctor.consultation_fee ? <>{doctor.consultation_fee} so'm </> : t("agreement")}
+                                {doctor.consultation_fee ? <>{doctor.consultation_fee} {t("sum")} </> : t("agreement")}
                             </div>
                         </div>
 
@@ -154,8 +155,8 @@ const AboutDoctor = () => {
                             <div className="title">{t("second-consultation")}</div>
                             <div className="number">
                                 {doctor.second_consultation_fee ?
-                                    <>{doctor.second_consultation_fee} so'm </> :
-                                    t("agreement")}}
+                                    <>{doctor.second_consultation_fee} {t("sum")} </> :
+                                    t("agreement")}
                             </div>
                         </div>
                     </div>
@@ -305,7 +306,8 @@ const AboutDoctor = () => {
                                             <img src="./images/time.png" alt=""/>
                                             {item.working_days.map((item, index) => {
                                                 return <p key={index}>
-                                                    {item.translations[i18next.language].day}
+                                                    &nbsp;
+                                                    {item.translations[i18next.language].day},
                                                 </p>
                                             })}
                                         </div>
@@ -336,6 +338,7 @@ const AboutDoctor = () => {
                                         <div className="item-price">
                                             <div className="title">{t("second-consultation")}</div>
                                             <div className="number">
+
                                                 {item.second_consultation_fee ?
                                                     <>{item.second_consultation_fee} {t("sum")} </> :
                                                     t("agreement")}
