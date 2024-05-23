@@ -1,9 +1,9 @@
 {
   "files": {
     "main.css": "/static/css/main.5f966123.css",
-    "main.js": "/static/js/main.4d3e2f24.js",
-    "static/css/117.406bd4b0.chunk.css": "/static/css/117.406bd4b0.chunk.css",
-    "static/js/117.d438ec1b.chunk.js": "/static/js/117.d438ec1b.chunk.js",
+    "main.js": "/static/js/main.455c527c.js",
+    "static/css/117.7c3a2e15.chunk.css": "/static/css/117.7c3a2e15.chunk.css",
+    "static/js/117.69a04de1.chunk.js": "/static/js/117.69a04de1.chunk.js",
     "static/js/941.fc8acd7d.chunk.js": "/static/js/941.fc8acd7d.chunk.js",
     "static/media/clinic-icon.svg": "/static/media/clinic-icon.9feac12f3dc58bc9fa41.svg",
     "static/media/doctor-icon.svg": "/static/media/doctor-icon.ccf55918015e524eaf24.svg",
@@ -11,13 +11,13 @@
     "static/media/service-icon.svg": "/static/media/service-icon.028114b529d0dbb6caac.svg",
     "index.html": "/index.html",
     "main.5f966123.css.map": "/static/css/main.5f966123.css.map",
-    "main.4d3e2f24.js.map": "/static/js/main.4d3e2f24.js.map",
-    "117.406bd4b0.chunk.css.map": "/static/css/117.406bd4b0.chunk.css.map",
-    "117.d438ec1b.chunk.js.map": "/static/js/117.d438ec1b.chunk.js.map",
+    "main.455c527c.js.map": "/static/js/main.455c527c.js.map",
+    "117.7c3a2e15.chunk.css.map": "/static/css/117.7c3a2e15.chunk.css.map",
+    "117.69a04de1.chunk.js.map": "/static/js/117.69a04de1.chunk.js.map",
     "941.fc8acd7d.chunk.js.map": "/static/js/941.fc8acd7d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.5f966123.css",
-    "static/js/main.4d3e2f24.js"
+    "static/js/main.455c527c.js"
   ]
 }

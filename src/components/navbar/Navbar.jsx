@@ -143,6 +143,7 @@ const Navbar = () => {
     };
 
     const getInformation = (status, item) => {
+
         if (status === "hospital") {
             axios.get(`${baseUrl}hospital/?name=${item.translations["uz"].name}`).then((response) => {
                 dispatch(getClinics(response.data));
@@ -175,6 +176,7 @@ const Navbar = () => {
                 dispatch(getClinics(response.data));
                 dispatch(changeMenu(true));
                 navigate("/")
+                setSearchList(false)
             });
         }
     };

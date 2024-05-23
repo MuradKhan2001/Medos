@@ -843,7 +843,15 @@
           padding: 10px 18px;
           font-size: 14px;
           background-color: #f1f1f1;
+          &:hover{
+
+          }
         }
+        .active {
+          background-color: #262D33;
+          color: white;
+        }
+
       }
 
       .bottom-content {
