@@ -38,6 +38,14 @@ const PharmaciesMarkers = () => {
         return now >= startDate && now <= endDate;
     };
 
+    const NavigateButton = (location) => {
+        let latitude = Number(location.split(",")[0]);
+        let longitude = Number(location.split(",")[1]);
+
+        const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        window.open(url, '_blank');
+    };
+
     return <>
         <MarkerClustererF gridSize={60}>
             {(clusterer) => Pharmacies.map((item, index) => {
@@ -65,6 +73,11 @@ const PharmaciesMarkers = () => {
                 <div className="info-text">
                     <div className="photo-clinic">
                         <img src={selectedLocation.image} alt=""/>
+                    </div>
+                    <div onClick={() => NavigateButton(selectedLocation.location)}
+                         className="navigator">
+                        Navigator
+                        <img src="./images/compass.png" alt=""/>
                     </div>
                     <div className="content">
                         <div className="header-clinic">

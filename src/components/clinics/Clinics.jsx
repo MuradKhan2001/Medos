@@ -35,6 +35,7 @@ const Clinics = () => {
     const [speciality, setSpeciality] = useState("");
     const [working24, setWorking24] = useState("");
     const [disable, setDisable] = useState("");
+    const [emergency_number, setEmergency_number] = useState("");
     const [savedPosts, setSavedPosts] = useState([]);
 
     const regions = [
@@ -69,7 +70,7 @@ const Clinics = () => {
 
     useEffect(() => {
         if (location.key + 1 && !filterService) {
-            filterHospital(hospitalType, location.key + 1, type, speciality, working24, disable);
+            filterHospital(hospitalType, location.key + 1, type, speciality, working24, disable, emergency_number);
             setRegion(location.key + 1);
             setRegionSelect(location.key)
         }
@@ -79,14 +80,15 @@ const Clinics = () => {
         dispatch(showModals({show: true, status, item}))
     };
 
-    const filterHospital = (hospital_type_key, region_key, type_key, speciality_key, open_24_key, disabled_key) => {
+    const filterHospital = (hospital_type_key, region_key, type_key, speciality_key, open_24_key, disabled_key, emergency_number_key) => {
         let filterBox = {
             hospital_type: hospital_type_key,
             region: region_key,
             type: type_key,
             speciality: speciality_key,
             open_24: open_24_key,
-            disabled: disabled_key
+            disabled: disabled_key,
+            emergency_number: emergency_number_key
         };
 
         const queryString = Object.entries(filterBox)
@@ -119,6 +121,14 @@ const Clinics = () => {
 
         localStorage.setItem('hospital_saved', JSON.stringify(updatedSavedPosts));
         setSavedPosts(updatedSavedPosts);
+    };
+
+    const NavigateButton = (location) => {
+        let latitude = Number(location.split(",")[0]);
+        let longitude = Number(location.split(",")[1]);
+
+        const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        window.open(url, '_blank');
     };
 
     return <>
@@ -172,6 +182,18 @@ const Clinics = () => {
 
                             <div>
                                 <div className="dropdown-filter">
+                                    <div onClick={() => {
+                                        filterHospital(hospitalType, region, type, speciality, working24, disable, !emergency_number);
+                                        setEmergency_number(!emergency_number)
+                                    }}
+                                         className={`button-filter ${emergency_number ? "active-filter-btn" : ""}`}>
+                                        {t("emergency")}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div className="dropdown-filter">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
                                                  className="selectHospitalType">
                                         <InputLabel id="demo-select-large-label">{t("hospital_type")}</InputLabel>
@@ -181,7 +203,7 @@ const Clinics = () => {
                                             value={type}
                                             label={t("hospital_type")}
                                             onChange={(e) => {
-                                                filterHospital(hospitalType, region, e.target.value, speciality, working24, disable);
+                                                filterHospital(hospitalType, region, e.target.value, speciality, working24, disable, emergency_number);
                                                 setType(e.target.value)
                                             }}
                                         >
@@ -203,7 +225,7 @@ const Clinics = () => {
                                             value={speciality}
                                             label={t("expertise")}
                                             onChange={(e) => {
-                                                filterHospital(hospitalType, region, type, e.target.value, working24, disable);
+                                                filterHospital(hospitalType, region, type, e.target.value, working24, disable, emergency_number);
                                                 setSpeciality(e.target.value)
                                             }}
                                         >
@@ -220,7 +242,7 @@ const Clinics = () => {
                             <div>
                                 <div className="dropdown-filter">
                                     <div onClick={() => {
-                                        filterHospital(hospitalType, region, type, speciality, !working24, disable);
+                                        filterHospital(hospitalType, region, type, speciality, !working24, disable, emergency_number);
                                         setWorking24(!working24)
                                     }}
                                          className={`button-filter ${working24 ? "active-filter-btn" : ""}`}>
@@ -232,7 +254,7 @@ const Clinics = () => {
                             <div>
                                 <div className="dropdown-filter">
                                     <div onClick={() => {
-                                        filterHospital(hospitalType, region, type, speciality, working24, !disable);
+                                        filterHospital(hospitalType, region, type, speciality, working24, !disable, emergency_number);
                                         setDisable(!disable)
                                     }}
                                          className={`button-filter ${disable ? "active-filter-btn" : ""}`}>
@@ -290,7 +312,6 @@ const Clinics = () => {
 
                                             </div>
                                         </div>
-
                                         <div className="services">
                                             {item.hospital_services.map((item, index) => {
                                                 return <div key={index} className="service">
@@ -298,12 +319,29 @@ const Clinics = () => {
                                                 </div>
                                             })}
                                         </div>
-                                        <div onClick={() => {
-                                            navigate("/about-clinic");
-                                            localStorage.setItem("clinicId", item.id);
-                                            dispatch(getAboutMarker(item.location))
-                                        }} className="more-btn">
-                                            {t("more")}
+
+                                        <div className="btns">
+                                            <div onClick={() => {
+                                                navigate("/about-clinic");
+                                                localStorage.setItem("clinicId", item.id);
+                                                dispatch(getAboutMarker(item.location))
+                                            }} className="more-btn">
+                                                {t("more")}
+                                            </div>
+                                            <div className="left-btn">
+                                                {item.emergency_number &&
+                                                <a href={`tel:${item.emergency_number}`} className="emergency">
+                                                    <img src="./images/phone-call.png" alt=""/>
+                                                    {item.emergency_number}
+                                                </a>}
+
+                                                <div onClick={() => NavigateButton(item.location)}
+                                                     className="navigator">
+                                                    Navigator
+                                                    <img src="./images/compass.png" alt=""/>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

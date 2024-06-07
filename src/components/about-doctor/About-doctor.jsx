@@ -59,6 +59,14 @@ const AboutDoctor = () => {
         setSavedPosts(updatedSavedPosts);
     };
 
+    const NavigateButton = (location) => {
+        let latitude = Number(location.split(",")[0]);
+        let longitude = Number(location.split(",")[1]);
+
+        const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        window.open(url, '_blank');
+    };
+
     return <div className="about-doctor-box">
         <Navbar/>
 
@@ -74,6 +82,14 @@ const AboutDoctor = () => {
                         {doctor.translations[i18next.language].first_name} &nbsp;
                         {doctor.translations[i18next.language].last_name} &nbsp;
                         {doctor.translations[i18next.language].middle_name}
+                    </div>
+
+                    <div className="social-medias-icons">
+                        {doctor.doctor_socials.map((item, index) => {
+                            return <a key={index} href={item.url} target="_blank">
+                                <img src={`./images/social-media/${item.key}.png`} alt=""/>
+                            </a>
+                        })}
                     </div>
 
                     <div className="info">
@@ -112,6 +128,12 @@ const AboutDoctor = () => {
                         <img src={savedPosts.includes(doctor.id) ? "./images/like.png" : "./images/no-like.png"}
                              alt=""/>
                         <div className="name">{t("save")}</div>
+                    </div>
+
+                    <div onClick={() => NavigateButton(doctor.location)}
+                         className="navigator">
+                        Navigator
+                        <img src="./images/compass.png" alt=""/>
                     </div>
                 </div>
 

@@ -14,6 +14,8 @@
         font-weight: bold;
       }
 
+
+
       .buttons {
         display: flex;
         align-items: center;
@@ -49,12 +51,71 @@
             cursor: pointer;
           }
         }
+
+        .emergency {
+          width: max-content;
+          padding: 8px 15px;
+          border-radius: 10px;
+          cursor: pointer;
+          color: white;
+          background-color: #d81927;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          transition: 0.3s;
+          margin-right: 10px;
+          text-decoration: none;
+
+          img {
+            width: 18px;
+            margin-right: 10px;
+          }
+        }
       }
+    }
+
+    .social-medias-icons {
+      width: 100%;
+
+      a {
+        text-decoration: none;
+        img {
+          cursor: pointer;
+          margin-top: 10px;
+          width: 24px;
+          margin-right: 10px;
+          transition: 0.3s;
+          &:hover{
+            transform: scale(1.1);
+          }
+        }
+      }
+
     }
 
     .body {
       width: 100%;
       margin-bottom: 60px;
+      .navigator {
+        margin: 10px;
+        width: max-content;
+        padding: 4px 15px;
+        border-radius: 10px;
+        border: 1px solid #00ADAD;
+        cursor: pointer;
+        background-color: #EDF7F7;
+        color: #00ADAD;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+
+        img {
+          width: 16px;
+          margin-left: 10px;
+        }
+      }
 
       .section-commit {
         margin-top: 20px;
@@ -152,6 +213,8 @@
             }
           }
         }
+
+
 
         .location-box {
           padding: 10px;
@@ -327,6 +390,7 @@
           }
         }
       }
+
 
       .tab-hospital {
         margin-top: 40px;

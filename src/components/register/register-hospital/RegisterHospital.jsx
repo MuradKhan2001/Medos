@@ -160,6 +160,7 @@ const RegisterHospital = () => {
             type: "",
             phone1: "",
             phone2: "",
+            emergency_number: "",
             start_time: null,
             end_time: null,
             working_days: [],
@@ -455,6 +456,7 @@ const RegisterHospital = () => {
             type: formOne.values.type,
             phone1: formOne.values.phone1,
             phone2: formOne.values.phone2,
+            emergency_number: formOne.values.emergency_number,
             start_time: formOne.values.start_time,
             end_time: formOne.values.end_time,
             open_24: workingTime24,
@@ -741,6 +743,22 @@ const RegisterHospital = () => {
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
                             label="Telefon raqam 2" variant="outlined" className="textField"/>
                     </div>
+                </div>
+                <div className="select-box">
+                    <div className="select-sides">
+                        <TextField
+                            value={formOne.emergency_number}
+                            onChange={formOne.handleChange}
+                            name="emergency_number"
+                            sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
+                            label="Tez yordam raqami" variant="outlined" className="textField"/>
+
+                    </div>
+                    <div className="select-sides">
+                    </div>
+                </div>
+                <div className="des-input">
+                    Agar tez yordam xizmati mavjud bolsa tez yordam raqamini kiriting.
                 </div>
 
                 <div className="label-text">

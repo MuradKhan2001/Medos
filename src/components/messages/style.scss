@@ -32,7 +32,7 @@
           margin-top: 20px;
           padding: 15px;
           width: 300px;
-          height: 200px;
+          height: 220px;
           border-radius: 10px;
           box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
           position: relative;
@@ -40,7 +40,7 @@
           .icon-message {
             position: absolute;
             right: 15px;
-            bottom: 0px;
+            bottom: 10px;
             width: 100px;
             height: 100px;
             border-radius: 50%;
@@ -106,6 +106,19 @@
             &::-webkit-scrollbar-thumb {
               border-radius: 20px;
               background-color: gray;
+            }
+          }
+
+          .time{
+            width: 100%;
+            text-align: right;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #00ADAD;
+            font-weight: bold;
+            span{
+              margin-right: 10px;
+              color: black;
             }
           }
         }

@@ -111,6 +111,14 @@ const Pharmacies = () => {
         setSavedPosts(updatedSavedPosts);
     };
 
+    const NavigateButton = (location) => {
+        let latitude = Number(location.split(",")[0]);
+        let longitude = Number(location.split(",")[1]);
+
+        const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        window.open(url, '_blank');
+    };
+
     return <>
         <div className="pharmacies-wrapper">
             <Navbar/>
@@ -210,6 +218,12 @@ const Pharmacies = () => {
                                                     </div>
                                                 </div>
                                                 <div className="buttons">
+                                                    <div onClick={() => NavigateButton(item.location)}
+                                                         className="navigator">
+                                                        Navigator
+                                                        <img src="./images/compass.png" alt=""/>
+                                                    </div>
+
                                                     <div onClick={() => {
                                                         localStorage.setItem("pharmacyId", item.id);
                                                         dispatch(getAboutMarker(item.location));
@@ -218,7 +232,10 @@ const Pharmacies = () => {
                                                          className="more-btn">
                                                         {t("more")}
                                                     </div>
+
+
                                                 </div>
+
                                             </div>
                                         </div>
                                     })

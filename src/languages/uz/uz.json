@@ -33,7 +33,7 @@
   "agreement": "Kelishuv asosida",
   "sum": "so'm",
   "acceptance": "Qabulga yozilish",
-  "acceptance2": "Yozilish",
+  "acceptance2": "Qabulga yozilish",
   "call": "Qo'ng'iroq qilish",
   "more": "Ko'proq ko'rish",
   "prev": "Orqaga",
@@ -64,7 +64,7 @@
   "doctor": "Shifokor haqida",
   "address-doctor": "Ishxona manzili",
   "address-pharmacy": "Dorixona manzili",
-  "more-doctors": "O'xshash doctorlar",
+  "more-doctors": "O'xshash shifokorlar",
   "pharmacy": "Dorixona",
   "contact": "Bog'lanish",
   "add-doctor": "Shifokor akkauntini ochish",
@@ -76,5 +76,6 @@
   "uzb": "O'zbekiston",
   "reason-register": "Siz ro‘yxatdan qanday maqsatda o‘tmoqchisiz?",
   "register-text": "Ro‘yxatdan o‘tishdan oldin pastdagi maqsadlardan birini tanlang!",
-  "register-btn": "Tasdiqlash va davom etish"
+  "register-btn": "Tasdiqlash va davom etish",
+  "emergency": "Tez yordam"
 }

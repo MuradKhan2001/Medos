@@ -23,26 +23,32 @@ const ClinicMarkers = () => {
         setClinicActiveId(null)
     };
 
+    const NavigateButton = (location) => {
+        let latitude = Number(location.split(",")[0]);
+        let longitude = Number(location.split(",")[1]);
+
+        const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        window.open(url, '_blank');
+    };
+
     return <>
 
         <MarkerClustererF gridSize={60}>
-            {(clusterer) =>
-                clinics.map((item, index) => {
-                    return <MarkerF
-                        key={index}
-                        position={{lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])}}
-                        icon={clinicActiveId === item.id ? icon2 : icon}
-                        onClick={() => {
-                            onMarkerClick(item);
-                            setClinicActiveId(item.id)
-                        }}
-                        clusterer={clusterer}
-                    />
-                })
+            {(clusterer) => clinics.map((item, index) => {
+                return <MarkerF
+                    key={index}
+                    position={{lat: Number(item.location.split(",")[0]), lng: Number(item.location.split(",")[1])}}
+                    icon={clinicActiveId === item.id ? icon2 : icon}
+                    onClick={() => {
+                        onMarkerClick(item);
+                        setClinicActiveId(item.id)
+                    }}
+                    clusterer={clusterer}
+                />
+            })
+
             }
         </MarkerClustererF>
-
-
         {selectedLocation && (<InfoWindow
             position={{
                 lat: Number(selectedLocation.location.split(",")[0]),
@@ -54,6 +60,10 @@ const ClinicMarkers = () => {
                 <div className="info-text">
                     <div className="photo-clinic">
                         <img src={selectedLocation.image} alt=""/>
+                    </div>
+                    <div onClick={()=> NavigateButton(selectedLocation.location)} className="navigator">
+                        Navigator
+                        <img src="./images/compass.png" alt=""/>
                     </div>
                     <div className="content">
                         <div className="title">
@@ -86,6 +96,7 @@ const ClinicMarkers = () => {
                         </div>
                     </div>
                 </div>
+
             </div>
         </InfoWindow>)}
     </>

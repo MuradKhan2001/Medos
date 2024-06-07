@@ -75,6 +75,14 @@ const AboutClinic = () => {
         setSavedPosts(updatedSavedPosts);
     };
 
+    const NavigateButton = (location) => {
+        let latitude = Number(location.split(",")[0]);
+        let longitude = Number(location.split(",")[1]);
+
+        const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        window.open(url, '_blank');
+    };
+
     return <div className="about-clinic-box">
         <Navbar/>
 
@@ -84,12 +92,19 @@ const AboutClinic = () => {
                 <div className="title">
                     {clinic && clinic.translations[i18next.language].name}
                 </div>
+
                 <div className="buttons">
                     <div className="like">
                         <img onClick={() => handleSaveClick(clinic.id)}
                              src={savedPosts.includes(clinic.id) ? "./images/like.png" : "./images/no-like.png"}
                              alt=""/>
                     </div>
+
+                    {clinic.emergency_number &&
+                    <a href={`tel:${clinic.emergency_number}`} className="emergency">
+                        <img src="./images/phone-call.png" alt=""/>
+                        {clinic.emergency_number}
+                    </a>}
 
                     <div onClick={() => ShowModal("contact", clinic)}
                          className="button-call">
@@ -100,6 +115,13 @@ const AboutClinic = () => {
                         {t("acceptance2")}
                     </div>
                 </div>
+            </div>
+            <div className="social-medias-icons">
+                {clinic.hospital_socials.map((item, index) => {
+                    return <a key={index} href={item.url} target="_blank">
+                        <img src={`./images/social-media/${item.key}.png`} alt=""/>
+                    </a>
+                })}
             </div>
             <div className="body">
                 <div className="section-commit">
@@ -125,12 +147,20 @@ const AboutClinic = () => {
                         </>}
                     </div>
                 </div>
+                <div onClick={() => NavigateButton(clinic.location)}
+                     className="navigator">
+                    Navigator
+                    <img src="./images/compass.png" alt=""/>
+                </div>
                 <div className="images-location">
                     <div className="images-box">
                         <div className="image-hospital">
                             <img src={clinic.image} alt=""/>
                         </div>
                     </div>
+
+
+
                     <div className="location-box">
                         <MapAbout/>
                     </div>

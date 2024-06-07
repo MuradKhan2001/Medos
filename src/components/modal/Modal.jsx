@@ -5,7 +5,6 @@ import ReactStars from "react-stars";
 import {hideModal, showModals} from "../../redux/ModalContent";
 import "./style.scss";
 import {useFormik} from "formik";
-import {useNavigate} from "react-router-dom";
 import {addAlert, delAlert} from "../../redux/AlertsBox";
 import i18next from "i18next";
 import axios from "axios";
@@ -13,7 +12,6 @@ import {useTranslation} from "react-i18next";
 
 const Modal = () => {
     const {t} = useTranslation();
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const nodeRef = useRef(null);
     const modalContent = useSelector((store) => store.ModalContent.data);
@@ -34,6 +32,9 @@ const Modal = () => {
         if (!values.text) {
             errors.text = "Required";
         }
+        if (!values.utime) {
+            errors.utime = "Required";
+        }
         return errors;
     };
 
@@ -41,7 +42,8 @@ const Modal = () => {
         initialValues: {
             name: "",
             phone: "",
-            text: ""
+            text: "",
+            utime:""
         },
         validate,
         onSubmit: (values) => {
@@ -133,6 +135,14 @@ const Modal = () => {
                                 value={formReception.values.phone}
                                 name="phone"
                                 placeholder="Telefon raqamingizni kiriting" type="text"/>
+                            <label htmlFor="utime">Qabulga borish kuni va soatini kiriting:</label>
+                            <input
+                                className={formReception.errors.utime === "Required" ? "Required" : ""}
+                                onChange={formReception.handleChange}
+                                value={formReception.values.utime}
+                                name="utime"
+                                type="datetime-local"
+                                id="utime"/>
                             <textarea
                                 className={formReception.errors.text === "Required" ? "Required" : ""}
                                 onChange={formReception.handleChange}
@@ -142,9 +152,6 @@ const Modal = () => {
                                 cols="30" rows="10"></textarea>
                         </div>
                         <div className="buttons-box">
-                            <div onClick={() => dispatch(hideModal({show: false}))} className="cancel-btn">Bekor
-                                qilish
-                            </div>
                             <button type="submit" className="send-btn">Yuborish</button>
                         </div>
                     </form>}

@@ -31,6 +31,25 @@
           font-weight: bold;
         }
 
+        .social-medias-icons {
+          width: 100%;
+
+          a {
+            text-decoration: none;
+            img {
+              cursor: pointer;
+              margin-top: 10px;
+              width: 24px;
+              margin-right: 10px;
+              transition: 0.3s;
+              &:hover{
+                transform: scale(1.1);
+              }
+            }
+          }
+
+        }
+
         .info {
           margin-top: 10px;
           display: flex;
@@ -122,6 +141,26 @@
 
           .name {
 
+          }
+        }
+
+        .navigator {
+         margin-top: 10px;
+          width: max-content;
+          padding: 4px 15px;
+          border-radius: 10px;
+          border: 1px solid #00ADAD;
+          cursor: pointer;
+          background-color: #EDF7F7;
+          color: #00ADAD;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: 0.3s;
+
+          img {
+            width: 16px;
+            margin-left: 10px;
           }
         }
       }
