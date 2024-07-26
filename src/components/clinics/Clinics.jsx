@@ -15,6 +15,7 @@ import {getClinics} from "../../redux/clinics";
 import {getAboutMarker} from "../../redux/markerAbout";
 import MobileNavbar from "../mobile-navbar/MobileNavbar";
 import {show} from "../../redux/show-map";
+import AdvertBox from "../adverts/AdvertBox";
 
 
 const Clinics = () => {
@@ -133,6 +134,7 @@ const Clinics = () => {
 
     return <>
         <div className="clinics-wrapper">
+           <AdvertBox/>
             <Navbar/>
             <div className="clinics-list">
                 <div className="category-wrapper">
@@ -264,7 +266,7 @@ const Clinics = () => {
                             </div>
                         </div>
                         {!showMap && <div className="clinics">
-                            {clinics.map((item, index) => {
+                            {clinics.length > 0 && clinics.map((item, index) => {
                                 return <div key={index} className="clinic">
                                     <div className="left-side">
                                         <img src={item.image} alt=""/>
@@ -299,7 +301,7 @@ const Clinics = () => {
                                         <div className="section-location">
                                             <div className="location">
                                                 <img src="./images/icon.png" alt=""/>
-                                                {item.translations[i18next.language].address}
+                                                {/*{item.translations[i18next.language].address}*/}
                                             </div>
                                             <div className="time-open">
                                                 <img src="./images/clock.png" alt=""/>

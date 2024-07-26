@@ -31,7 +31,7 @@ const Footer = () => {
                 </div>
 
                 <div className="call">
-                    <div className="title-call">1060</div>
+                    <div className="title-call">94 009 09 06</div>
                     <div className="des-call">
                         {t("des-footer")}
                     </div>

@@ -32,7 +32,7 @@ const Modal = () => {
         if (!values.text) {
             errors.text = "Required";
         }
-        if (!values.utime) {
+        if (!values.utime && modalContent.status === "sms") {
             errors.utime = "Required";
         }
         return errors;
@@ -59,7 +59,6 @@ const Modal = () => {
             };
 
             if (modalContent.status === "sms") {
-                console.log(reception);
                 axios.post(`${baseUrl}patient/`, reception).then((response) => {
                     let idAlert = Date.now();
                     let alert = {

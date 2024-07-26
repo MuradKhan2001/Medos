@@ -49,6 +49,7 @@ const ClinicMarkers = () => {
 
             }
         </MarkerClustererF>
+
         {selectedLocation && (<InfoWindow
             position={{
                 lat: Number(selectedLocation.location.split(",")[0]),
@@ -99,6 +100,7 @@ const ClinicMarkers = () => {
 
             </div>
         </InfoWindow>)}
+
     </>
 };
 

@@ -15,6 +15,7 @@ import MobileNavbar from "../mobile-navbar/MobileNavbar";
 import i18next from "i18next";
 import {useTranslation} from "react-i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
+import AdvertBox from "../adverts/AdvertBox";
 
 const Doctors = () => {
     const {t} = useTranslation();
@@ -121,6 +122,7 @@ const Doctors = () => {
 
     return <>
         <div className="doctors-wrapper">
+            <AdvertBox/>
             <Navbar/>
             <div className="doctors-list">
                 <div className="bottom-content">

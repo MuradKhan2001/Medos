@@ -282,6 +282,7 @@ const RegisterHospital = () => {
             } ${road ? road : ""}`;
 
             setSelected(locMy);
+            setCenter({lat:latitude, lng:longitude});
             setAddressLocation(fullAddress)
             setAddress_validate(false)
         });
@@ -700,7 +701,6 @@ const RegisterHospital = () => {
                         </div>
                     </div>
                 </div>
-
                 {workingTime24 ? "" : <div className="select-box-working-time">
                     <div className="select-sides">
                         <label htmlFor="">Ish vaqti boshlanishi</label>
@@ -716,14 +716,12 @@ const RegisterHospital = () => {
                             name="end_time" onChange={formOne.handleChange} value={formOne.end_time} type="time"/>
                     </div>
                 </div>}
-
                 <div className="label-text">
                     <div className="sides">
                         <div className="label-bold">Shifoxona bilan bog‘lanish</div>
                     </div>
                     <div className="sides"></div>
                 </div>
-
                 <div className="select-box">
                     <div className="select-sides">
                         <TextField
@@ -760,17 +758,13 @@ const RegisterHospital = () => {
                 <div className="des-input">
                     Agar tez yordam xizmati mavjud bolsa tez yordam raqamini kiriting.
                 </div>
-
                 <div className="label-text">
                     <div className="sides">
                         Ijtimoiy tarmoq sahifasi yoki veb sayt havolasi
                     </div>
                     <div className="sides"></div>
                 </div>
-
                 <div className="inputs-box-link">
-
-
                     {socialMedias.map((item, index) => {
                         return <div key={index} className="inputs-social-media">
 
@@ -836,14 +830,12 @@ const RegisterHospital = () => {
                         osonlashtiring.
                     </div>
                 </div>
-
                 <div className="btn-box">
                     <div onClick={() => formOne.handleSubmit()} className="next-page-btn">
                         Tasdiqlash va davom etish
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
                 </div>
-
             </div>}
 
 

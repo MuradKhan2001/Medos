@@ -258,6 +258,7 @@ const PharmacyProfile = () => {
             } ${road ? road : ""}`;
 
             setSelected(locMy);
+            setCenter({lat:latitude, lng:longitude});
             setAddressLocation(fullAddress)
             setAddress_validate(false)
         });

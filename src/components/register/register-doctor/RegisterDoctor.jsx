@@ -10,7 +10,8 @@ import {
     Select,
     Checkbox,
     OutlinedInput,
-    ListItemText
+    ListItemText,
+    Autocomplete
 } from "@mui/material";
 import {GoogleMap, Marker, useLoadScript} from "@react-google-maps/api";
 import {GOOGLE_MAPS_API_KEY} from "../googleMapsApi";
@@ -336,6 +337,7 @@ const RegisterHospital = () => {
             } ${road ? road : ""}`;
 
             setSelected(locMy);
+            setCenter({lat:latitude, lng:longitude});
             setAddressLocation(fullAddress)
             setAddress_validate(false)
         });
@@ -681,7 +683,7 @@ const RegisterHospital = () => {
                             <Select
                                 error={formOne.errors.working_days === "Required"}
                                 name="working_days"
-                                labelId="demo-multiple-checkbox-label"
+                                labelid="demo-multiple-checkbox-label"
                                 id="demo-multiple-checkbox"
                                 multiple
                                 value={weekend}
@@ -817,7 +819,7 @@ const RegisterHospital = () => {
                     Ish joyingiz qayerda joylashgan?
                 </div>
                 <div className="des">
-                    Bemorlar sizni topishlari oson bo‘lishi uchun bu juda muhim
+                    Ish joyingiz keltirilgan royxatda mavjud bo'lmasa, xaritadan belgilang.
                 </div>
 
                 <div className="select-box">
@@ -826,7 +828,7 @@ const RegisterHospital = () => {
                             <InputLabel id="demo-select-large-label">Viloyatni tanlang</InputLabel>
                             <Select
                                 error={region_validate}
-                                labelId="demo-select-small-label"
+                                labelid="demo-select-small-label"
                                 id="demo-select-small"
                                 value={region}
                                 label="Viloyatni tanlang"
@@ -846,28 +848,53 @@ const RegisterHospital = () => {
 
                     <div className="select-sides">
                         <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                            <InputLabel id="demo-select-large-label">Ish joyingizni tanlang</InputLabel>
-                            <Select
+                            {/*<InputLabel id="demo-select-large-label">Ish joyingizni tanlang</InputLabel>*/}
+                            {/*<Select*/}
+                            {/*    error={formOne.errors.hospital === "Required"}*/}
+                            {/*    name="hospital"*/}
+                            {/*    labelid="demo-select-small-label"*/}
+                            {/*    id="demo-select-small"*/}
+                            {/*    value={hospitalType}*/}
+                            {/*    label="Ish joyingizni tanlang"*/}
+                            {/*    onChange={(e) => {*/}
+                            {/*        formOne.handleChange(e)*/}
+                            {/*        setHospitalType(e.target.value)*/}
+                            {/*    }}*/}
+                            {/*>*/}
+                            {/*    <MenuItem onClick={() => {*/}
+                            {/*        setAddressLocation("");*/}
+                            {/*        setAddressLocationRu("");*/}
+                            {/*    }} value={""}>---</MenuItem>*/}
+                            {/*    {hospitalList.map((item) => {*/}
+                            {/*        return <MenuItem key={item.id}*/}
+                            {/*                         value={item.id}>{item.translations[i18next.language].name}</MenuItem>*/}
+                            {/*    })}*/}
+                            {/*</Select>*/}
+
+                            <Autocomplete
+                                disablePortal
                                 error={formOne.errors.hospital === "Required"}
                                 name="hospital"
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
+                                labelid="demo-select-small-label"
+                                size="small"
                                 value={hospitalType}
-                                label="Ish joyingizni tanlang"
-                                onChange={(e) => {
-                                    formOne.handleChange(e)
-                                    setHospitalType(e.target.value)
+                                onChange={(e, value) => {
+                                    formOne.values.hospital= value ? value[0] : null;
+                                    setHospitalType(value)
                                 }}
-                            >
-                                <MenuItem onClick={() => {
-                                    setAddressLocation("");
-                                    setAddressLocationRu("");
-                                }} value={""}>---</MenuItem>
-                                {hospitalList.map((item) => {
-                                    return <MenuItem key={item.id}
-                                                     value={item.id}>{item.translations[i18next.language].name}</MenuItem>
-                                })}
-                            </Select>
+                                id="combo-box-demo"
+                                options={hospitalList.map((item)=> [item.id,item.translations[i18next.language].name])}
+                                getOptionLabel={(option) => option ? option[1] : ""}
+                                isOptionEqualToValue={(option, value) => true}
+                                renderOption={(props, option) => (
+                                    <li {...props}>
+                                        {option[1]}
+                                    </li>
+                                )}
+
+                                renderInput={(params) => <TextField {...params} label="Ish joyingizni tanlang"/>}
+                            />
+
                         </FormControl>
                     </div>
                 </div>
@@ -934,7 +961,7 @@ const RegisterHospital = () => {
                                 label="Asosiy mutaxassislikni tanlang___"
                                 error={formOne.errors.specialty === "Required"}
                                 name="specialty"
-                                labelId="demo-select-small-label"
+                                labelid="demo-select-small-label"
                                 id="demo-select-small"
                                 value={specialty}
                                 onChange={(e) => {
@@ -956,7 +983,7 @@ const RegisterHospital = () => {
                             <InputLabel id="demo-multiple-checkbox-label">Qo'shimcha mutaxassisliklar</InputLabel>
                             <Select
                                 name="sub_speciality"
-                                labelId="demo-multiple-checkbox-label"
+                                labelid="demo-multiple-checkbox-label"
                                 id="demo-multiple-checkbox"
                                 multiple
                                 value={subSpecialty}

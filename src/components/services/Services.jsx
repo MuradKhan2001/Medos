@@ -10,6 +10,7 @@ import MobileNavbar from "../mobile-navbar/MobileNavbar";
 import {getClinics} from "../../redux/clinics";
 import {changeMenu} from "../../redux/menu";
 import {useNavigate} from "react-router-dom";
+import AdvertBox from "../adverts/AdvertBox";
 
 const Service = () => {
     const dispatch = useDispatch();
@@ -26,7 +27,6 @@ const Service = () => {
 
     const filterHospital = (id) => {
         axios.post(`${baseUrl}filter-hospital/`, {sub_service: id}).then((response) => {
-            console.log(response.data)
             dispatch(getClinics(response.data));
             dispatch(changeMenu(true));
             navigate("/")
@@ -34,6 +34,7 @@ const Service = () => {
     };
 
     return <div className="service-container">
+        <AdvertBox/>
         <Navbar/>
         <div className="service-box">
             <div className="title">
@@ -56,6 +57,7 @@ const Service = () => {
                     <div className="title-service">
                         {item.translations[i18next.language].name} <span></span>
                         <div className="num">
+                            {console.log(item)}
                             {item.hospital_count}
                         </div>
                     </div>

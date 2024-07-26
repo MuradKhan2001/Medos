@@ -14,6 +14,7 @@ import axios from "axios";
 import {useTranslation} from "react-i18next";
 import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
+import AdvertBox from "../adverts/AdvertBox";
 
 
 const Pharmacies = () => {
@@ -121,6 +122,7 @@ const Pharmacies = () => {
 
     return <>
         <div className="pharmacies-wrapper">
+            <AdvertBox/>
             <Navbar/>
             <div className="pharmacies-list">
                 <div className="bottom-content">
