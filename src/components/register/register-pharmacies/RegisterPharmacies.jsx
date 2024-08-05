@@ -245,7 +245,7 @@ const RegisterPharmacies = () => {
             } ${road ? road : ""}`;
 
             setSelected(locMy);
-            setCenter({lat:latitude, lng:longitude});
+            setCenter({lat: latitude, lng: longitude});
             setAddressLocation(fullAddress)
             setAddress_validate(false)
         });
@@ -394,8 +394,10 @@ const RegisterPharmacies = () => {
         <div className="register-page">
             <div className="header-register">
                 <div className="line-page-numbers">
-                    <div className={`line ${pageNumber === 1 || pageNumber === 2 ? "line-active" : ""}`}></div>
-                    <div className={`num ${pageNumber === 1 || pageNumber === 2 ? "num-active" : ""}`}>
+                    <div
+                        className={`line ${pageNumber === 1 || pageNumber === 2  ? "line-active" : ""}`}></div>
+                    <div
+                        className={`num ${pageNumber === 1 || pageNumber === 2 ? "num-active" : ""}`}>
                         1
                         <div className={`name ${pageNumber === 1 || pageNumber === 2 ? "active-name" : ""}`}>
                             Dorixona haqida
@@ -409,7 +411,6 @@ const RegisterPharmacies = () => {
                             Dorixona manzili
                         </div>
                     </div>
-
                     <div className={`line ${pageNumber === 2 ? "line-active" : ""}`}></div>
                 </div>
                 <div onClick={() => navigate("/register")} className="prev-mobile">
@@ -419,7 +420,7 @@ const RegisterPharmacies = () => {
 
             {pageNumber === 1 &&
             <div className="register-page-one">
-                <div  ref={ref2} className="title">
+                <div ref={ref2} className="title">
                     Dorixona haqida ma'lumotlarni toldiring
                 </div>
                 <div className="des">
@@ -602,7 +603,6 @@ const RegisterPharmacies = () => {
                         </FormControl>
                     </div>
                 </div>
-
                 <div className="label-address">Manzil:</div>
                 <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
                     {i18next.language === "uz" && addressLocation ? addressLocation : ""}
@@ -629,26 +629,17 @@ const RegisterPharmacies = () => {
                         </div>
                     </GoogleMap>
                 </div>
-
                 <div className="btn-box">
                     <div onClick={() => setPageNumber(1)} className="prev-btn">
                         <img src="./images/prev-btn.png" alt=""/>
                         Orqaga qaytish
                     </div>
-                    <div onClick={() => {
-                        if (addressLocation && region) {
-                            sendAllInfo()
-                        } else {
-                            if (!addressLocation) setAddress_validate(true);
-                            if (!region) setRegion_validate(true)
-                        }
-                    }} className="next-page-btn">
-                        Tasdiqlash va davom etish
+                    <div onClick={sendAllInfo} className="next-page-btn">
+                        Tasdiqlash
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
                 </div>
             </div>}
-
         </div>
     </div>
 };

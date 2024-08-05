@@ -52,7 +52,11 @@ const Doctors = () => {
     ];
 
     useEffect(() => {
-        axios.get(`${baseUrl}speciality/`).then((response) => {
+        axios.get(`${baseUrl}speciality/`, {
+            headers:{
+                "Accept-Language": i18next.language
+            },
+        }).then((response) => {
             setServiceList(response.data)
         }).catch((error) => {
         });

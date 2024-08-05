@@ -16,6 +16,7 @@ import ProfileDoctor from "../components/profile/profile-doctor/ProfileDoctor";
 import ProfileHospital from "../components/profile/hospital-profile/HospitalProfile";
 import PharmacyProfile from "../components/profile/pharmacy-profile/PharmacyProfile";
 import Messages from "../components/messages/Messages";
+import Balance from "../components/my-balance/Balance";
 
 
 export const publicRoutes = [
@@ -90,6 +91,10 @@ export const allRoutes = [
     {
         path: "/profile-pharmacy",
         element: <PharmacyProfile/>
+    },
+    {
+        path: "/balance",
+        element: <Balance/>
     },
 ];
 

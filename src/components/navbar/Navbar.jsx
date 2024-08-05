@@ -78,6 +78,7 @@ const Navbar = () => {
     const changeLanguage = (code) => {
         localStorage.setItem("lng", code);
         i18next.changeLanguage(code);
+        window.location.reload()
     };
 
     window.onclick = function (event) {
@@ -323,6 +324,12 @@ const Navbar = () => {
                                                 {i18next.language === "ru" && localStorage.getItem("nameRu")}
                                             </div>
                                         </div>
+
+                                        <div onClick={() => navigate("/balance")} className="btns">
+                                            <img src="./images/cash.png" alt=""/>
+                                            {t("Mening hisobim")}
+                                        </div>
+
                                         <div onClick={() => {
                                             localStorage.getItem("userType") === "Doctor" && navigate("/profile-doctor");
                                             localStorage.getItem("userType") === "Hospital" && navigate("/profile-hospital");

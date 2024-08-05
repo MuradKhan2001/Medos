@@ -34,7 +34,7 @@ const RegisterHospital = () => {
     const [invalidService, setInvalidService] = useState(true);
     const [workingTime24, setWorkingTime24] = useState(false);
     const [selected, setSelected] = useState(null);
-    const [pageNumber, setPageNumber] = useState(1);
+    const [pageNumber, setPageNumber] = useState(3);
     const [center, setCenter] = useState(null);
     const [socialMedias, setSocialMedias] = useState([{key: "web", url: ""}]);
     const [service, setService] = useState([
@@ -208,12 +208,20 @@ const RegisterHospital = () => {
         }).catch((error) => {
         });
 
-        axios.get(`${baseUrl}hospital-type/`).then((response) => {
+        axios.get(`${baseUrl}hospital-type/`, {
+            headers:{
+                "Accept-Language": i18next.language
+            },
+        }).then((response) => {
             setHospitalList(response.data)
         }).catch((error) => {
         });
 
-        axios.get(`${baseUrl}speciality/`).then((response) => {
+        axios.get(`${baseUrl}speciality/`, {
+            headers:{
+                "Accept-Language": i18next.language
+            },
+        }).then((response) => {
             setServiceList(response.data)
         }).catch((error) => {
         });

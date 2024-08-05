@@ -15,6 +15,7 @@ import {useTranslation} from "react-i18next";
 import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
 import AdvertBox from "../adverts/AdvertBox";
+import {addAlert, delAlert} from "../../redux/AlertsBox";
 
 
 const Pharmacies = () => {
@@ -30,6 +31,7 @@ const Pharmacies = () => {
     const [working24, setWorking24] = useState("");
     const [region, setRegion] = useState("");
     const [savedPosts, setSavedPosts] = useState([]);
+    const [searchText, setSearchText] = useState("");
 
     const regions = [
         {name: t("Andijan"), latitude: 40.813616, longitude: 72.283463},
@@ -120,6 +122,26 @@ const Pharmacies = () => {
         window.open(url, '_blank');
     };
 
+    const filterPharmacy = () => {
+        axios.get(`${baseUrl}pharmacy/search_pill/?medicine=${searchText}&region=${region}`).then((response) => {
+            dispatch(getPharmacies(response.data));
+        }).catch((error) => {
+            if (error.response.status) {
+                let idAlert = Date.now();
+                let alert = {
+                    id: idAlert,
+                    text: "Siz izlagan dori topilmadi!",
+                    img: "./images/yellow.svg",
+                    color: "#fff4e0",
+                };
+                dispatch(addAlert(alert));
+                setTimeout(() => {
+                    dispatch(delAlert(idAlert));
+                }, 5000);
+            }
+        })
+    };
+
     return <>
         <div className="pharmacies-wrapper">
             <AdvertBox/>
@@ -128,6 +150,22 @@ const Pharmacies = () => {
                 <div className="bottom-content">
                     <div className={showMap ? "left-side-hide" : "left-side"}>
                         <div className="category-wrapper">
+                            <div>
+                                <div className="dropdown-filter-search">
+                                    <input value={searchText} onChange={(e) => setSearchText(e.target.value)}
+                                           placeholder="Dori nomini kiriting" type="text"/>
+
+                                    <div className="cancel-box">
+                                        {searchText && <img onClick={() => setSearchText("")} className="cancel"
+                                                            src="./images/x-button.png" alt=""/>}
+                                    </div>
+
+                                    <div onClick={filterPharmacy} className="btn-search">
+                                        Dori izlash
+                                    </div>
+                                </div>
+                            </div>
+
                             <div>
                                 <div className="dropdown-filter">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
@@ -165,6 +203,7 @@ const Pharmacies = () => {
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         {!showMap && <div className="pharmacies">

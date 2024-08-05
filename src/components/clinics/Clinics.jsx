@@ -56,12 +56,20 @@ const Clinics = () => {
     ];
 
     useEffect(() => {
-        axios.get(`${baseUrl}hospital-type/`).then((response) => {
+        axios.get(`${baseUrl}hospital-type/`, {
+            headers: {
+                "Accept-Language": i18next.language
+            },
+        }).then((response) => {
             setHospitalList(response.data)
         }).catch((error) => {
         });
 
-        axios.get(`${baseUrl}speciality/`).then((response) => {
+        axios.get(`${baseUrl}speciality/`, {
+            headers: {
+                "Accept-Language": i18next.language
+            },
+        }).then((response) => {
             setServiceList(response.data)
         }).catch((error) => {
         });
@@ -134,7 +142,7 @@ const Clinics = () => {
 
     return <>
         <div className="clinics-wrapper">
-           <AdvertBox/>
+            <AdvertBox/>
             <Navbar/>
             <div className="clinics-list">
                 <div className="category-wrapper">
@@ -301,7 +309,7 @@ const Clinics = () => {
                                         <div className="section-location">
                                             <div className="location">
                                                 <img src="./images/icon.png" alt=""/>
-                                                {/*{item.translations[i18next.language].address}*/}
+                                                {item.translations[i18next.language].address}
                                             </div>
                                             <div className="time-open">
                                                 <img src="./images/clock.png" alt=""/>

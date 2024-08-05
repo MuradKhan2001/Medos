@@ -1,6 +1,7 @@
 .pharmacies-wrapper {
   width: 100%;
   height: 100vh;
+
   .pharmacies-list {
     height: calc(100% - 120px);
 
@@ -111,13 +112,62 @@
               background-color: white;
               cursor: pointer;
               transition: 0.2s;
-              &:hover{
+
+              &:hover {
                 border: 1px solid rgba(0, 173, 173, 1);
               }
             }
-            .active-filter-btn{
+
+            .active-filter-btn {
               background-color: rgba(38, 45, 51, 1);
               color: white;
+            }
+          }
+
+          .dropdown-filter-search {
+            display: flex;
+            align-items: center;
+            border: 1px solid #b4b4b4;
+            border-radius: 20px;
+            overflow: hidden;
+            background-color: white;
+
+            input {
+              height: 35px;
+              padding-left: 10px;
+              border: none;
+              border-top-left-radius: 20px;
+              border-bottom-left-radius: 20px;
+
+              &:focus{
+                outline: none;
+              }
+            }
+
+            .cancel-box{
+              width: 15px;
+              margin-right: 10px;
+              .cancel{
+                width: 100%;
+                cursor: pointer;
+              }
+            }
+
+            .btn-search{
+              height: 35px;
+              width: 110px;
+              padding-left: 10px;
+              padding-right: 10px;
+              background-color: #00ADAD;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              cursor: pointer;
+              transition: 0.3s;
+              &:hover{
+                background-color: #009494;
+              }
             }
           }
 
@@ -470,11 +520,12 @@
         }
       }
 
-      .left-side-hide{
+      .left-side-hide {
         position: absolute;
         top: -4px;
         left: 200px;
         z-index: 100;
+
         .category-wrapper {
           width: 100%;
           margin: 0 auto;
@@ -572,14 +623,48 @@
               background-color: white;
               cursor: pointer;
               transition: 0.2s;
-              &:hover{
+
+              &:hover {
                 border: 1px solid rgba(0, 173, 173, 1);
               }
             }
 
-            .active-filter-btn{
+            .active-filter-btn {
               background-color: rgba(38, 45, 51, 1);
               color: white;
+            }
+          }
+
+          .dropdown-filter-search {
+            display: flex;
+            align-items: center;
+            border: 1px solid #b4b4b4;
+            border-radius: 20px;
+            overflow: hidden;
+
+            input {
+              height: 35px;
+              padding-left: 10px;
+              border: none;
+              border-top-left-radius: 20px;
+              border-bottom-left-radius: 20px;
+
+              &:focus{
+                outline: none;
+              }
+            }
+
+            .btn-search{
+              height: 35px;
+              width: 110px;
+              padding-left: 10px;
+              padding-right: 10px;
+              background-color: #00ADAD;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              cursor: pointer;
             }
           }
 
@@ -866,7 +951,7 @@
             }
           }
 
-          .my-location{
+          .my-location {
             position: absolute;
             right: 10px;
             bottom: 210px;
@@ -878,7 +963,8 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            img{
+
+            img {
               width: 60%;
             }
           }
@@ -896,7 +982,7 @@
   }
 }
 
-@media (max-width: 768px){
+@media (max-width: 768px) {
   .pharmacies-wrapper {
     height: auto;
 
@@ -998,7 +1084,8 @@
                   width: 100%;
                   height: 100%;
                   padding: 10px;
-                  .buttons{
+
+                  .buttons {
                     display: flex;
                   }
                 }
@@ -1008,9 +1095,9 @@
         }
 
         .left-side-hide {
-          position: sticky!important;
+          position: sticky !important;
           background-color: white;
-          top: 0px!important;
+          top: 0px !important;
           width: 98%;
           overflow-x: auto;
           left: 0;
@@ -1071,7 +1158,7 @@
         }
 
         .show-map {
-          display: block!important;
+          display: block !important;
           width: 100% !important;
         }
 
@@ -1080,6 +1167,7 @@
           width: 100%;
           height: 100vh;
           padding: 15px;
+
           .map {
             width: 100%;
             height: 100%;

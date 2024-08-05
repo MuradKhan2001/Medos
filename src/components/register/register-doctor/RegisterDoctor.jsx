@@ -245,7 +245,11 @@ const RegisterHospital = () => {
         }).catch((error) => {
         });
 
-        axios.get(`${baseUrl}speciality/`).then((response) => {
+        axios.get(`${baseUrl}speciality/`, {
+            headers: {
+                "Accept-Language": i18next.language
+            },
+        }).then((response) => {
             setSpecialtyList(response.data)
         }).catch((error) => {
         });
@@ -337,7 +341,7 @@ const RegisterHospital = () => {
             } ${road ? road : ""}`;
 
             setSelected(locMy);
-            setCenter({lat:latitude, lng:longitude});
+            setCenter({lat: latitude, lng: longitude});
             setAddressLocation(fullAddress)
             setAddress_validate(false)
         });
@@ -879,11 +883,11 @@ const RegisterHospital = () => {
                                 size="small"
                                 value={hospitalType}
                                 onChange={(e, value) => {
-                                    formOne.values.hospital= value ? value[0] : null;
+                                    formOne.values.hospital = value ? value[0] : null;
                                     setHospitalType(value)
                                 }}
                                 id="combo-box-demo"
-                                options={hospitalList.map((item)=> [item.id,item.translations[i18next.language].name])}
+                                options={hospitalList.map((item) => [item.id, item.translations[i18next.language].name])}
                                 getOptionLabel={(option) => option ? option[1] : ""}
                                 isOptionEqualToValue={(option, value) => true}
                                 renderOption={(props, option) => (

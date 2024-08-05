@@ -1,6 +1,6 @@
 import "./style.scss";
 import {useNavigate} from "react-router-dom";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import axios from "axios";
 import {
     TextField, MenuItem, InputLabel, FormControl, Select, Checkbox, OutlinedInput,
@@ -20,6 +20,8 @@ import {useTranslation} from "react-i18next";
 import {useFormik} from "formik";
 import {useDispatch, useSelector} from "react-redux";
 import {addAlert, delAlert} from "../../../redux/AlertsBox";
+import {CSSTransition} from "react-transition-group";
+
 
 const libraries = ["places"];
 
@@ -41,6 +43,14 @@ const PharmacyProfile = () => {
     const [logoHospital, setLogoHospital] = useState(null);
     const [weekend, setWeekend] = useState([]);
     const [daysList, setDaysList] = useState([]);
+    const [pharmaName, setPharmaName] = useState("");
+    const [pharmaPrice, setPharmaPrice] = useState("");
+    const [Pharmalist, setPharmalist] = useState([]);
+    const [pharmaFile, setPharmaFile] = useState(null);
+    const nodeRef = useRef(null);
+    const [modalContent, setModalContent] = useState({status: "", show: false});
+    const [searchValue, setSearchValue] = useState("");
+    const [editValue, setEditValue] = useState("");
 
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -206,10 +216,30 @@ const PharmacyProfile = () => {
                 localStorage.removeItem("userId");
             }
         });
+
     }
+
+    const getPharma = () => {
+        axios.get(`${baseUrl}medicine/`, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }
+        ).then((response) => {
+            setPharmalist(response.data)
+        }).catch((error) => {
+            if (error.response.statusText == "Unauthorized") {
+                window.location.pathname = "/";
+                localStorage.removeItem("token");
+                localStorage.removeItem("userId");
+            }
+        });
+    };
 
     useEffect(() => {
         getInformation()
+
+        getPharma()
         axios.get(`${baseUrl}days/`).then((response) => {
             setDaysList(response.data)
         }).catch((error) => {
@@ -258,7 +288,7 @@ const PharmacyProfile = () => {
             } ${road ? road : ""}`;
 
             setSelected(locMy);
-            setCenter({lat:latitude, lng:longitude});
+            setCenter({lat: latitude, lng: longitude});
             setAddressLocation(fullAddress)
             setAddress_validate(false)
         });
@@ -382,14 +412,15 @@ const PharmacyProfile = () => {
             open_24: workingTime24,
             location: loc,
             working_days: formOne.values.working_days,
-            region: region
+            region: region,
+            file: pharmaFile
         };
 
         axios.post(`${baseUrl}pharmacy-profile/`, allInfoHospital, {
             headers: {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             }
-        }).then((response) => {
+        }).then(() => {
 
             let idAlert = Date.now();
             let alert = {
@@ -409,9 +440,316 @@ const PharmacyProfile = () => {
 
     };
 
+    const addPharma = () => {
+
+        if (pharmaFile) {
+            const formData = new FormData();
+            formData.append('file', pharmaFile);
+
+            axios.post(`${baseUrl}medicine/add_medicine/`, formData, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }).then(() => {
+                let idAlert = Date.now();
+                let alert = {
+                    id: idAlert,
+                    text: "Dorilar saqlandi!",
+                    img: "./images/green.svg",
+                    color: "#EDFFFA",
+                };
+                dispatch(addAlert(alert));
+                setTimeout(() => {
+                    dispatch(delAlert(idAlert));
+                }, 5000);
+                getPharma()
+                setPharmaFile("")
+
+                modalContent.show = false
+                let newArr = {...modalContent}
+                setModalContent(newArr)
+            }).catch((error) => {
+            });
+        }
+
+        if (pharmaName.trim().length > 0 && pharmaPrice.trim().length > 0) {
+            let medicines = {
+                medicine_name: pharmaName,
+                cost: pharmaPrice
+            };
+
+            axios.post(`${baseUrl}medicine/`, {medicines: [medicines]}, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }).then(() => {
+
+                let idAlert = Date.now();
+                let alert = {
+                    id: idAlert,
+                    text: "Dori qo'shildi!",
+                    img: "./images/green.svg",
+                    color: "#EDFFFA",
+                };
+                dispatch(addAlert(alert));
+                setTimeout(() => {
+                    dispatch(delAlert(idAlert));
+                }, 5000);
+                getPharma()
+
+                modalContent.show = false
+                let newArr = {...modalContent}
+                setModalContent(newArr)
+            }).catch((error) => {
+            });
+        }
+    };
+
+    const getPages = (url) => {
+        axios.get(url, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }
+        ).then((response) => {
+            setPharmalist(response.data)
+        }).catch((error) => {
+            if (error.response.statusText == "Unauthorized") {
+                window.location.pathname = "/";
+                localStorage.removeItem("token");
+                localStorage.removeItem("userId");
+            }
+        });
+    };
+
+    const Clearlist = () => {
+        let result = window.confirm("Rostdan ham barcha dorilarni o'chirmoqchimisiz!")
+        if (result) {
+            axios.post(`${baseUrl}medicine/clear_medicine/`, {}, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }).then(() => {
+                let idAlert = Date.now();
+                let alert = {
+                    id: idAlert,
+                    text: "Ma'lumotlar tozalandi!",
+                    img: "./images/green.svg",
+                    color: "#EDFFFA",
+                };
+                dispatch(addAlert(alert));
+                setTimeout(() => {
+                    dispatch(delAlert(idAlert));
+                }, 5000);
+                getPharma()
+            })
+        }
+    };
+
+    const editPharma = () => {
+        if (pharmaName && pharmaPrice) {
+            axios.patch(`${baseUrl}medicine/${editValue}/`, {
+                medicine_name: pharmaName,
+                cost: pharmaPrice
+            }, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }).then(() => {
+
+                let idAlert = Date.now();
+                let alert = {
+                    id: idAlert,
+                    text: "Dori ma'lumotlari yangilandi!",
+                    img: "./images/green.svg",
+                    color: "#EDFFFA",
+                };
+                dispatch(addAlert(alert));
+                setTimeout(() => {
+                    dispatch(delAlert(idAlert));
+                }, 5000);
+                getPharma()
+
+                modalContent.show = false
+                let newArr = {...modalContent}
+                setModalContent(newArr)
+            }).catch((error) => {
+            });
+        }
+    }
+
+    const delPharma = (id) => {
+        let result = window.confirm("Rostdan ham barcha dorilarni o'chirmoqchimisiz!")
+        if (result) {
+            axios.delete(`${baseUrl}medicine/${id}/`, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }).then(() => {
+
+                let idAlert = Date.now();
+                let alert = {
+                    id: idAlert,
+                    text: "Dori o'chirildi",
+                    img: "./images/green.svg",
+                    color: "#EDFFFA",
+                };
+                dispatch(addAlert(alert));
+                setTimeout(() => {
+                    dispatch(delAlert(idAlert));
+                }, 5000);
+                getPharma()
+
+            }).catch((error) => {
+            });
+        }
+    };
+
     if (!isLoaded) return <Loader/>;
 
     return <div className="profile-pharmacies-container">
+        <CSSTransition
+            in={modalContent.show}
+            nodeRef={nodeRef}
+            timeout={300}
+            classNames="alert"
+            unmountOnExit
+        >
+            <div className="modal-sloy">
+                <div ref={nodeRef} className="modal-card">
+
+                    {modalContent.status === "enter" && <div className="enter">
+                        <div className="modal-header">
+                            <div className="xbtn-modal">
+                                <img onClick={() => {
+                                    modalContent.show = false
+                                    let newArr = {...modalContent}
+                                    setModalContent(newArr)
+                                }} src="./images/cancel.png"
+                                     alt=""/>
+                            </div>
+                        </div>
+
+                        <div className="title">
+                            Dorilarni donalab qo'shish
+                        </div>
+                        <div className="description">
+                            Dorixonangizda mavjud dorilarni kiritng!
+                        </div>
+
+                        <div className="select-box">
+                            <div className="select-sides">
+                                <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
+                                    <TextField onChange={(e) => setPharmaName(e.target.value)}
+                                               sx={{m: 1, minWidth: "80%"}}
+                                               size="small" id="outlined-basic"
+                                               label="Dori nomi " variant="outlined" className="textField"/>
+                                </FormControl>
+                            </div>
+                            <div className="select-sides">
+                                <TextField onChange={(e) => setPharmaPrice(e.target.value)}
+                                           sx={{m: 1, minWidth: "80%"}}
+                                           size="small" id="outlined-basic"
+                                           label="Dori narxi " variant="outlined" className="textField"/>
+                            </div>
+                        </div>
+
+                        <div className="buttons-box">
+                            <button onClick={addPharma} type="button" className="send-btn">Dori qo'shish</button>
+                        </div>
+                    </div>}
+
+                    {modalContent.status === "edit" && <div className="enter">
+                        <div className="modal-header">
+                            <div className="xbtn-modal">
+                                <img onClick={() => {
+                                    modalContent.show = false
+                                    let newArr = {...modalContent}
+                                    setModalContent(newArr)
+                                }} src="./images/cancel.png"
+                                     alt=""/>
+                            </div>
+                        </div>
+
+                        <div className="title">
+                            Dorini tahrirlash
+                        </div>
+
+                        <div className="select-box">
+                            <div className="select-sides">
+                                <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
+                                    <TextField value={pharmaName} onChange={(e) => setPharmaName(e.target.value)}
+                                               sx={{m: 1, minWidth: "80%"}}
+                                               size="small" id="outlined-basic"
+                                               label="Dori nomi " variant="outlined" className="textField"/>
+                                </FormControl>
+                            </div>
+                            <div className="select-sides">
+                                <TextField value={pharmaPrice} onChange={(e) => setPharmaPrice(e.target.value)}
+                                           sx={{m: 1, minWidth: "80%"}}
+                                           size="small" id="outlined-basic"
+                                           label="Dori narxi " variant="outlined" className="textField"/>
+                            </div>
+                        </div>
+
+                        <div className="buttons-box">
+                            <button onClick={editPharma} type="button" className="send-btn">Saqlash</button>
+                        </div>
+                    </div>}
+
+                    {modalContent.status === "file" &&
+                    <div className="file">
+                        <div className="modal-header">
+                            <div className="xbtn-modal">
+                                <img onClick={() => {
+                                    modalContent.show = false
+                                    let newArr = {...modalContent}
+                                    setModalContent(newArr)
+                                }} src="./images/cancel.png"
+                                     alt=""/>
+                            </div>
+                        </div>
+                        <div className="title">
+                            Elektron fayl
+                        </div>
+                        <div className="description">
+                            Dorilar yozilgan faylni Excel formatda joylang!
+                        </div>
+
+                        <div className="des-pharma">
+                            <div className="icon">
+                                <img src="./images/des.png" alt=""/>
+                            </div>
+                            <div className="text">
+                                Iltimos dorilar ro'yxatini excel dasturi orqali ushbu rasmda ko'rsatilgandek
+                                shakillantiring!
+                            </div>
+                        </div>
+                        <div className="pharma-image">
+                            <img src="./images/pharrmalist.jpg" alt=""/>
+                        </div>
+
+                        <div className="file-input">
+                            {
+                                pharmaFile ? <div className="text-file-val">
+                                    {pharmaFile && pharmaFile.name}
+                                </div> : <div className="text-file">
+                                    <img src="./images/File.png" alt=""/>
+                                    Faylni yuklash
+                                </div>
+                            }
+
+                            <input onChange={(e) => setPharmaFile(e.target.files[0])} type="file"/>
+                        </div>
+
+                        <div className="buttons-box">
+                            <button onClick={addPharma} type="button" className="send-btn">Faylni yuborish</button>
+                        </div>
+                    </div>}
+                </div>
+            </div>
+        </CSSTransition>
+
         <div className="logo">
             <img src="./images/logo.png" alt=""/>
         </div>
@@ -419,215 +757,347 @@ const PharmacyProfile = () => {
             <img onClick={() => navigate("/")} src="./images/cancel.png" alt=""/>
         </div>
         <div className="register-page">
-            <div className="register-page-one">
-                <div className="title">
-                    Akkount sozlamalari
+            <div className="title">
+                Akkount sozlamalari
+            </div>
+            <div className="des">
+                Dorixona akkountingizni tahrirlashingiz mumkin
+            </div>
+
+            <div className="header">
+                <div onClick={() => setPageNumber(1)} className={`item-menu ${pageNumber === 1 ? "active" : ""}`}>Umumiy
+                    ma'lumotlar
                 </div>
-                <div className="des">
-                    Dorixona akkountingizni tahrirlashingiz mumkin
-                </div>
-                <div className="logo-hospital">
-                    <div className="logo-image">
-                        {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
-                            <img className="logo-camera" src="./images/Exclude.png" alt=""/>
-                        }
-
-                    </div>
-
-                    <div className="label">
-                        Logo qo‘shish
-                        <input onChange={getInputPhoto} type="file"/>
-                    </div>
-                </div>
-
-                <div className="inputs-box">
-                    <TextField error={formOne.errors.nameUz === "Required"}
-                               value={formOne.values.nameUz}
-                               onChange={formOne.handleChange}
-                               name="nameUz"
-                               sx={{m: 1, minWidth: "100%"}} size="small"
-                               id="outlined-basic"
-                               label="Shifoxona nomini kiriting (uz) " variant="outlined" className="textField"/>
-                </div>
-
-                <div className="inputs-box">
-                    <TextField error={formOne.errors.nameRu === "Required"} value={formOne.values.nameRu}
-                               onChange={formOne.handleChange}
-                               name="nameRu" sx={{m: 1, minWidth: "100%"}} size="small"
-                               id="outlined-basic"
-                               label="Введите название больницы (ru) " variant="outlined" className="textField"/>
-                </div>
-
-                <div className="des-input">
-                    Iltimos, shifoxona nomini rus tili va o'zbek tilida kiritng
-                </div>
-
-                <div className="label-text">
-                    <div className="sides">
-                        <div className="label-bold">Ish vaqti</div>
-                    </div>
-                    <div className="sides"></div>
-                </div>
-
-                <div className="select-box">
-                    <div className="select-sides">
-                        <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
-                            <InputLabel id="demo-multiple-checkbox-label">Ish kunlarini belgilang</InputLabel>
-                            <Select
-                                error={formOne.errors.working_days === "Required"}
-                                name="working_days"
-                                labelId="demo-multiple-checkbox-label"
-                                id="demo-multiple-checkbox"
-                                multiple
-                                value={weekend}
-                                onChange={handleChangeMore}
-                                input={<OutlinedInput label="Ish kunlarini  belgilang"/>}
-                                renderValue={(selected) => selected.join(', ')}
-                                MenuProps={MenuProps}
-                            >
-                                {daysList.map((item, index) => (
-                                    <MenuItem key={item.id} value={item.translations[i18next.language].day}>
-                                        <Checkbox
-                                            checked={weekend.indexOf(item.translations[i18next.language].day) > -1}/>
-                                        <ListItemText primary={item.translations[i18next.language].day}/>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <div className="select-sides">
-                        <div className="check-box">
-                            <div className="checkbox-wrapper-13">
-                                <input
-                                    onChange={(e) => {
-                                        setWorkingTime24((prevState) => !prevState);
-                                    }}
-                                    checked={workingTime24}
-                                    id="c1-13"
-                                    type="checkbox"
-                                />
-                            </div>
-                            <label htmlFor="c1-13">
-                                Ish faoliyati 24 soat yuritiladi
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                {workingTime24 ? "" : <div className="select-box-working-time">
-                    <div className="select-sides">
-                        <label htmlFor="">Ish vaqti boshlanishi</label>
-                        <input
-                            className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
-                            name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
-                            type="time"/>
-                    </div>
-                    <div className="select-sides">
-                        <label htmlFor="">Ish vaqti boshlanishi</label>
-                        <input
-                            className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
-                            name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
-                            type="time"/>
-                    </div>
-                </div>}
-
-                <div className="label-text">
-                    <div className="sides">
-                        <div className="label-bold">Dorixona bilan bog‘lanish</div>
-                    </div>
-                    <div className="sides"></div>
-                </div>
-
-                <div className="select-box">
-                    <div className="select-sides">
-                        <TextField
-                            error={formOne.errors.phone1 === "Required"}
-                            value={formOne.values.phone1}
-                            onChange={formOne.handleChange}
-                            name="phone1"
-                            sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                            label="Telefon raqam 1" variant="outlined" className="textField"/>
-                    </div>
-                    <div className="select-sides">
-                        <TextField
-                            error={formOne.errors.phone2 === "Required"}
-                            value={formOne.values.phone2}
-                            onChange={formOne.handleChange}
-                            name="phone2"
-                            sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                            label="Telefon raqam 2" variant="outlined" className="textField"/>
-                    </div>
+                <div onClick={() => setPageNumber(2)}
+                     className={`item-menu ${pageNumber === 2 ? "active" : ""}`}>Dorilar
                 </div>
             </div>
-            <div className="register-page-two">
-                <div className="select-box">
-                    <div className="select-sides">
-                        <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                            <InputLabel id="demo-select-large-label">Viloyatni tanlang</InputLabel>
-                            <Select
-                                error={region_validate}
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                value={region}
-                                label="Viloyatni tanlang"
-                                onChange={(e) => setRegion(e.target.value)}
-                            >
 
-                                {regions.map((item, index) => {
-                                    return <MenuItem key={index} onClick={() => {
-                                        setRegion_validate(false)
-                                        setCenter({lat: item.latitude, lng: item.longitude})
-                                    }} value={index + 1}>{item.name}</MenuItem>
-                                })}
+            {pageNumber === 1 &&
+            <>
+                <div className="register-page-one">
 
-                            </Select>
-                        </FormControl>
+                    <div className="logo-hospital">
+                        <div className="logo-image">
+                            {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
+                                <img className="logo-camera" src="./images/Exclude.png" alt=""/>
+                            }
+
+                        </div>
+
+                        <div className="label">
+                            Logo qo‘shish
+                            <input onChange={getInputPhoto} type="file"/>
+                        </div>
                     </div>
-                </div>
-                <div className="label-address">Manzil:</div>
-                <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
-                    {i18next.language === "uz" && addressLocation ? addressLocation : ""}
-                    {i18next.language === "ru" && addressLocationRu ? addressLocationRu : ""}
-                    {!addressLocation && !addressLocationRu && <p>Manzilni xaritadan belgilang</p>}
-                </div>
-                <div className="address-container">
-                    <GoogleMap
-                        zoom={9}
-                        center={center}
-                        options={options}
-                        onClick={ClicklLocation}
-                        mapContainerClassName="map-box"
-                    >
-                        {selected && (
-                            <MarkerF icon={selectAddressIcon} position={selected}/>
-                        )}
 
-                        <div className="search-address">
-                            <div className="places-container">
-                                <PlacesAutocomplete setSelected={setSelected}/>
-                                <img src="./images/search.png" alt=""/>
+                    <div className="inputs-box">
+                        <TextField error={formOne.errors.nameUz === "Required"}
+                                   value={formOne.values.nameUz}
+                                   onChange={formOne.handleChange}
+                                   name="nameUz"
+                                   sx={{m: 1, minWidth: "100%"}} size="small"
+                                   id="outlined-basic"
+                                   label="Shifoxona nomini kiriting (uz) " variant="outlined" className="textField"/>
+                    </div>
+
+                    <div className="inputs-box">
+                        <TextField error={formOne.errors.nameRu === "Required"} value={formOne.values.nameRu}
+                                   onChange={formOne.handleChange}
+                                   name="nameRu" sx={{m: 1, minWidth: "100%"}} size="small"
+                                   id="outlined-basic"
+                                   label="Введите название больницы (ru) " variant="outlined" className="textField"/>
+                    </div>
+
+                    <div className="des-input">
+                        Iltimos, shifoxona nomini rus tili va o'zbek tilida kiritng
+                    </div>
+
+                    <div className="label-text">
+                        <div className="sides">
+                            <div className="label-bold">Ish vaqti</div>
+                        </div>
+                        <div className="sides"></div>
+                    </div>
+
+                    <div className="select-box">
+                        <div className="select-sides">
+                            <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
+                                <InputLabel id="demo-multiple-checkbox-label">Ish kunlarini belgilang</InputLabel>
+                                <Select
+                                    error={formOne.errors.working_days === "Required"}
+                                    name="working_days"
+                                    labelId="demo-multiple-checkbox-label"
+                                    id="demo-multiple-checkbox"
+                                    multiple
+                                    value={weekend}
+                                    onChange={handleChangeMore}
+                                    input={<OutlinedInput label="Ish kunlarini  belgilang"/>}
+                                    renderValue={(selected) => selected.join(', ')}
+                                    MenuProps={MenuProps}
+                                >
+                                    {daysList.map((item, index) => (
+                                        <MenuItem key={item.id} value={item.translations[i18next.language].day}>
+                                            <Checkbox
+                                                checked={weekend.indexOf(item.translations[i18next.language].day) > -1}/>
+                                            <ListItemText primary={item.translations[i18next.language].day}/>
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className="select-sides">
+                            <div className="check-box">
+                                <div className="checkbox-wrapper-13">
+                                    <input
+                                        onChange={(e) => {
+                                            setWorkingTime24((prevState) => !prevState);
+                                        }}
+                                        checked={workingTime24}
+                                        id="c1-13"
+                                        type="checkbox"
+                                    />
+                                </div>
+                                <label htmlFor="c1-13">
+                                    Ish faoliyati 24 soat yuritiladi
+                                </label>
                             </div>
                         </div>
-                    </GoogleMap>
+                    </div>
+
+                    {workingTime24 ? "" : <div className="select-box-working-time">
+                        <div className="select-sides">
+                            <label htmlFor="">Ish vaqti boshlanishi</label>
+                            <input
+                                className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
+                                name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
+                                type="time"/>
+                        </div>
+                        <div className="select-sides">
+                            <label htmlFor="">Ish vaqti boshlanishi</label>
+                            <input
+                                className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
+                                name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
+                                type="time"/>
+                        </div>
+                    </div>}
+
+                    <div className="label-text">
+                        <div className="sides">
+                            <div className="label-bold">Dorixona bilan bog‘lanish</div>
+                        </div>
+                        <div className="sides"></div>
+                    </div>
+
+                    <div className="select-box">
+                        <div className="select-sides">
+                            <TextField
+                                error={formOne.errors.phone1 === "Required"}
+                                value={formOne.values.phone1}
+                                onChange={formOne.handleChange}
+                                name="phone1"
+                                sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
+                                label="Telefon raqam 1" variant="outlined" className="textField"/>
+                        </div>
+                        <div className="select-sides">
+                            <TextField
+                                error={formOne.errors.phone2 === "Required"}
+                                value={formOne.values.phone2}
+                                onChange={formOne.handleChange}
+                                name="phone2"
+                                sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
+                                label="Telefon raqam 2" variant="outlined" className="textField"/>
+                        </div>
+                    </div>
                 </div>
+                <div className="register-page-two">
+                    <div className="select-box">
+                        <div className="select-sides">
+                            <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
+                                <InputLabel id="demo-select-large-label">Viloyatni tanlang</InputLabel>
+                                <Select
+                                    error={region_validate}
+                                    labelId="demo-select-small-label"
+                                    id="demo-select-small"
+                                    value={region}
+                                    label="Viloyatni tanlang"
+                                    onChange={(e) => setRegion(e.target.value)}
+                                >
+
+                                    {regions.map((item, index) => {
+                                        return <MenuItem key={index} onClick={() => {
+                                            setRegion_validate(false)
+                                            setCenter({lat: item.latitude, lng: item.longitude})
+                                        }} value={index + 1}>{item.name}</MenuItem>
+                                    })}
+
+                                </Select>
+                            </FormControl>
+                        </div>
+                    </div>
+                    <div className="label-address">Manzil:</div>
+                    <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
+                        {i18next.language === "uz" && addressLocation ? addressLocation : ""}
+                        {i18next.language === "ru" && addressLocationRu ? addressLocationRu : ""}
+                        {!addressLocation && !addressLocationRu && <p>Manzilni xaritadan belgilang</p>}
+                    </div>
+                    <div className="address-container">
+                        <GoogleMap
+                            zoom={9}
+                            center={center}
+                            options={options}
+                            onClick={ClicklLocation}
+                            mapContainerClassName="map-box"
+                        >
+                            {selected && (
+                                <MarkerF icon={selectAddressIcon} position={selected}/>
+                            )}
+
+                            <div className="search-address">
+                                <div className="places-container">
+                                    <PlacesAutocomplete setSelected={setSelected}/>
+                                    <img src="./images/search.png" alt=""/>
+                                </div>
+                            </div>
+                        </GoogleMap>
+                    </div>
+
+                    <div className="btn-box">
+                        <div onClick={() => navigate("/")} className="prev-btn">
+                            Bekor qilish
+                        </div>
+                        <div onClick={() => {
+                            if (addressLocation && region) {
+                                sendAllInfo()
+                            } else {
+                                if (!addressLocation) setAddress_validate(true);
+                                if (!region) setRegion_validate(true)
+                            }
+                        }} className="next-page-btn">
+                            O'zgarishlarni saqlash
+                        </div>
+                    </div>
+                </div>
+            </>}
+
+            {pageNumber === 2 &&
+            <div className="register-page-three">
+                <div className="title">
+                    Dorilar qo'shish
+                </div>
+
                 <div className="btn-box">
-                    <div onClick={() => navigate("/")} className="prev-btn">
-                        <img src="./images/prev-btn.png" alt=""/>
-                        Bekor qilish
+                    <div onClick={() => {
+                        modalContent.status = "enter"
+                        modalContent.show = true
+                        let newContent = {...modalContent}
+                        setModalContent(newContent)
+                    }} className="add-social-media">
+                        Donalab dori qo'shish
                     </div>
                     <div onClick={() => {
-                        if (addressLocation && region) {
-                            sendAllInfo()
-                        } else {
-                            if (!addressLocation) setAddress_validate(true);
-                            if (!region) setRegion_validate(true)
-                        }
-                    }} className="next-page-btn">
-                        O'zgarishlarni saqlash
-                        <img src="./images/next-btn.png" alt=""/>
+                        modalContent.status = "file"
+                        modalContent.show = true
+                        let newContent = {...modalContent}
+                        setModalContent(newContent)
+                    }} className="add-social-media">
+                        Dorilarni faylda qo'shish
                     </div>
+
+
                 </div>
-            </div>
+
+                <div className="title">
+                    Dorixanada mavjud bo'lgan dorilar ro'yxati.
+                </div>
+
+                <div onClick={Clearlist} className="clear-btns">
+                    Barcha dorilarni o'chirish
+                    <img src="./images/del-icon.png" alt=""/>
+                </div>
+
+                <div className="table-box">
+                    <div className="dropdown-filter-search">
+                        <input onChange={(e) => setSearchValue(e.target.value)} placeholder="Dori nomini kiriting"
+                               type="text"/>
+
+                        <div onClick={() => searchValue && getPages(`${baseUrl}search-medicine/?name=${searchValue}`)}
+                             className="btn-search">
+                            Dori izlash
+                        </div>
+                    </div>
+
+                    {
+                        Pharmalist.results.length > 0 ?
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Dori nomi</th>
+                                    <th>Dori narxi</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {Pharmalist.results.map((item, index) => {
+                                    return <tr key={index}>
+                                        <td>{item.medicine_name}</td>
+                                        <td>
+                                            {item.cost}
+                                            <div className="del-edit-btns">
+                                                <div className="sides">
+                                                    <img onClick={() => {
+                                                        setPharmaName(item.medicine_name)
+                                                        setPharmaPrice(item.cost)
+                                                        setEditValue(item.id);
+                                                        modalContent.status = "edit"
+                                                        modalContent.show = true
+                                                        let newContent = {...modalContent}
+                                                        setModalContent(newContent)
+                                                    }} src="./images/comit.png" alt=""/>
+                                                </div>
+                                                <div className="sides">
+                                                    <img onClick={() => delPharma(item.id)} src="./images/del-icon.png"
+                                                         alt=""/>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                })}
+
+                                </tbody>
+                            </table> : searchValue && <div className="validate"> Siz izlagan dori topilmadi!</div>
+                    }
+
+
+                    {Pharmalist.results.length > 0 &&
+                    <div className="pagination-box">
+                        <div onClick={() => {
+                            if (Pharmalist.links.previous) {
+                                getPages(Pharmalist.links.previous)
+                            }
+                        }} className="nav">
+                            <img src="./images/arrow-prev.png" alt=""/>
+                        </div>
+
+                        <div className="pages">
+                            {Pharmalist.links.pages.map((item, index) => {
+                                return <div onClick={() => getPages(item[index + 1])} key={index}
+                                            className={`page ${Pharmalist.links.current_page === item[index + 1] ? "active" : ""}`}>{index + 1}</div>
+                            })}
+                        </div>
+
+                        <div onClick={() => {
+                            if (Pharmalist.links.next) {
+                                getPages(Pharmalist.links.next)
+                            }
+                        }} className="nav">
+                            <img src="./images/arrow-next.png" alt=""/>
+                        </div>
+                    </div>}
+
+                </div>
+
+            </div>}
         </div>
     </div>
 };

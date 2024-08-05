@@ -30,6 +30,7 @@
   }
 
   .register-page {
+    width: 600px;
 
     .header-register {
       height: 70px;
@@ -87,6 +88,7 @@
           color: white;
         }
       }
+
       .prev-mobile {
         display: none;
       }
@@ -798,7 +800,7 @@
           align-items: center;
 
           .line {
-            width: 33%;
+            width: 50%;
             height: 5px;
             border-radius: 0;
           }
