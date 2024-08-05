@@ -20,6 +20,7 @@ import i18next from "i18next";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {addAlert, delAlert} from "../../../redux/AlertsBox";
+import PhoneInput from "react-phone-number-input";
 
 
 const libraries = ["places"];
@@ -34,7 +35,7 @@ const RegisterHospital = () => {
     const [invalidService, setInvalidService] = useState(true);
     const [workingTime24, setWorkingTime24] = useState(false);
     const [selected, setSelected] = useState(null);
-    const [pageNumber, setPageNumber] = useState(3);
+    const [pageNumber, setPageNumber] = useState(1);
     const [center, setCenter] = useState(null);
     const [socialMedias, setSocialMedias] = useState([{key: "web", url: ""}]);
     const [service, setService] = useState([

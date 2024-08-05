@@ -355,6 +355,50 @@
             }
           }
 
+          .PhoneInput {
+            display: flex;
+            align-items: center;
+
+            .PhoneInputCountry {
+              display: flex;
+              align-items: center;
+
+              .PhoneInputCountrySelect {
+                width: 20px;
+                height: 20px;
+                border: none;
+                color: #002B48;
+                border-radius: 50%;
+
+                &:focus {
+                  outline: none;
+                }
+              }
+
+              .PhoneInputCountryIcon {
+                width: 40px;
+                height: 40px;
+                margin-top: 22px;
+                margin-right: 10px;
+                margin-left: 10px;
+                color: white;
+              }
+            }
+          }
+
+          #phone {
+            margin-top: 15px;
+            width: 100%;
+            height: 35px;
+            border: 1px solid #EEF0F4;
+            border-radius: 6px;
+            padding-left: 10px;
+            background-color: rgba(180, 192, 204, 0.16);
+            &:focus{
+              outline: none;
+            }
+          }
+
           .selectMuiRequired {
 
             .MuiOutlinedInput-root {

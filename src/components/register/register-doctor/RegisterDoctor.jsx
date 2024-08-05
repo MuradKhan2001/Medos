@@ -240,11 +240,6 @@ const RegisterHospital = () => {
         }).catch((error) => {
         });
 
-        axios.get(`${baseUrl}hospital-short/`).then((response) => {
-            setHospitalList(response.data)
-        }).catch((error) => {
-        });
-
         axios.get(`${baseUrl}speciality/`, {
             headers: {
                 "Accept-Language": i18next.language
@@ -255,6 +250,14 @@ const RegisterHospital = () => {
         });
 
     }, []);
+
+    const getHospital =(e) => {
+        setRegion(e.target.value)
+        axios.get(`${baseUrl}hospital-short/?region=${e.target.value}`).then((response) => {
+            setHospitalList(response.data)
+        }).catch((error) => {
+        });
+    };
 
     const getSubSpecialty = (id) => {
         axios.get(`${baseUrl}speciality/${id}/`).then((response) => {
@@ -836,7 +839,7 @@ const RegisterHospital = () => {
                                 id="demo-select-small"
                                 value={region}
                                 label="Viloyatni tanlang"
-                                onChange={(e) => setRegion(e.target.value)}
+                                onChange={getHospital}
                             >
 
                                 {regions.map((item, index) => {
