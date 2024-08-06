@@ -371,6 +371,7 @@
               .btns {
                 width: 100%;
                 display: flex;
+                align-items: center;
                 justify-content: space-between;
 
                 .more-btn {
@@ -383,6 +384,7 @@
                 }
 
                 .left-btn {
+                  margin-top: 10px;
                   display: flex;
                   align-items: center;
 

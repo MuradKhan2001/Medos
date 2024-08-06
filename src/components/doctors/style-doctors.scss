@@ -209,7 +209,6 @@
                 width: 100%;
                 display: flex;
 
-
                 .name-clinic {
                   color: #262D33;
                   font-weight: 600;
@@ -299,9 +298,9 @@
 
                 .location {
                   width: 100%;
-                  overflow: hidden;
                   display: flex;
                   align-items: center;
+                  flex-wrap: wrap;
 
                   img {
                     width: 17px;
@@ -383,14 +382,14 @@
                   border-bottom: 2px dotted rgba(133, 145, 158, 1);
 
                   .title {
-                    background-color: rgb(239, 255, 253);
+                    background-color: rgb(243, 253, 255);
                     color: rgba(133, 145, 158, 1);
                     margin-bottom: -6px;
                     padding-right: 5px;
                   }
 
                   .number {
-                    background-color: white;
+                    background-color: rgb(243, 253, 255);
                     margin-bottom: -6px;
                     font-weight: bold;
                     color: rgba(38, 45, 51, 1);
@@ -1284,14 +1283,12 @@
                     border-bottom: 2px dotted rgba(133, 145, 158, 1);
 
                     .title {
-                      background-color: white;
                       color: rgba(133, 145, 158, 1);
                       margin-bottom: -6px;
                       padding-right: 5px;
                     }
 
                     .number {
-                      background-color: white;
                       margin-bottom: -6px;
                       font-weight: bold;
                       color: rgba(38, 45, 51, 1);

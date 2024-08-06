@@ -306,11 +306,13 @@ const AboutClinic = () => {
                                         </div>
 
                                         <div className="section-location">
-                                            <div className="location">
+                                            <div className="location-working">
                                                 <img src="./images/time.png" alt=""/>
-                                                {item.working_days.map((item, index) => {
+                                                {item.working_days.map((itemWorkingdays, index) => {
                                                     return <p key={index}>
-                                                        {item.translations[i18next.language].day}
+                                                        &nbsp;
+                                                        {itemWorkingdays.translations[i18next.language].day}
+                                                        {index !== item.working_days.length-1 && ","}
                                                     </p>
                                                 })}
                                             </div>

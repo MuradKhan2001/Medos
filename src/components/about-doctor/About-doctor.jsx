@@ -144,10 +144,11 @@ const AboutDoctor = () => {
 
                     <div className="date">
                         <img src="./images/calendar.png" alt=""/>
-                        {doctor.working_days.map((item, index) => {
+                        {doctor.working_days.map((itemWorking, index) => {
                             return <p key={index}>
                                 &nbsp;
-                                {item.translations[i18next.language].day}
+                                {itemWorking.translations[i18next.language].day}
+                                {index !== doctor.working_days.length - 1 && ","}
                             </p>
                         })}
                     </div>
@@ -205,7 +206,7 @@ const AboutDoctor = () => {
                 </div>
 
                 <div className="images-location">
-                    <div className="title">{t("")}</div>
+                    <div className="title">{t("address-doctor")}</div>
                     <div className="location">
                         <img src="./images/loaction.png" alt=""/>
                         {doctor.hospital ? doctor.hospital.translations[i18next.language].address :
@@ -324,12 +325,13 @@ const AboutDoctor = () => {
                                     </div>
 
                                     <div className="section-location">
-                                        <div className="location">
+                                        <div className="location-working">
                                             <img src="./images/time.png" alt=""/>
-                                            {item.working_days.map((item, index) => {
+                                            {item.working_days.map((itemWorking, index) => {
                                                 return <p key={index}>
                                                     &nbsp;
-                                                    {item.translations[i18next.language].day},
+                                                    {itemWorking.translations[i18next.language].day}
+                                                    {index !== item.working_days.length - 1 && ","}
                                                 </p>
                                             })}
                                         </div>

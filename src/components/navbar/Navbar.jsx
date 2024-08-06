@@ -325,10 +325,10 @@ const Navbar = () => {
                                             </div>
                                         </div>
 
-                                        <div onClick={() => navigate("/balance")} className="btns">
-                                            <img src="./images/cash.png" alt=""/>
-                                            {t("Mening hisobim")}
-                                        </div>
+                                        {/*<div onClick={() => navigate("/balance")} className="btns">*/}
+                                        {/*    <img src="./images/cash.png" alt=""/>*/}
+                                        {/*    {t("Mening hisobim")}*/}
+                                        {/*</div>*/}
 
                                         <div onClick={() => {
                                             localStorage.getItem("userType") === "Doctor" && navigate("/profile-doctor");

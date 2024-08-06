@@ -1,9 +1,9 @@
 {
   "files": {
-    "main.css": "/static/css/main.5f966123.css",
-    "main.js": "/static/js/main.f170187a.js",
-    "static/css/700.82261577.chunk.css": "/static/css/700.82261577.chunk.css",
-    "static/js/700.c84dbf45.chunk.js": "/static/js/700.c84dbf45.chunk.js",
+    "main.css": "/static/css/main.5df8fc8f.css",
+    "main.js": "/static/js/main.c19bcfa6.js",
+    "static/css/700.21dc3173.chunk.css": "/static/css/700.21dc3173.chunk.css",
+    "static/js/700.786c2efa.chunk.js": "/static/js/700.786c2efa.chunk.js",
     "static/js/631.844c601e.chunk.js": "/static/js/631.844c601e.chunk.js",
     "static/media/clinic-icon.svg": "/static/media/clinic-icon.9feac12f3dc58bc9fa41.svg",
     "static/media/doctor-icon.svg": "/static/media/doctor-icon.ccf55918015e524eaf24.svg",
@@ -14,14 +14,14 @@
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "static/media/service-icon.svg": "/static/media/service-icon.028114b529d0dbb6caac.svg",
     "index.html": "/index.html",
-    "main.5f966123.css.map": "/static/css/main.5f966123.css.map",
-    "main.f170187a.js.map": "/static/js/main.f170187a.js.map",
-    "700.82261577.chunk.css.map": "/static/css/700.82261577.chunk.css.map",
-    "700.c84dbf45.chunk.js.map": "/static/js/700.c84dbf45.chunk.js.map",
+    "main.5df8fc8f.css.map": "/static/css/main.5df8fc8f.css.map",
+    "main.c19bcfa6.js.map": "/static/js/main.c19bcfa6.js.map",
+    "700.21dc3173.chunk.css.map": "/static/css/700.21dc3173.chunk.css.map",
+    "700.786c2efa.chunk.js.map": "/static/js/700.786c2efa.chunk.js.map",
     "631.844c601e.chunk.js.map": "/static/js/631.844c601e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5f966123.css",
-    "static/js/main.f170187a.js"
+    "static/css/main.5df8fc8f.css",
+    "static/js/main.c19bcfa6.js"
   ]
 }

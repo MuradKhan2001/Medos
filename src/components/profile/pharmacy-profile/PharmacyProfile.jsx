@@ -496,6 +496,8 @@ const PharmacyProfile = () => {
                     dispatch(delAlert(idAlert));
                 }, 5000);
                 getPharma()
+                setPharmaName("");
+                setPharmaPrice("")
 
                 modalContent.show = false
                 let newArr = {...modalContent}
@@ -579,7 +581,7 @@ const PharmacyProfile = () => {
     }
 
     const delPharma = (id) => {
-        let result = window.confirm("Rostdan ham barcha dorilarni o'chirmoqchimisiz!")
+        let result = window.confirm("Rostdan dorini o'chirmoqchimisiz?");
         if (result) {
             axios.delete(`${baseUrl}medicine/${id}/`, {
                 headers: {
@@ -1028,7 +1030,7 @@ const PharmacyProfile = () => {
                     </div>
 
                     {
-                        Pharmalist.results.length > 0 ?
+                        Pharmalist.results && Pharmalist.results.length > 0 ?
                             <table>
                                 <thead>
                                 <tr>
@@ -1069,7 +1071,7 @@ const PharmacyProfile = () => {
                     }
 
 
-                    {Pharmalist.results.length > 0 &&
+                    {Pharmalist.results && Pharmalist.results.length > 0 &&
                     <div className="pagination-box">
                         <div onClick={() => {
                             if (Pharmalist.links.previous) {

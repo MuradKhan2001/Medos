@@ -14,8 +14,6 @@
         font-weight: bold;
       }
 
-
-
       .buttons {
         display: flex;
         align-items: center;
@@ -726,11 +724,25 @@
             .section-location {
               margin-top: 10px;
               display: flex;
+              flex-wrap: wrap;
               align-items: center;
 
               .location {
                 display: flex;
                 align-items: center;
+
+                img {
+                  width: 17px;
+                  margin-right: 5px;
+                }
+
+                color: rgba(38, 45, 51, 1);
+              }
+
+              .location-working{
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
 
                 img {
                   width: 17px;
@@ -792,14 +804,14 @@
                 border-bottom: 2px dotted rgba(133, 145, 158, 1);
 
                 .title {
-                  background-color: white;
+                  background-color: rgb(243, 253, 255);
                   color: rgba(133, 145, 158, 1);
                   margin-bottom: -6px;
                   padding-right: 5px;
                 }
 
                 .number {
-                  background-color: white;
+                  background-color: rgb(243, 253, 255);
                   margin-bottom: -6px;
                   font-weight: bold;
                   color: rgba(38, 45, 51, 1);
@@ -1440,6 +1452,7 @@
               .header-clinic {
                 width: 100%;
                 display: flex;
+                flex-wrap: wrap;
 
 
                 .name-clinic {
@@ -1556,14 +1569,12 @@
                   border-bottom: 2px dotted rgba(133, 145, 158, 1);
 
                   .title {
-                    background-color: white;
                     color: rgba(133, 145, 158, 1);
                     margin-bottom: -6px;
                     padding-right: 5px;
                   }
 
                   .number {
-                    background-color: white;
                     margin-bottom: -6px;
                     font-weight: bold;
                     color: rgba(38, 45, 51, 1);

@@ -296,10 +296,11 @@ const Doctors = () => {
                                         <div className="section-location-working-days">
                                             <div className="location">
                                                 <img src="./images/time.png" alt=""/>
-                                                {item.working_days.map((item, index) => {
+                                                {item.working_days.map((itemWorkingdays, index) => {
                                                     return <p key={index}>
                                                         &nbsp;
-                                                        {item.translations[i18next.language].day},
+                                                        {itemWorkingdays.translations[i18next.language].day}
+                                                        {index !== item.working_days.length-1 && ","}
                                                     </p>
                                                 })}
                                             </div>

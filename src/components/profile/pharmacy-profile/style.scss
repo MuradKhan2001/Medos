@@ -1157,7 +1157,6 @@
         }
 
         .pagination-box {
-          background-color: white;
           margin-top: 20px;
           width: 100%;
           display: flex;
@@ -1681,7 +1680,7 @@
 
           .add-social-media {
             margin-top: 10px;
-            width: 45%;
+            width: 48%;
             height: 40px;
             background-color: rgba(180, 192, 204, 0.16);
             color: rgba(0, 173, 173, 1);
@@ -1725,7 +1724,6 @@
           }
 
           .pagination-box {
-            background-color: white;
             margin-top: 20px;
             width: 100%;
             display: flex;
@@ -1764,7 +1762,7 @@
           }
 
           table {
-            width: 90%;
+            width: 85%;
 
             thead {
               tr {
@@ -1879,6 +1877,11 @@
           .pharma-image {
             height: 90px;
           }
+        }
+
+        .enter {
+          width: 100%;
+          padding: 10px;
         }
       }
     }
