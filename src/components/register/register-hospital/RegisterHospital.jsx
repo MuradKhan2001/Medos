@@ -477,8 +477,15 @@ const RegisterHospital = () => {
             region: region
         }
         setLoader(true);
-        axios.post(`${baseUrl}auth/register/hospital/`, allInfoHospital).then((response) => {
-            window.location.pathname = "/login";
+
+        axios.post(`${baseUrl}auth/register/hospital/`, allInfoHospital,
+            {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }
+            ).then((response) => {
+            window.location.pathname = "/profile-hospital";
             setTimeout(() => {
                 setLoader(false)
             }, 500);

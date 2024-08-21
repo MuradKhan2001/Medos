@@ -17,6 +17,7 @@ import ProfileHospital from "../components/profile/hospital-profile/HospitalProf
 import PharmacyProfile from "../components/profile/pharmacy-profile/PharmacyProfile";
 import Messages from "../components/messages/Messages";
 import Balance from "../components/my-balance/Balance";
+import RegisterLogin from "../components/register-login/RegisterLogin";
 
 
 export const publicRoutes = [
@@ -75,6 +76,10 @@ export const publicRoutes = [
     {
         path: "/messages",
         element: <Messages/>
+    },
+    {
+        path: "/register-step-one",
+        element: <RegisterLogin/>
     },
 ];
 

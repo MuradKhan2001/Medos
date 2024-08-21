@@ -140,9 +140,7 @@ const RegisterHospital = () => {
             errors.end_time = "Required";
         }
 
-        if (!values.phone1) {
-            errors.phone1 = "Required";
-        } else if (isNaN(Number(values.phone1))) {
+        if (isNaN(Number(values.phone1))) {
             errors.phone1 = "Required";
         }
 
@@ -178,7 +176,7 @@ const RegisterHospital = () => {
             second_consultation_fee: null,
             specialty: null,
             hospital: "",
-            sub_speciality: "",
+            sub_speciality: [],
             experience: ""
         },
         validate,
@@ -251,7 +249,7 @@ const RegisterHospital = () => {
 
     }, []);
 
-    const getHospital =(e) => {
+    const getHospital = (e) => {
         setRegion(e.target.value)
         axios.get(`${baseUrl}hospital-short/?region=${e.target.value}`).then((response) => {
             setHospitalList(response.data)
@@ -525,8 +523,15 @@ const RegisterHospital = () => {
             experience: formOne.values.experience
         };
         setLoader(true);
-        axios.post(`${baseUrl}auth/register/doctor/`, allInfoHospital).then((response) => {
-            window.location.pathname = "/login";
+        axios.post(`${baseUrl}auth/register/doctor/`, allInfoHospital,
+            {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }).then((response) => {
+
+            window.location.pathname = "/profile-doctor";
+
             setTimeout(() => {
                 setLoader(false)
             }, 500);

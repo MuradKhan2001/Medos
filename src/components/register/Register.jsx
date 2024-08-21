@@ -25,7 +25,8 @@ const Register = () => {
             </div>
 
 
-            <div onClick={() => setDirection("/register-doctor")} className={`items ${direction === "/register-doctor" ? "active" : ""}`}>
+            <div onClick={() => setDirection("/register-doctor")}
+                 className={`items ${direction === "/register-doctor" ? "active" : ""}`}>
                 <img src="./images/icons.png" alt=""/>
                 {t("add-doctor")}
             </div>
@@ -42,7 +43,10 @@ const Register = () => {
                 {t("add-pharmacy")}
             </div>
 
-            <div onClick={() => navigate(direction)} className={`button-next ${!direction ? "button-next-disabled" : ""}`}>
+            <div onClick={() => {
+                navigate("/register-step-one");
+                sessionStorage.setItem("link-register", direction)
+            }} className={`button-next ${!direction ? "button-next-disabled" : ""}`}>
                 {t("register-btn")}
             </div>
         </div>

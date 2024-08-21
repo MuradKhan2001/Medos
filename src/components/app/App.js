@@ -15,7 +15,6 @@ export const MainContext = createContext();
 
 const App = () => {
     const {t} = useTranslation();
-    const [url, setUrl] = useState('https://api.buyukyol.uz/');
     const dispatch = useDispatch();
 
     const user = useMemo(() => localStorage.getItem('token'), []);
@@ -55,14 +54,14 @@ const App = () => {
         });
     }, []);
 
-    return <MainContext.Provider value={url}>
+    return <>
         <Routes>
             {routes.map((route, index) => (<Route key={index} {...route} />))}
             <Route path={'*'} element={<NotFound/>}/>
         </Routes>
         <Modal/>
         <Alerts/>
-    </MainContext.Provider>
+    </>
 };
 
 export default App;

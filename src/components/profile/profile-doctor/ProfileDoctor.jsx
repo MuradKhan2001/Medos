@@ -136,10 +136,6 @@ const ProfileDoctor = () => {
             errors.end_time = "Required";
         }
 
-        if (!values.phone1) {
-            errors.phone1 = "Required";
-        }
-
         if (!values.specialty) {
             errors.specialty = "Required";
         }

@@ -372,8 +372,13 @@ const RegisterPharmacies = () => {
             region: region
         };
         setLoader(true);
-        axios.post(`${baseUrl}auth/register/pharmacy/`, allInfoHospital).then((response) => {
-            window.location.pathname = "/login";
+        axios.post(`${baseUrl}auth/register/pharmacy/`, allInfoHospital,
+            {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }).then((response) => {
+            window.location.pathname = "/profile-pharmacy";
             setTimeout(() => {
                 setLoader(false)
             }, 500);
