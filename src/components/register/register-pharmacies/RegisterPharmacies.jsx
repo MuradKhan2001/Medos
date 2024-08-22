@@ -379,6 +379,7 @@ const RegisterPharmacies = () => {
                 }
             }).then((response) => {
             window.location.pathname = "/profile-pharmacy";
+            localStorage.setItem("profile", true);
             setTimeout(() => {
                 setLoader(false)
             }, 500);

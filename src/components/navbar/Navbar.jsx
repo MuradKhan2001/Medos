@@ -91,7 +91,7 @@ const Navbar = () => {
         const lowerCaseSearchValue = searchValue.toLowerCase();
 
         const filterHospitals = (hospitals) => {
-            return hospitals.filter(hospital =>
+            return hospitals && hospitals.filter(hospital =>
                 Object.values(hospital.translations).some(translation =>
                     translation.name.toLowerCase().includes(lowerCaseSearchValue)
                 )
@@ -99,7 +99,7 @@ const Navbar = () => {
         };
 
         const filterDoctors = (doctors) => {
-            return doctors.filter(doctor =>
+            return doctors && doctors.filter(doctor =>
                 Object.values(doctor.translations).some(translation => {
                     const fullName = `${translation.first_name} ${translation.middle_name} ${translation.last_name}`.toLowerCase();
                     return fullName.includes(lowerCaseSearchValue);
@@ -108,7 +108,7 @@ const Navbar = () => {
         };
 
         const filterPharmacies = (pharmacies) => {
-            return pharmacies.filter(pharmacy =>
+            return pharmacies && pharmacies.filter(pharmacy =>
                 Object.values(pharmacy.translations).some(translation =>
                     translation.name.toLowerCase().includes(lowerCaseSearchValue)
                 )
@@ -116,7 +116,7 @@ const Navbar = () => {
         };
 
         const filterServices = (services) => {
-            return services.filter(service =>
+            return services && services.filter(service =>
                 Object.values(service.translations).some(translation =>
                     translation.name.toLowerCase().includes(lowerCaseSearchValue)
                 )
@@ -133,11 +133,12 @@ const Navbar = () => {
             doctors: find2,
             pharmacy: find3,
             services: find4,
-            found: (find1.length > 0 || find2.length > 0 || find3.length > 0 || find4.length > 0)
+            found: (find1 && find1.length > 0 || find2 && find2.length > 0 || find3 && find3.length > 0 || find4 && find4.length > 0)
         };
     };
 
     const handleSearch = (e) => {
+
         setInputVal(e.target.value);
         const filteredResults = filterData(searchBox, e.target.value);
         setFilterResult(filteredResults);
@@ -247,7 +248,8 @@ const Navbar = () => {
                             className={`search-list`}>
 
                             {inputVal && <div>
-                                {filterResult.services.length > 0 && <div className="search-title">{t("nav4")}</div>}
+                                {filterResult.services && filterResult.services.length > 0 &&
+                                <div className="search-title">{t("nav4")}</div>}
                                 {filterResult.services && filterResult.services.map((item, index) => {
                                     return <div onClick={() => getInformation("service", item)} key={index}
                                                 className="search-result">
@@ -258,7 +260,8 @@ const Navbar = () => {
                                     </div>
                                 })}
 
-                                {filterResult.hospitals.length > 0 && <div className="search-title">{t("nav1")}</div>}
+                                {filterResult.hospitals && filterResult.hospitals.length > 0 &&
+                                <div className="search-title">{t("nav1")}</div>}
                                 {filterResult.hospitals && filterResult.hospitals.map((item, index) => {
                                     return <div onClick={() => getInformation("hospital", item)} key={index}
                                                 className="search-result">
@@ -269,7 +272,8 @@ const Navbar = () => {
                                     </div>
                                 })}
 
-                                {filterResult.doctors.length > 0 && <div className="search-title">{t("nav2")}</div>}
+                                {filterResult.doctors && filterResult.doctors.length > 0 &&
+                                <div className="search-title">{t("nav2")}</div>}
                                 {filterResult.doctors && filterResult.doctors.map((item, index) => {
                                     return <div onClick={() => getInformation("doctor", item)} key={index}
                                                 className="search-result">
@@ -281,7 +285,8 @@ const Navbar = () => {
                                     </div>
                                 })}
 
-                                {filterResult.pharmacy.length > 0 && <div className="search-title">{t("nav3")}</div>}
+                                {filterResult.pharmacy && filterResult.pharmacy.length > 0 &&
+                                <div className="search-title">{t("nav3")}</div>}
                                 {filterResult.pharmacy && filterResult.pharmacy.map((item, index) => {
                                     return <div onClick={() => getInformation("pharmacy", item)} key={index}
                                                 className="search-result">
@@ -331,9 +336,22 @@ const Navbar = () => {
                                         {/*</div>*/}
 
                                         <div onClick={() => {
-                                            localStorage.getItem("userType") === "Doctor" && navigate("/profile-doctor");
-                                            localStorage.getItem("userType") === "Hospital" && navigate("/profile-hospital");
-                                            localStorage.getItem("userType") === "Pharmacy" && navigate("/profile-pharmacy");
+                                            if (localStorage.getItem("profile") !== "false") {
+                                                localStorage.getItem("userType") === "Doctor" && navigate("/profile-doctor");
+                                                localStorage.getItem("userType") === "Hospital" && navigate("/profile-hospital");
+                                                localStorage.getItem("userType") === "Pharmacy" && navigate("/profile-pharmacy");
+                                            } else {
+                                                if (localStorage.getItem("userType") === "Doctor") {
+                                                    window.location.pathname = "/register-doctor"
+
+                                                } else if (localStorage.getItem("userType") === "Hospital") {
+                                                    window.location.pathname = "/register-hospital"
+
+                                                } else if (localStorage.getItem("userType") === "Pharmacy") {
+                                                    window.location.pathname = "/register-pharmacies"
+
+                                                }
+                                            }
                                         }} className="btns">
                                             <img src="./images/settings.png" alt=""/>
                                             {t("settings")}

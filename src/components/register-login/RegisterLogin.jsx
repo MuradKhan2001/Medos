@@ -22,6 +22,8 @@ const RegisterLogin = () => {
         axios
             .post(`${baseUrl}auth/register/register-user/`, user)
             .then((response) => {
+                localStorage.setItem("userType",response.data.user_type);
+                localStorage.setItem("profile", response.data.profile);
                 localStorage.setItem("token", response.data.token)
                 navigate(sessionStorage.getItem("link-register"))
             })

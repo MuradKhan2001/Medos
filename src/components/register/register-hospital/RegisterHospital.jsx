@@ -153,8 +153,8 @@ const RegisterHospital = () => {
         return errors;
     };
 
-    const formOne = useFormik({
-        initialValues: {
+    const initialValues = JSON.parse(sessionStorage.getItem("formDataHospital")) ||
+        {
             nameUz: "",
             nameRu: "",
             hospital_type: "",
@@ -165,7 +165,10 @@ const RegisterHospital = () => {
             start_time: null,
             end_time: null,
             working_days: [],
-        },
+        };
+
+    const formOne = useFormik({
+        initialValues: initialValues,
         validate,
         onSubmit: (values) => {
             if (logoHospital) {
@@ -210,7 +213,7 @@ const RegisterHospital = () => {
         });
 
         axios.get(`${baseUrl}hospital-type/`, {
-            headers:{
+            headers: {
                 "Accept-Language": i18next.language
             },
         }).then((response) => {
@@ -219,7 +222,7 @@ const RegisterHospital = () => {
         });
 
         axios.get(`${baseUrl}speciality/`, {
-            headers:{
+            headers: {
                 "Accept-Language": i18next.language
             },
         }).then((response) => {
@@ -229,6 +232,10 @@ const RegisterHospital = () => {
 
     }, []);
 
+    useEffect(() => {
+        sessionStorage.setItem("formDataHospital", JSON.stringify(formOne.values))
+    }, [formOne.values]);
+
     const handleChangeMore = (event) => {
         const {
             target: {value},
@@ -237,6 +244,9 @@ const RegisterHospital = () => {
         setWeekend(
             typeof value === 'string' ? value.split(',') : value,
         );
+
+        sessionStorage.setItem("weekendHospital", typeof value === 'string' ?
+            JSON.stringify(value.split(',')) : JSON.stringify(value));
 
         let new_list = daysList.filter(day => {
             return day.translations[i18next.language].day && value.includes(day.translations[i18next.language].day);
@@ -291,7 +301,7 @@ const RegisterHospital = () => {
             } ${road ? road : ""}`;
 
             setSelected(locMy);
-            setCenter({lat:latitude, lng:longitude});
+            setCenter({lat: latitude, lng: longitude});
             setAddressLocation(fullAddress)
             setAddress_validate(false)
         });
@@ -484,8 +494,15 @@ const RegisterHospital = () => {
                     "Authorization": `Token ${localStorage.getItem("token")}`
                 }
             }
-            ).then((response) => {
+        ).then((response) => {
+
+            sessionStorage.removeItem("formDataHospital");
+            sessionStorage.removeItem("weekendHospital");
+            sessionStorage.removeItem("hospital");
+            sessionStorage.removeItem("hospitaltype");
+
             window.location.pathname = "/profile-hospital";
+            localStorage.setItem("profile", true);
             setTimeout(() => {
                 setLoader(false)
             }, 500);
@@ -570,7 +587,7 @@ const RegisterHospital = () => {
 
                 <div className="inputs-box">
                     <TextField error={formOne.errors.nameUz === "Required"}
-                               value={formOne.nameUz}
+                               value={formOne.values.nameUz}
                                onChange={formOne.handleChange}
                                name="nameUz"
                                sx={{m: 1, minWidth: "100%"}} size="small"
@@ -579,7 +596,7 @@ const RegisterHospital = () => {
                 </div>
 
                 <div className="inputs-box">
-                    <TextField error={formOne.errors.nameRu === "Required"} value={formOne.nameRu}
+                    <TextField error={formOne.errors.nameRu === "Required"} value={formOne.values.nameRu}
                                onChange={formOne.handleChange}
                                name="nameRu" sx={{m: 1, minWidth: "100%"}} size="small"
                                id="outlined-basic"
@@ -600,10 +617,11 @@ const RegisterHospital = () => {
                                 name="type"
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
-                                value={hospital}
+                                value={sessionStorage.getItem("hospital") || hospital}
                                 label="Shifoxona"
                                 onChange={(e) => {
                                     formOne.handleChange(e);
+                                    sessionStorage.setItem("hospital", e.target.value)
                                     setHospital(e.target.value)
                                 }}
                             >
@@ -636,10 +654,11 @@ const RegisterHospital = () => {
                                 name="hospital_type"
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
-                                value={hospitalType}
+                                value={sessionStorage.getItem("hospitaltype") || hospitalType}
                                 label="Shifoxona turi"
                                 onChange={(e) => {
                                     formOne.handleChange(e);
+                                    sessionStorage.setItem("hospitaltype", e.target.value);
                                     setHospitalType(e.target.value)
                                 }}
                             >
@@ -684,7 +703,8 @@ const RegisterHospital = () => {
                                 labelId="demo-multiple-checkbox-label"
                                 id="demo-multiple-checkbox"
                                 multiple
-                                value={weekend}
+                                value={sessionStorage.getItem("weekendHospital") &&
+                                JSON.parse(sessionStorage.getItem("weekendHospital")) || weekend}
                                 onChange={handleChangeMore}
                                 input={<OutlinedInput label="Ish kunlarini  belgilang"/>}
                                 renderValue={(selected) => selected.join(', ')}
@@ -693,7 +713,7 @@ const RegisterHospital = () => {
                                 {daysList.map((item) => (
                                     <MenuItem key={item.id} value={item.translations[i18next.language].day}>
                                         <Checkbox
-                                            checked={weekend.indexOf(item.translations[i18next.language].day) > -1}/>
+                                            checked={sessionStorage.getItem("weekendHospital") && JSON.parse(sessionStorage.getItem("weekendHospital")).indexOf(item.translations[i18next.language].day) > -1}/>
                                         <ListItemText primary={item.translations[i18next.language].day}/>
                                     </MenuItem>
                                 ))}
@@ -722,14 +742,15 @@ const RegisterHospital = () => {
                         <label htmlFor="">Ish vaqti boshlanishi</label>
                         <input
                             className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
-                            name="start_time" onChange={formOne.handleChange} value={formOne.start_time}
+                            name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
                             type="time"/>
                     </div>
                     <div className="select-sides">
                         <label htmlFor="">Ish vaqti boshlanishi</label>
                         <input
                             className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
-                            name="end_time" onChange={formOne.handleChange} value={formOne.end_time} type="time"/>
+                            name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
+                            type="time"/>
                     </div>
                 </div>}
                 <div className="label-text">
@@ -742,7 +763,7 @@ const RegisterHospital = () => {
                     <div className="select-sides">
                         <TextField
                             error={formOne.errors.phone1 === "Required"}
-                            value={formOne.phone1}
+                            value={formOne.values.phone1}
                             onChange={formOne.handleChange}
                             name="phone1"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
@@ -751,7 +772,7 @@ const RegisterHospital = () => {
                     <div className="select-sides">
                         <TextField
                             error={formOne.errors.phone2 === "Required"}
-                            value={formOne.phone2}
+                            value={formOne.values.phone2}
                             onChange={formOne.handleChange}
                             name="phone2"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
@@ -761,7 +782,7 @@ const RegisterHospital = () => {
                 <div className="select-box">
                     <div className="select-sides">
                         <TextField
-                            value={formOne.emergency_number}
+                            value={formOne.values.emergency_number}
                             onChange={formOne.handleChange}
                             name="emergency_number"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"

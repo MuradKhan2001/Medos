@@ -21,6 +21,8 @@ const Login = () => {
             .post(`${baseUrl}auth/register/login/`, user)
             .then((response) => {
                 localStorage.setItem("token", response.data.token)
+                localStorage.setItem("userType",response.data.user_type);
+                localStorage.setItem("profile", response.data.profile);
                 if (response.data.profile) {
 
                     if (response.data.user_type === "Doctor") {

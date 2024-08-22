@@ -23,9 +23,8 @@ const Modal = () => {
         const errors = {};
         if (!values.phone) {
             errors.phone = "Required";
-        } else if (isNaN(Number(values.phone))) {
-            errors.phone = "Required";
         }
+
         if (!values.name) {
             errors.name = "Required";
         }
