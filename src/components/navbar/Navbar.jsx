@@ -360,7 +360,22 @@ const Navbar = () => {
                                         {(localStorage.getItem("userType") === "Doctor" ||
                                             localStorage.getItem("userType") === "Hospital") &&
                                         <div onClick={() => {
-                                            navigate("/messages");
+
+                                            if (localStorage.getItem("profile") !== "false") {
+                                                navigate("/messages");
+                                            } else {
+                                                if (localStorage.getItem("userType") === "Doctor") {
+                                                    window.location.pathname = "/register-doctor"
+
+                                                } else
+                                                    if (localStorage.getItem("userType") === "Hospital") {
+                                                    window.location.pathname = "/register-hospital"
+                                                } else if (localStorage.getItem("userType") === "Pharmacy") {
+                                                    window.location.pathname = "/register-pharmacies"
+                                                }
+                                            }
+
+
                                         }} className="btns">
                                             <img src="./images/email.png" alt=""/>
                                             {t("messages")}
@@ -371,6 +386,8 @@ const Navbar = () => {
                                             localStorage.removeItem("userId")
                                             localStorage.removeItem("nameUz")
                                             localStorage.removeItem("nameRu")
+                                            localStorage.removeItem("userType")
+                                            localStorage.removeItem("profile")
                                             window.location.reload()
                                         }} className="btns">
                                             <img src="./images/log-out.png" alt=""/>

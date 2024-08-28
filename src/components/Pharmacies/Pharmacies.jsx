@@ -32,6 +32,7 @@ const Pharmacies = () => {
     const [region, setRegion] = useState("");
     const [savedPosts, setSavedPosts] = useState([]);
     const [searchText, setSearchText] = useState("");
+    const [cost, setCost] = useState(true);
 
     const regions = [
         {name: t("Andijan"), latitude: 40.813616, longitude: 72.283463},
@@ -142,6 +143,18 @@ const Pharmacies = () => {
         })
     };
 
+    const sortPharmacies = (i) => {
+        if (Pharmacies[0].hasOwnProperty('medicine_cost')) {
+            var temp_list = [...Pharmacies];
+            if (i) {
+                temp_list.sort((a, b) => a.medicine_cost - b.medicine_cost);
+            } else {
+                temp_list.sort((a, b) => b.medicine_cost - a.medicine_cost);
+            }
+            dispatch(getPharmacies(temp_list));
+        }
+    };
+
     return <>
         <div className="pharmacies-wrapper">
             <AdvertBox/>
@@ -192,6 +205,30 @@ const Pharmacies = () => {
                                     </FormControl>
                                 </div>
                             </div>
+
+                            {searchText &&
+                            <div>
+                                <div className="dropdown-filter">
+                                    <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
+                                                 className="price">
+                                        <InputLabel id="demo-select-large-label">{t("price")}</InputLabel>
+                                        <Select
+                                            labelId="demo-select-small-label"
+                                            id="demo-select-small"
+                                            value={cost}
+                                            label={"price"}
+                                            onChange={(e) => {
+                                                sortPharmacies(e.target.value)
+                                                setCost(e.target.value)
+                                            }}
+                                        >
+                                            <MenuItem value={true}>{t("cheap")}</MenuItem>
+                                            <MenuItem value={false}>{t("expensive")}</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                            </div>}
+
                             <div>
                                 <div className="dropdown-filter">
                                     <div onClick={() => {
@@ -218,6 +255,13 @@ const Pharmacies = () => {
                                                          src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
                                                          alt=""/>
                                                 </div>
+
+                                                {item.hasOwnProperty('medicine_cost') && item.hasOwnProperty('medicine_name') &&
+                                                <div className="pharma-list">
+                                                    <div className="name">{item.medicine_name}</div>
+                                                    <div className="price">{item.medicine_cost} so'm</div>
+                                                </div>}
+
                                             </div>
                                             <div className="right-side">
                                                 <div className="header-clinic">

@@ -186,6 +186,9 @@ const ProfileHospital = () => {
                 working_days: response.data.working_days,
             });
 
+            localStorage.setItem("nameUz", response.data.translations["uz"].name)
+            localStorage.setItem("nameRu", response.data.translations["ru"].name)
+
             setSocialMedias(response.data.hospital_socials)
             response.data.hospital_socials.map((item, index) => {
                 if (item.key === "telegram") setTg(true)

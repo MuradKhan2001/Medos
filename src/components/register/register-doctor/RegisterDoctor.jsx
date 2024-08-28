@@ -13,6 +13,12 @@ import {
     ListItemText,
     Autocomplete
 } from "@mui/material";
+// import { Unstable_NumberInput as NumberInput } from '@mui/base';
+// import {NumberInput } from '@mui/base/Unstable_NumberInput';
+import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
+
+
+
 import {GoogleMap, Marker, useLoadScript} from "@react-google-maps/api";
 import {GOOGLE_MAPS_API_KEY} from "../googleMapsApi";
 import usePlacesAutocomplete, {getGeocode, getLatLng} from "use-places-autocomplete";
@@ -559,11 +565,10 @@ const RegisterHospital = () => {
                     "Authorization": `Token ${localStorage.getItem("token")}`
                 }
             }).then((response) => {
-            sessionStorage.removeItem("formData")
-            sessionStorage.removeItem("weekend")
+            sessionStorage.removeItem("formData");
+            sessionStorage.removeItem("weekend");
             localStorage.setItem("profile", true);
             window.location.pathname = "/profile-doctor";
-
 
             setTimeout(() => {
                 setLoader(false)
@@ -710,6 +715,7 @@ const RegisterHospital = () => {
                             value={formOne.values.phone1}
                             onChange={formOne.handleChange}
                             name="phone1"
+                            type="number"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
                             label="Telefon raqam " variant="outlined" className="textField"/>
                     </div>
@@ -1055,6 +1061,7 @@ const RegisterHospital = () => {
                                    value={formOne.values.experience}
                                    onChange={formOne.handleChange}
                                    name="experience"
+                                   type="number"
                                    sx={{m: 1, minWidth: "100%"}} size="small"
                                    id="outlined-basic"
                                    label="Tajribangiz " variant="outlined" className="textField"/>
@@ -1072,6 +1079,7 @@ const RegisterHospital = () => {
                             name="consultation_fee"
                             sx={{m: 1, minWidth: "80%"}} size="small"
                             id="outlined-basic"
+                            type="number"
                             label="Birinchi konsultatsiya " variant="outlined" className="textField"/>
 
                         <div className="price">UZS</div>
@@ -1083,6 +1091,7 @@ const RegisterHospital = () => {
                             name="second_consultation_fee"
                             sx={{m: 1, minWidth: "80%"}} size="small"
                             id="outlined-basic"
+                            type="number"
                             label="Ikkinchi konsultatsiya " variant="outlined" className="textField"/>
 
                         <div className="price">UZS</div>

@@ -553,6 +553,7 @@ const RegisterPharmacies = () => {
                             value={formOne.phone1}
                             onChange={formOne.handleChange}
                             name="phone1"
+                            type="number"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
                             label="Telefon raqam 1" variant="outlined" className="textField"/>
                     </div>
@@ -562,6 +563,7 @@ const RegisterPharmacies = () => {
                             value={formOne.phone2}
                             onChange={formOne.handleChange}
                             name="phone2"
+                            type="number"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
                             label="Telefon raqam 2" variant="outlined" className="textField"/>
                     </div>

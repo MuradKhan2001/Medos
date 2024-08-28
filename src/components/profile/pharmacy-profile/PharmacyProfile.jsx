@@ -185,6 +185,9 @@ const PharmacyProfile = () => {
                 working_days: response.data.working_days,
             });
 
+            localStorage.setItem("nameUz", response.data.translations["uz"].name)
+            localStorage.setItem("nameRu", response.data.translations["ru"].name)
+
             let week = response.data.working_days
             axios.get(`${baseUrl}days/`).then((response) => {
 

@@ -288,7 +288,9 @@ const Doctors = () => {
                                                 <>
                                                     <span></span>
                                                     <div className="time-open">
-                                                        {item.hospital.translations[i18next.language].name}
+                                                       <b>
+                                                           {item.hospital.translations[i18next.language].name}
+                                                       </b>
                                                     </div>
                                                 </> : ""}
                                         </div>

@@ -201,6 +201,12 @@ const ProfileDoctor = () => {
                 experience: response.data.experience
             });
 
+            localStorage.setItem("nameUz", response.data.translations["uz"].first_name + " "
+                + response.data.translations["uz"].last_name)
+
+            localStorage.setItem("nameRu", response.data.translations["ru"].first_name + " "
+                + response.data.translations["ru"].last_name)
+
             setSocialMedias(response.data.doctor_socials)
             response.data.doctor_socials.map((item, index) => {
                 if (item.key === "telegram") setTg(true)
@@ -232,7 +238,7 @@ const ProfileDoctor = () => {
             });
 
             setSpecialty(response.data.specialty)
-            
+
             setInvalidService(response.data.gender);
 
             setLogoHospital(`https://api.medos.uz/` + response.data.image)
@@ -361,7 +367,7 @@ const ProfileDoctor = () => {
             } ${road ? road : ""}`;
 
             setSelected(locMy);
-            setCenter({lat:latitude, lng:longitude});
+            setCenter({lat: latitude, lng: longitude});
             setAddressLocation(fullAddress)
             setAddress_validate(false)
         });

@@ -10,10 +10,15 @@ const Messages = () => {
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [messages, setMessages] = useState([]);
     useEffect(() => {
-        axios.get(`${baseUrl}patient/${localStorage.getItem("userId")}/`).then((response) => {
+        axios.get(`${baseUrl}patient/`, {
+            headers: {
+                "Authorization": `Token ${localStorage.getItem("token")}`
+            }
+        }).then((response) => {
             setMessages(response.data);
         });
     }, []);
+
     const delMessage = (id) => {
         axios.delete(`${baseUrl}patient/${id}/`).then((response) => {
             axios.get(`${baseUrl}patient/${localStorage.getItem("userId")}/`).then((response) => {
@@ -21,6 +26,8 @@ const Messages = () => {
             });
         });
     };
+
+
     return <div className="messages-wrapper">
         <Navbar/>
         <div className="bottom-contents">

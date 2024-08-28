@@ -139,21 +139,22 @@
               border-top-left-radius: 20px;
               border-bottom-left-radius: 20px;
 
-              &:focus{
+              &:focus {
                 outline: none;
               }
             }
 
-            .cancel-box{
+            .cancel-box {
               width: 15px;
               margin-right: 10px;
-              .cancel{
+
+              .cancel {
                 width: 100%;
                 cursor: pointer;
               }
             }
 
-            .btn-search{
+            .btn-search {
               height: 35px;
               width: 110px;
               padding-left: 10px;
@@ -165,11 +166,40 @@
               color: white;
               cursor: pointer;
               transition: 0.3s;
-              &:hover{
+
+              &:hover {
                 background-color: #009494;
               }
             }
           }
+
+          .price {
+            width: max-content;
+            margin-right: 20px;
+
+            .MuiOutlinedInput-root {
+              border-radius: 20px;
+              margin-right: 10px;
+              background-color: white;
+
+              &:hover {
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba(0, 173, 173, 1);
+                }
+              }
+            }
+
+            .MuiOutlinedInput-root.Mui-focused {
+              .MuiOutlinedInput-notchedOutline {
+                border: 1px solid rgba(0, 173, 173, 1);
+              }
+            }
+
+            .MuiInputLabel-root.Mui-focused {
+              color: rgba(0, 173, 173, 1);
+            }
+          }
+
 
           &::-webkit-scrollbar {
             width: 10px;
@@ -216,6 +246,32 @@
                   img {
                     width: 25px;
                     cursor: pointer;
+                  }
+                }
+
+                .pharma-list {
+                  position: absolute;
+                  width: 100%;
+                  height: 40%;
+                  background-color: rgba(255, 255, 255, 0.6);
+                  -webkit-backdrop-filter: blur(2px);
+                  backdrop-filter: blur(2px);
+                  left: 0;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  flex-direction: column;
+                  .name{
+                    font-size: 22px;
+                    font-weight: bold;
+                    color: #047766;
+
+                  }
+                  .price{
+                    font-size: 18px;
+                    margin-top: 4px;
                   }
                 }
               }
@@ -649,12 +705,12 @@
               border-top-left-radius: 20px;
               border-bottom-left-radius: 20px;
 
-              &:focus{
+              &:focus {
                 outline: none;
               }
             }
 
-            .btn-search{
+            .btn-search {
               height: 35px;
               width: 110px;
               padding-left: 10px;
