@@ -3,10 +3,12 @@ import Navbar from "../navbar/Navbar";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useSelector} from "react-redux";
+import {useTranslation} from "react-i18next";
 import MobileNavbar from "../mobile-navbar/MobileNavbar";
 
 
 const Messages = () => {
+    const {t} = useTranslation();
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [messages, setMessages] = useState([]);
     useEffect(() => {
@@ -33,7 +35,7 @@ const Messages = () => {
         <div className="bottom-contents">
             <div className="left-side">
                 <div className="title">
-                    Kelib tushgan murojaat va xabarlar
+                    {t("message_title")}
                 </div>
                 <div className="messages">
                     {messages.map((item, index) => {
@@ -54,7 +56,7 @@ const Messages = () => {
                                 {item.text}
                             </div>
                             <div className="time">
-                                <span>Qabul kuni:</span>
+                                <span>{t("message_time")}</span>
                                 {item.utime}
                             </div>
                         </div>

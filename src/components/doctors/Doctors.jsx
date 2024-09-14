@@ -242,7 +242,7 @@ const Doctors = () => {
                                         </div>
                                         <div onClick={() => NavigateButton(item.location)}
                                              className="navigator">
-                                            Navigator
+                                            {t("navigator")}
                                             <img src="./images/compass.png" alt=""/>
                                         </div>
                                     </div>
@@ -325,7 +325,7 @@ const Doctors = () => {
 
                                         <div onClick={() => NavigateButton(item.location)}
                                              className="navigator">
-                                            Navigator
+                                            {t("navigator")}
                                             <img src="./images/compass.png" alt=""/>
                                         </div>
 

@@ -62,7 +62,7 @@ const Modal = () => {
                     let idAlert = Date.now();
                     let alert = {
                         id: idAlert,
-                        text: "Xabar yuborildi!",
+                        text: t("alert_register"),
                         img: "./images/green.svg",
                         color: "#EDFFFA",
                     };
@@ -106,19 +106,20 @@ const Modal = () => {
             <div className="modal-sloy">
                 <div ref={nodeRef} className="modal-card">
 
-                    {modalContent.status === "sms" && <form onSubmit={formReception.handleSubmit} className="send-sms">
+                    {modalContent.status === "sms" &&
+                    <form onSubmit={formReception.handleSubmit} className="send-sms">
                         <div className="header">
                             <div className="xbtn">
                                 <img onClick={() => dispatch(hideModal({show: false}))} src="./images/cancel.png"
                                      alt=""/>
                             </div>
                         </div>
+
                         <div className="title">
-                            Qabulga yozilish
+                            {t("acceptance")}
                         </div>
                         <div className="description">
-                            Operatorlar siz bilan aloqaga chiqa olishlari uchun pastdagi maydonlarni to‘g‘ri
-                            to‘ldiring!
+                            {t("sms_des")}
                         </div>
                         <div className="inputs-box">
                             <input
@@ -126,14 +127,14 @@ const Modal = () => {
                                 onChange={formReception.handleChange}
                                 value={formReception.values.name}
                                 name="name"
-                                placeholder="To'liq ismingizni yozing" type="text"/>
+                                placeholder={t("sms_name")} type="text"/>
                             <input
                                 className={formReception.errors.phone === "Required" ? "Required" : ""}
                                 onChange={formReception.handleChange}
                                 value={formReception.values.phone}
                                 name="phone"
-                                placeholder="Telefon raqamingizni kiriting" type="text"/>
-                            <label htmlFor="utime">Qabulga borish kuni va soatini kiriting:</label>
+                                placeholder={t("phone")} type="text"/>
+                            <label htmlFor="utime">{t("sms_date")}</label>
                             <input
                                 className={formReception.errors.utime === "Required" ? "Required" : ""}
                                 onChange={formReception.handleChange}
@@ -146,11 +147,11 @@ const Modal = () => {
                                 onChange={formReception.handleChange}
                                 value={formReception.values.text}
                                 name="text"
-                                placeholder="Siz kuzatilayotgan muammo haqida qisqacha izoh yozing"
+                                placeholder={t("sms_text")}
                                 cols="30" rows="10"></textarea>
                         </div>
                         <div className="buttons-box">
-                            <button type="submit" className="send-btn">Yuborish</button>
+                            <button type="submit" className="send-btn">{t("send_sms")}</button>
                         </div>
                     </form>}
 
@@ -172,16 +173,16 @@ const Modal = () => {
                                      alt=""/>
                             </div>
                         </div>
-                        <div className="title-contact">Ish vaqti</div>
+                        <div className="title-contact">{t("working-time")}</div>
                         <div className="content">
-                            {modalContent.item.open_24 ? "24 soat ochiq" : <>
-                                {modalContent.item.start_time} dan
+                            {modalContent.item.open_24 ? t("open24") : <>
+                                {modalContent.item.start_time} {t("from")}
                                 &nbsp;
-                                {modalContent.item.end_time} gacha
+                                {modalContent.item.end_time} {t("to")}
                             </>}
                         </div>
 
-                        <div className="title-contact">Bog‘lanish uchun telefon raqmalar</div>
+                        <div className="title-contact">{t("contacts")}</div>
                         <div className="content">
                             <div className="phone">
                                 {modalContent.item.phone1 ? modalContent.item.phone1 : modalContent.item.phone}
@@ -201,7 +202,7 @@ const Modal = () => {
                             </div>
                         </div>
                         <div className="title">
-                            Baholang va izoh qoldiring
+                            {t("commit_title")}
                         </div>
                         <div className="stars">
                             <ReactStars
@@ -220,28 +221,28 @@ const Modal = () => {
                                 onChange={formReception.handleChange}
                                 value={formReception.values.name}
                                 name="name"
-                                placeholder="To'liq ismingizni yozing" type="text"/>
+                                placeholder={t("sms_name")} type="text"/>
                             <input
                                 className={formReception.errors.phone === "Required" ? "Required" : ""}
                                 onChange={formReception.handleChange}
                                 value={formReception.values.phone}
                                 name="phone"
-                                placeholder="Telefon raqamingizni kiriting" type="text"/>
+                                placeholder={t("phone")} type="text"/>
                             <div className="description">
-                                Sizning xavfsizligingiz uchun telefon raqami boshqa foydalanuvchilarga ko‘rinmaydi.
+                                {t("commit_des")}
                             </div>
                             <textarea
                                 className={formReception.errors.text === "Required" ? "Required" : ""}
                                 onChange={formReception.handleChange}
                                 value={formReception.values.text}
                                 name="text"
-                                placeholder="Siz kuzatilayotgan muammo haqida qisqacha izoh yozing"
+                                placeholder={t("commit")}
                                 cols="30" rows="10"></textarea>
                         </div>
                         <div className="description">
-                            Barcha izohlar tekshiruvdan o'tadi
+                            {t("commit_des2")}
                         </div>
-                        <button type="submit" className="send-btn">Saqlash va yuborish</button>
+                        <button type="submit" className="send-btn">{t("send_sms")}</button>
                     </form>}
                 </div>
             </div>

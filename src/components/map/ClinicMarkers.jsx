@@ -4,8 +4,10 @@ import {useSelector, useDispatch} from "react-redux";
 import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
 import {useNavigate} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const ClinicMarkers = () => {
+    const {t} = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const clinics = useSelector((store) => store.Clinics.data);
@@ -63,7 +65,7 @@ const ClinicMarkers = () => {
                         <img src={selectedLocation.image} alt=""/>
                     </div>
                     <div onClick={()=> NavigateButton(selectedLocation.location)} className="navigator">
-                        Navigator
+                        {t("navigator")}
                         <img src="./images/compass.png" alt=""/>
                     </div>
                     <div className="content">
@@ -75,16 +77,16 @@ const ClinicMarkers = () => {
                                 {selectedLocation.avg_rating}
                             </div>
                             <div className="commit-count">
-                                {selectedLocation.comment_count} ta izoh
+                                {selectedLocation.comment_count} {t("comment")}
                             </div>
                         </div>
                         <div className="section-location">
                             <div className="time-open">
                                 <img src="./images/clock.png" alt=""/>
-                                {selectedLocation.open_24 ? "24 soat ochiq" : <>
-                                    {selectedLocation.start_time} dan
+                                {selectedLocation.open_24 ? t("open24") : <>
+                                    {selectedLocation.start_time} {t("from")}
                                     &nbsp;
-                                    {selectedLocation.end_time} gacha
+                                    {selectedLocation.end_time} {t("to")}
                                 </>}
                             </div>
                         </div>
@@ -93,7 +95,7 @@ const ClinicMarkers = () => {
                             localStorage.setItem("clinicId", selectedLocation.id);
                             dispatch(getAboutMarker(selectedLocation.location))
                         }} className="more-btn">
-                            Ko'proq ko'rsatish
+                            {t("more")}
                         </div>
                     </div>
                 </div>

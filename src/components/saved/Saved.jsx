@@ -11,9 +11,11 @@ import {getAboutMarker} from "../../redux/markerAbout";
 import i18next from "i18next";
 import Doctors from "../doctors/Doctors";
 import Pharmacies from "../Pharmacies/Pharmacies";
+import {useTranslation} from "react-i18next";
 
 
 const Saved = () => {
+    const {t} = useTranslation();
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [tabActive, setTabActive] = useState(1);
     const navigate = useNavigate();
@@ -87,9 +89,9 @@ const Saved = () => {
 
     const dispatch = useDispatch();
     const Tabs = [
-        {id: 1, name: "Shifoxonalar"},
-        {id: 2, name: "Doktorlar"},
-        {id: 3, name: "Dorixonalar"}
+        {id: 1, name: t("nav1")},
+        {id: 2, name: t("nav2")},
+        {id: 3, name: t("nav3")}
     ];
 
     useEffect(() => {
@@ -109,7 +111,6 @@ const Saved = () => {
         setSavedPostsClinic(getSavedPostsClinic());
         setSavedPostsPharmacy(getSavedPostsPharmacy());
     }, []);
-
 
     const isPlaceOpen = (startTime, endTime) => {
         const startParts = startTime.split(':');
@@ -134,7 +135,7 @@ const Saved = () => {
             <Navbar/>
             <div className="content-box">
                 <div className="title-saved">
-                    Saqlanganlar
+                    {t("saved")}
                 </div>
                 <div className="tab-box">
                     {
@@ -163,10 +164,12 @@ const Saved = () => {
                                     </div>
                                     <div className="buttons">
                                         <div onClick={() => ShowModal("contact", item)}
-                                             className="button-call">Qo'ng'iroq qilish
+                                             className="button-call">
+                                            {t("call")}
                                         </div>
                                         <div onClick={() => ShowModal("sms", item.user)}
-                                             className="button-send">Yozish
+                                             className="button-send">
+                                            {t("acceptance2")}
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +179,7 @@ const Saved = () => {
                                         {item.avg_rating}
                                     </div>
                                     <div className="commit-count">
-                                        {item.comment_count} ta izoh
+                                        {item.comment_count} {t("comment")}
                                     </div>
                                 </div>
 
@@ -188,12 +191,11 @@ const Saved = () => {
                                     <div className="time-open">
                                         <img src="./images/clock.png" alt=""/>
 
-                                        {item.open_24 ? "24 soat ochiq" : <>
-                                            {item.start_time} dan
+                                        {item.open_24 ? t("open24") : <>
+                                            {item.start_time} {t("from")}
                                             &nbsp;
-                                            {item.end_time} gacha
+                                            {item.end_time} {t("to")}
                                         </>}
-
                                     </div>
                                 </div>
 
@@ -210,13 +212,13 @@ const Saved = () => {
                                     localStorage.setItem("clinicId", item.id);
                                     dispatch(getAboutMarker(item.location))
                                 }} className="more-btn">
-                                    Ko'proq ko'rsatish
+                                    {t("more")}
                                 </div>
                             </div>
                         </div>
                     }) : <div className="text-box">
                         <div className="text-no-info">
-                            Saqlangan shifoxonalar mavjud emas
+                            {t("saved_text1")}
                         </div>
                     </div>}
                 </div>}
@@ -225,7 +227,7 @@ const Saved = () => {
                     {doctors.length > 0 ? doctors.map((item, index) => {
                         return <div key={index} className="doctor">
                             <div className="left-side">
-                                <img src={"https://api.medos.uz/"+item.image} alt=""/>
+                                <img src={item.image} alt=""/>
                                 <div className="like">
                                     <img onClick={() => handleSaveClickDoctor(item.id)}
                                          src={savedPostsDoctor.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
@@ -246,7 +248,7 @@ const Saved = () => {
                                         </div>
                                         <span></span>
                                         <div className="commit-count">
-                                            {item.comment_count} ta izoh
+                                            {item.comment_count} {t("comment")}
                                         </div>
                                     </div>
                                 </div>
@@ -258,7 +260,7 @@ const Saved = () => {
                                     </div>
                                     <span></span>
                                     <div className="time-open">
-                                        {item.experience} yillik tajriba
+                                        {item.experience} {t("experience")}
                                     </div>
                                 </div>
 
@@ -290,9 +292,9 @@ const Saved = () => {
                                     </div>
                                     <span></span>
                                     <div className="time-open">
-                                        {item.start_time} dan
+                                        {item.start_time} {t("from")}
                                         &nbsp;
-                                        {item.end_time} gacha
+                                        {item.end_time} {t("to")}
                                     </div>
                                 </div>
 
@@ -306,18 +308,18 @@ const Saved = () => {
 
                                 <div className="prices">
                                     <div className="item-price">
-                                        <div className="title">Birinchi konsultatsiya</div>
+                                        <div className="title">{t("first-consultation")}</div>
                                         <div className="number">
-                                            {item.consultation_fee ? <>{item.consultation_fee} so'm </> : "Kelishuv asosida"}
+                                            {item.consultation_fee ? <>{item.consultation_fee} {t("sum")} </> : t("agreement")}
                                         </div>
                                     </div>
 
                                     <div className="item-price">
-                                        <div className="title">Takroriy konsultatsiya</div>
+                                        <div className="title">{t("second-consultation")}</div>
                                         <div className="number">
                                             {item.second_consultation_fee ?
-                                                <>{item.second_consultation_fee} so'm </> :
-                                                "Kelishuv asosida"}
+                                                <>{item.second_consultation_fee} {t("sum")} </> :
+                                                t("agreement")}
                                         </div>
                                     </div>
                                 </div>
@@ -326,11 +328,11 @@ const Saved = () => {
                                     <div className="left-btn">
                                         <div onClick={() => ShowModal("sms", item.user)}
                                              className="button-send">
-                                            Qabuliga yozilish
+                                            {t("acceptance")}
                                         </div>
                                         <div onClick={() => ShowModal("contact", item)}
-                                             className="button-call">Qo'ng'iroq
-                                            qilish
+                                             className="button-call">
+                                            {t("call")}
                                         </div>
                                     </div>
                                     <div onClick={() => {
@@ -338,14 +340,14 @@ const Saved = () => {
                                         navigate("/about-doctor")
                                         dispatch(getAboutMarker(item.location ? item.location : item.hospital.location))
                                     }} className="more-btn">
-                                        Ko'proq ko'rsatish
+                                        {t("more")}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     }) : <div className="text-box">
                         <div className="text-no-info">
-                            Saqlangan shifokorlar mavjud emas
+                            {t("saved_text2")}
                         </div>
                     </div>}
                 </div>}
@@ -390,17 +392,17 @@ const Saved = () => {
                                         <div className="location">
                                             <img src="./images/time.png" alt=""/>
                                             {item.open_24 ? <div
-                                                className="open">Ochiq</div> : isPlaceOpen(item.start_time, item.end_time) ?
-                                                <div className="open">Ochiq</div> :
-                                                <div className="close">Yopiq</div>}
+                                                className="open">{t("open")}</div> : isPlaceOpen(item.start_time, item.end_time) ?
+                                                <div className="open">{t("open")}</div> :
+                                                <div className="close">{t("close")}</div>}
                                         </div>
 
                                         <span></span>
                                         <div className="time-open">
-                                            {item.open_24 ? "24 soat ochiq" : <>
-                                                {item.start_time} dan
+                                            {item.open_24 ? t("open24") : <>
+                                                {item.start_time} {t("from")}
                                                 &nbsp;
-                                                {item.end_time} gacha
+                                                {item.end_time} {t("to")}
                                             </>}
                                         </div>
                                     </div>
@@ -412,7 +414,7 @@ const Saved = () => {
                                             navigate("/about-pharmacies")
                                         }}
                                              className="more-btn">
-                                            Ko'proq ko'rsatish
+                                            {t("more")}
                                         </div>
                                     </div>
                                 </div>
@@ -420,7 +422,7 @@ const Saved = () => {
                         })
                         : <div className="text-box">
                             <div className="text-no-info">
-                                Saqlangan dorixonalar mavjud emas
+                                {t("saved_text3")}
                             </div>
                         </div>
                     }

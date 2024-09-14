@@ -314,7 +314,7 @@ const Clinics = () => {
                                             <div className="time-open">
                                                 <img src="./images/clock.png" alt=""/>
 
-                                                {item.open_24 ? "24 soat ochiq" : <>
+                                                {item.open_24 ? t("open24") : <>
                                                     {item.start_time} {t("from")}
                                                     &nbsp;
                                                     {item.end_time} {t("to")}
@@ -347,7 +347,7 @@ const Clinics = () => {
 
                                                 <div onClick={() => NavigateButton(item.location)}
                                                      className="navigator">
-                                                    Navigator
+                                                    {t("navigator")}
                                                     <img src="./images/compass.png" alt=""/>
                                                 </div>
                                             </div>

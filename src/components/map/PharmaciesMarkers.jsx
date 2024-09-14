@@ -4,8 +4,10 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
+import {useTranslation} from "react-i18next";
 
 const PharmaciesMarkers = () => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const Pharmacies = useSelector((store) => store.Pharmacies.data);
@@ -76,7 +78,7 @@ const PharmaciesMarkers = () => {
                     </div>
                     <div onClick={() => NavigateButton(selectedLocation.location)}
                          className="navigator">
-                        Navigator
+                        {t("navigator")}
                         <img src="./images/compass.png" alt=""/>
                     </div>
                     <div className="content">
@@ -108,17 +110,17 @@ const PharmaciesMarkers = () => {
                             <div className="location">
                                 <img src="./images/time.png" alt=""/>
                                 {selectedLocation.open_24 ? <div
-                                    className="open">Ochiq</div> : isPlaceOpen(selectedLocation.start_time, selectedLocation.end_time) ?
-                                    <div className="open">Ochiq</div> :
-                                    <div className="close">Yopiq</div>}
+                                    className="open">{t("open")}</div> : isPlaceOpen(selectedLocation.start_time, selectedLocation.end_time) ?
+                                    <div className="open">{t("open")}</div> :
+                                    <div className="close">{t("close")}</div>}
                             </div>
 
                             <span></span>
                             <div className="time-open">
-                                {selectedLocation.open_24 ? "24 soat ochiq" : <>
-                                    {selectedLocation.start_time} dan
+                                {selectedLocation.open_24 ? t("open24") : <>
+                                    {selectedLocation.start_time} {t("from")}
                                     &nbsp;
-                                    {selectedLocation.end_time} gacha
+                                    {selectedLocation.end_time} {t("to")}
                                 </>}
                             </div>
                         </div>
@@ -129,7 +131,7 @@ const PharmaciesMarkers = () => {
                                 dispatch(getAboutMarker(selectedLocation.location));
                                 navigate("/about-pharmacies")
                             }} className="more-btn">
-                                Ko'proq ko'rsatish
+                                {t("more")}
                             </div>
                         </div>
                     </div>

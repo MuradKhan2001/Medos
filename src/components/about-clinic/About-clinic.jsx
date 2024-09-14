@@ -149,7 +149,7 @@ const AboutClinic = () => {
                 </div>
                 <div onClick={() => NavigateButton(clinic.location)}
                      className="navigator">
-                    Navigator
+                    {t("navigator")}
                     <img src="./images/compass.png" alt=""/>
                 </div>
                 <div className="images-location">
@@ -362,7 +362,11 @@ const AboutClinic = () => {
                                                     {t("call")}
                                                 </div>
                                             </div>
-                                            <div onClick={() => navigate("/about-clinic")} className="more-btn">
+                                            <div onClick={() => {
+                                                localStorage.setItem("doctorId", item.id)
+                                                navigate("/about-doctor")
+                                                dispatch(getAboutMarker(item.location ? item.location : item.hospital.location))
+                                            }} className="more-btn">
                                                 {t("more")}
                                             </div>
                                         </div>

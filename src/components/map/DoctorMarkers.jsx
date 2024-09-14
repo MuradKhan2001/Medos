@@ -4,8 +4,10 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
+import {useTranslation} from "react-i18next";
 
 const DoctorMarkers = () => {
+    const {t} = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const Doctors = useSelector((store) => store.Doctors.data);
@@ -74,7 +76,7 @@ const DoctorMarkers = () => {
                     </div>
                     <div onClick={() => NavigateButton(selectedLocation.location)}
                          className="navigator">
-                        Navigator
+                        {t("navigator")}
                         <img src="./images/compass.png" alt=""/>
                     </div>
                     <div className="content">
@@ -92,7 +94,7 @@ const DoctorMarkers = () => {
                                 </div>
                                 <span></span>
                                 <div className="commit-count">
-                                    {selectedLocation.comment_count} ta izoh
+                                    {selectedLocation.comment_count} {t("comment")}
                                 </div>
                             </div>
                         </div>
@@ -104,7 +106,7 @@ const DoctorMarkers = () => {
                             </div>
                             <span></span>
                             <div className="time-open">
-                                {selectedLocation.experience} yillik tajriba
+                                {selectedLocation.experience} {t("experience")}
                             </div>
                         </div>
 
@@ -135,9 +137,9 @@ const DoctorMarkers = () => {
                             </div>
                             <span></span>
                             <div className="time-open">
-                                {selectedLocation.start_time} dan
+                                {selectedLocation.start_time} {t("from")}
                                 &nbsp;
-                                {selectedLocation.end_time} gacha
+                                {selectedLocation.end_time} {t("to")}
                             </div>
                         </div>
 
@@ -147,7 +149,7 @@ const DoctorMarkers = () => {
                                 navigate("/about-doctor")
                                 dispatch(getAboutMarker(selectedLocation.location ? selectedLocation.location : selectedLocation.hospital.location))
                             }} className="more-btn">
-                                Ko'proq ko'rsatish
+                                {t("more")}
                             </div>
                         </div>
                     </div>

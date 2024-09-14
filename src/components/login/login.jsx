@@ -5,9 +5,11 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {addAlert, delAlert} from "../../redux/AlertsBox";
 import {TextField} from "@mui/material";
+import {useTranslation} from "react-i18next";
 import {useFormik} from "formik";
 
 const Login = () => {
+    const {t} = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const baseUrl = useSelector((store) => store.baseUrl.data);
@@ -36,11 +38,11 @@ const Login = () => {
                     }
 
                 } else {
-
                     if (response.data.user_type === "Doctor") {
                         window.location.pathname = "/register-doctor"
 
-                    } else if (response.data.user_type === "Hospital") {
+                    } else
+                        if (response.data.user_type === "Hospital") {
                         window.location.pathname = "/register-hospital"
 
                     } else if (response.data.user_type === "Pharmacy") {
@@ -54,7 +56,7 @@ const Login = () => {
                     let idAlert = Date.now();
                     let alert = {
                         id: idAlert,
-                        text: "Login yoki parol xato!",
+                        text: t("error1"),
                         img: "./images/red.svg",
                         color: "#ffefe7",
                     };
@@ -66,8 +68,6 @@ const Login = () => {
 
             });
     };
-
-
 
     const validate = (values) => {
         const errors = {};
@@ -107,11 +107,11 @@ const Login = () => {
             </div>
 
             <div className="title-login">
-                Profilga kirish
+                {t("login_text")}
             </div>
 
             <div className="des-login">
-                Dasturga kirish uchun login va parolni kiriting
+                {t("login_des")}
             </div>
 
             <div className="inputs">
@@ -121,7 +121,7 @@ const Login = () => {
                     onChange={formOne.handleChange}
                     name="username"
                     sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                    label="Login" variant="outlined" className="textField"/>
+                    label={t("user_name")} variant="outlined" className="textField"/>
 
                 <TextField
                     error={formOne.errors.password === "Required"}
@@ -129,12 +129,12 @@ const Login = () => {
                     onChange={formOne.handleChange}
                     name="password"
                     sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                    label="Parol" variant="outlined" className="textField"/>
+                    label={t("password")} variant="outlined" className="textField"/>
             </div>
 
             <div onClick={() => formOne.handleSubmit()}
                  className="login-btn">
-                Kirish
+                {t("login")}
             </div>
         </div>
 

@@ -379,7 +379,7 @@ const PharmacyProfile = () => {
                     onChange={(e) => setValue(e.target.value)}
                     disabled={!ready}
                     className="combobox-input"
-                    placeholder="Manzilni kiriting..."
+                    placeholder={t("address_input")}
                 />
 
                 <div className="address-wrapper">
@@ -428,7 +428,7 @@ const PharmacyProfile = () => {
             let idAlert = Date.now();
             let alert = {
                 id: idAlert,
-                text: "Malumotlar yangilandi!",
+                text: t("alert_profile"),
                 img: "./images/green.svg",
                 color: "#EDFFFA",
             };
@@ -528,7 +528,7 @@ const PharmacyProfile = () => {
     };
 
     const Clearlist = () => {
-        let result = window.confirm("Rostdan ham barcha dorilarni o'chirmoqchimisiz!")
+        let result = window.confirm(t("confirm_pharma"))
         if (result) {
             axios.post(`${baseUrl}medicine/clear_medicine/`, {}, {
                 headers: {
@@ -538,7 +538,7 @@ const PharmacyProfile = () => {
                 let idAlert = Date.now();
                 let alert = {
                     id: idAlert,
-                    text: "Ma'lumotlar tozalandi!",
+                    text: t("alert_pharma"),
                     img: "./images/green.svg",
                     color: "#EDFFFA",
                 };
@@ -565,7 +565,7 @@ const PharmacyProfile = () => {
                 let idAlert = Date.now();
                 let alert = {
                     id: idAlert,
-                    text: "Dori ma'lumotlari yangilandi!",
+                    text: t("alert_pharma2"),
                     img: "./images/green.svg",
                     color: "#EDFFFA",
                 };
@@ -584,7 +584,7 @@ const PharmacyProfile = () => {
     }
 
     const delPharma = (id) => {
-        let result = window.confirm("Rostdan dorini o'chirmoqchimisiz?");
+        let result = window.confirm(t("confirm_pharma2"));
         if (result) {
             axios.delete(`${baseUrl}medicine/${id}/`, {
                 headers: {
@@ -595,7 +595,7 @@ const PharmacyProfile = () => {
                 let idAlert = Date.now();
                 let alert = {
                     id: idAlert,
-                    text: "Dori o'chirildi",
+                    text: t("alert_pharma3"),
                     img: "./images/green.svg",
                     color: "#EDFFFA",
                 };
@@ -636,10 +636,10 @@ const PharmacyProfile = () => {
                         </div>
 
                         <div className="title">
-                            Dorilarni donalab qo'shish
+                            {t("add_med")}
                         </div>
                         <div className="description">
-                            Dorixonangizda mavjud dorilarni kiritng!
+                            {t("add_med_des")}
                         </div>
 
                         <div className="select-box">
@@ -648,19 +648,21 @@ const PharmacyProfile = () => {
                                     <TextField onChange={(e) => setPharmaName(e.target.value)}
                                                sx={{m: 1, minWidth: "80%"}}
                                                size="small" id="outlined-basic"
-                                               label="Dori nomi " variant="outlined" className="textField"/>
+                                               label={t("med_name")} variant="outlined" className="textField"/>
                                 </FormControl>
                             </div>
                             <div className="select-sides">
                                 <TextField onChange={(e) => setPharmaPrice(e.target.value)}
                                            sx={{m: 1, minWidth: "80%"}}
                                            size="small" id="outlined-basic"
-                                           label="Dori narxi " variant="outlined" className="textField"/>
+                                           label={t("med_price")} variant="outlined" className="textField"/>
                             </div>
                         </div>
 
                         <div className="buttons-box">
-                            <button onClick={addPharma} type="button" className="send-btn">Dori qo'shish</button>
+                            <button onClick={addPharma} type="button" className="send-btn">
+                                {t("add_med_btn")}
+                            </button>
                         </div>
                     </div>}
 
@@ -677,7 +679,7 @@ const PharmacyProfile = () => {
                         </div>
 
                         <div className="title">
-                            Dorini tahrirlash
+                            {t("edit_med")}
                         </div>
 
                         <div className="select-box">
@@ -686,24 +688,25 @@ const PharmacyProfile = () => {
                                     <TextField value={pharmaName} onChange={(e) => setPharmaName(e.target.value)}
                                                sx={{m: 1, minWidth: "80%"}}
                                                size="small" id="outlined-basic"
-                                               label="Dori nomi " variant="outlined" className="textField"/>
+                                               label={t("med_name")} variant="outlined" className="textField"/>
                                 </FormControl>
                             </div>
                             <div className="select-sides">
                                 <TextField value={pharmaPrice} onChange={(e) => setPharmaPrice(e.target.value)}
                                            sx={{m: 1, minWidth: "80%"}}
                                            size="small" id="outlined-basic"
-                                           label="Dori narxi " variant="outlined" className="textField"/>
+                                           label={t("med_price")} variant="outlined" className="textField"/>
                             </div>
                         </div>
 
                         <div className="buttons-box">
-                            <button onClick={editPharma} type="button" className="send-btn">Saqlash</button>
+                            <button onClick={editPharma} type="button" className="send-btn">
+                                {t("save_edit")}
+                            </button>
                         </div>
                     </div>}
 
-                    {modalContent.status === "file" &&
-                    <div className="file">
+                    {modalContent.status === "file" && <div className="file">
                         <div className="modal-header">
                             <div className="xbtn-modal">
                                 <img onClick={() => {
@@ -714,11 +717,12 @@ const PharmacyProfile = () => {
                                      alt=""/>
                             </div>
                         </div>
+
                         <div className="title">
-                            Elektron fayl
+                            {t("med_file")}
                         </div>
                         <div className="description">
-                            Dorilar yozilgan faylni Excel formatda joylang!
+                            {t("med_file_des")}
                         </div>
 
                         <div className="des-pharma">
@@ -726,8 +730,7 @@ const PharmacyProfile = () => {
                                 <img src="./images/des.png" alt=""/>
                             </div>
                             <div className="text">
-                                Iltimos dorilar ro'yxatini excel dasturi orqali ushbu rasmda ko'rsatilgandek
-                                shakillantiring!
+                                {t("med_file_des2")}
                             </div>
                         </div>
                         <div className="pharma-image">
@@ -740,7 +743,7 @@ const PharmacyProfile = () => {
                                     {pharmaFile && pharmaFile.name}
                                 </div> : <div className="text-file">
                                     <img src="./images/File.png" alt=""/>
-                                    Faylni yuklash
+                                    {t("med_file2")}
                                 </div>
                             }
 
@@ -748,7 +751,9 @@ const PharmacyProfile = () => {
                         </div>
 
                         <div className="buttons-box">
-                            <button onClick={addPharma} type="button" className="send-btn">Faylni yuborish</button>
+                            <button onClick={addPharma} type="button" className="send-btn">
+                                {t("send_file")}
+                            </button>
                         </div>
                     </div>}
                 </div>
@@ -763,18 +768,19 @@ const PharmacyProfile = () => {
         </div>
         <div className="register-page">
             <div className="title">
-                Akkount sozlamalari
+                {t("profile_title")}
             </div>
             <div className="des">
-                Dorixona akkountingizni tahrirlashingiz mumkin
+                {t("profile_des")}
             </div>
 
             <div className="header">
-                <div onClick={() => setPageNumber(1)} className={`item-menu ${pageNumber === 1 ? "active" : ""}`}>Umumiy
-                    ma'lumotlar
+                <div onClick={() => setPageNumber(1)} className={`item-menu ${pageNumber === 1 ? "active" : ""}`}>
+                    {t("all_info")}
                 </div>
                 <div onClick={() => setPageNumber(2)}
-                     className={`item-menu ${pageNumber === 2 ? "active" : ""}`}>Dorilar
+                     className={`item-menu ${pageNumber === 2 ? "active" : ""}`}>
+                    {t("med")}
                 </div>
             </div>
 
@@ -787,11 +793,10 @@ const PharmacyProfile = () => {
                             {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
                                 <img className="logo-camera" src="./images/Exclude.png" alt=""/>
                             }
-
                         </div>
 
                         <div className="label">
-                            Logo qo‘shish
+                            {t("change_image")}
                             <input onChange={getInputPhoto} type="file"/>
                         </div>
                     </div>
@@ -803,7 +808,7 @@ const PharmacyProfile = () => {
                                    name="nameUz"
                                    sx={{m: 1, minWidth: "100%"}} size="small"
                                    id="outlined-basic"
-                                   label="Shifoxona nomini kiriting (uz) " variant="outlined" className="textField"/>
+                                   label="Dorixona nomini kiriting (uz) " variant="outlined" className="textField"/>
                     </div>
 
                     <div className="inputs-box">
@@ -811,16 +816,16 @@ const PharmacyProfile = () => {
                                    onChange={formOne.handleChange}
                                    name="nameRu" sx={{m: 1, minWidth: "100%"}} size="small"
                                    id="outlined-basic"
-                                   label="Введите название больницы (ru) " variant="outlined" className="textField"/>
+                                   label="Введите название аптеки (ru) " variant="outlined" className="textField"/>
                     </div>
 
                     <div className="des-input">
-                        Iltimos, shifoxona nomini rus tili va o'zbek tilida kiritng
+                        {t("des_pharma")}
                     </div>
 
                     <div className="label-text">
                         <div className="sides">
-                            <div className="label-bold">Ish vaqti</div>
+                            <div className="label-bold">{t("working-time")}</div>
                         </div>
                         <div className="sides"></div>
                     </div>
@@ -828,7 +833,7 @@ const PharmacyProfile = () => {
                     <div className="select-box">
                         <div className="select-sides">
                             <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
-                                <InputLabel id="demo-multiple-checkbox-label">Ish kunlarini belgilang</InputLabel>
+                                <InputLabel id="demo-multiple-checkbox-label">{t("working_days")}</InputLabel>
                                 <Select
                                     error={formOne.errors.working_days === "Required"}
                                     name="working_days"
@@ -837,7 +842,7 @@ const PharmacyProfile = () => {
                                     multiple
                                     value={weekend}
                                     onChange={handleChangeMore}
-                                    input={<OutlinedInput label="Ish kunlarini  belgilang"/>}
+                                    input={<OutlinedInput label={t("working_days")}/>}
                                     renderValue={(selected) => selected.join(', ')}
                                     MenuProps={MenuProps}
                                 >
@@ -864,7 +869,7 @@ const PharmacyProfile = () => {
                                     />
                                 </div>
                                 <label htmlFor="c1-13">
-                                    Ish faoliyati 24 soat yuritiladi
+                                    {t("open24_register")}
                                 </label>
                             </div>
                         </div>
@@ -872,14 +877,14 @@ const PharmacyProfile = () => {
 
                     {workingTime24 ? "" : <div className="select-box-working-time">
                         <div className="select-sides">
-                            <label htmlFor="">Ish vaqti boshlanishi</label>
+                            <label htmlFor="">{t("start_time")}</label>
                             <input
                                 className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
                                 name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
                                 type="time"/>
                         </div>
                         <div className="select-sides">
-                            <label htmlFor="">Ish vaqti boshlanishi</label>
+                            <label htmlFor="">{t("end_time")}</label>
                             <input
                                 className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
                                 name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
@@ -889,7 +894,7 @@ const PharmacyProfile = () => {
 
                     <div className="label-text">
                         <div className="sides">
-                            <div className="label-bold">Dorixona bilan bog‘lanish</div>
+                            <div className="label-bold">{t("contact_pharma")}</div>
                         </div>
                         <div className="sides"></div>
                     </div>
@@ -902,7 +907,7 @@ const PharmacyProfile = () => {
                                 onChange={formOne.handleChange}
                                 name="phone1"
                                 sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                                label="Telefon raqam 1" variant="outlined" className="textField"/>
+                                label={t("phone1")} variant="outlined" className="textField"/>
                         </div>
                         <div className="select-sides">
                             <TextField
@@ -911,7 +916,7 @@ const PharmacyProfile = () => {
                                 onChange={formOne.handleChange}
                                 name="phone2"
                                 sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                                label="Telefon raqam 2" variant="outlined" className="textField"/>
+                                label={t("phone2")} variant="outlined" className="textField"/>
                         </div>
                     </div>
                 </div>
@@ -919,13 +924,13 @@ const PharmacyProfile = () => {
                     <div className="select-box">
                         <div className="select-sides">
                             <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                                <InputLabel id="demo-select-large-label">Viloyatni tanlang</InputLabel>
+                                <InputLabel id="demo-select-large-label">{t("region_register")}</InputLabel>
                                 <Select
                                     error={region_validate}
                                     labelId="demo-select-small-label"
                                     id="demo-select-small"
                                     value={region}
-                                    label="Viloyatni tanlang"
+                                    label={t("region_register")}
                                     onChange={(e) => setRegion(e.target.value)}
                                 >
 
@@ -940,11 +945,11 @@ const PharmacyProfile = () => {
                             </FormControl>
                         </div>
                     </div>
-                    <div className="label-address">Manzil:</div>
+                    <div className="label-address">{t("location")}</div>
                     <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
                         {i18next.language === "uz" && addressLocation ? addressLocation : ""}
                         {i18next.language === "ru" && addressLocationRu ? addressLocationRu : ""}
-                        {!addressLocation && !addressLocationRu && <p>Manzilni xaritadan belgilang</p>}
+                        {!addressLocation && !addressLocationRu && <p>{t("map_des")}</p>}
                     </div>
                     <div className="address-container">
                         <GoogleMap
@@ -969,7 +974,7 @@ const PharmacyProfile = () => {
 
                     <div className="btn-box">
                         <div onClick={() => navigate("/")} className="prev-btn">
-                            Bekor qilish
+                            {t("cancel")}
                         </div>
                         <div onClick={() => {
                             if (addressLocation && region) {
@@ -979,7 +984,7 @@ const PharmacyProfile = () => {
                                 if (!region) setRegion_validate(true)
                             }
                         }} className="next-page-btn">
-                            O'zgarishlarni saqlash
+                            {t("save_edit")}
                         </div>
                     </div>
                 </div>
@@ -988,7 +993,7 @@ const PharmacyProfile = () => {
             {pageNumber === 2 &&
             <div className="register-page-three">
                 <div className="title">
-                    Dorilar qo'shish
+                    {t("add_med_btn")}
                 </div>
 
                 <div className="btn-box">
@@ -998,7 +1003,7 @@ const PharmacyProfile = () => {
                         let newContent = {...modalContent}
                         setModalContent(newContent)
                     }} className="add-social-media">
-                        Donalab dori qo'shish
+                        {t("add_med")}
                     </div>
                     <div onClick={() => {
                         modalContent.status = "file"
@@ -1006,18 +1011,18 @@ const PharmacyProfile = () => {
                         let newContent = {...modalContent}
                         setModalContent(newContent)
                     }} className="add-social-media">
-                        Dorilarni faylda qo'shish
+                        {t("med_file2")}
                     </div>
 
 
                 </div>
 
                 <div className="title">
-                    Dorixanada mavjud bo'lgan dorilar ro'yxati.
+                    {t("med_list")}
                 </div>
 
                 <div onClick={Clearlist} className="clear-btns">
-                    Barcha dorilarni o'chirish
+                    {t("del_all_med")}
                     <img src="./images/del-icon.png" alt=""/>
                 </div>
 
@@ -1028,7 +1033,7 @@ const PharmacyProfile = () => {
 
                         <div onClick={() => searchValue && getPages(`${baseUrl}search-medicine/?name=${searchValue}`)}
                              className="btn-search">
-                            Dori izlash
+                            {t("search_med")}
                         </div>
                     </div>
 
@@ -1037,8 +1042,8 @@ const PharmacyProfile = () => {
                             <table>
                                 <thead>
                                 <tr>
-                                    <th>Dori nomi</th>
-                                    <th>Dori narxi</th>
+                                    <th>{t("med_name")}</th>
+                                    <th>{t("med_price")}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -1070,7 +1075,7 @@ const PharmacyProfile = () => {
                                 })}
 
                                 </tbody>
-                            </table> : searchValue && <div className="validate"> Siz izlagan dori topilmadi!</div>
+                            </table> : searchValue && <div className="validate">{t("search_text_med")}</div>
                     }
 
 

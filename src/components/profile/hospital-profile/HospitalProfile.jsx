@@ -154,7 +154,7 @@ const ProfileHospital = () => {
             hospital_type: "",
             phone1: "",
             phone2: "",
-            emergency_number:"",
+            emergency_number: "",
             start_time: "",
             end_time: "",
             working_days: [],
@@ -321,7 +321,7 @@ const ProfileHospital = () => {
             } ${road ? road : ""}`;
 
             setSelected(locMy);
-            setCenter({lat:latitude, lng:longitude});
+            setCenter({lat: latitude, lng: longitude});
             setAddressLocation(fullAddress)
             setAddress_validate(false)
         });
@@ -409,7 +409,7 @@ const ProfileHospital = () => {
                     onChange={(e) => setValue(e.target.value)}
                     disabled={!ready}
                     className="combobox-input"
-                    placeholder="Manzilni kiriting..."
+                    placeholder={t("address_input")}
                 />
 
                 <div className="address-wrapper">
@@ -512,7 +512,7 @@ const ProfileHospital = () => {
             let idAlert = Date.now();
             let alert = {
                 id: idAlert,
-                text: "Malumotlar yangilandi!",
+                text: t("alert_profile"),
                 img: "./images/green.svg",
                 color: "#EDFFFA",
             };
@@ -538,19 +538,21 @@ const ProfileHospital = () => {
         <div className="register-page">
 
             <div className="title">
-                Akkount sozlamalari
+                {t("profile_title")}
             </div>
             <div className="des">
-                Shifoxona akkountingizni tahrirlashingiz mumkin
+                {t("profile_des")}
             </div>
             <div className="header">
-                <div onClick={() => setPageNumber(1)} className={`item-menu ${pageNumber === 1 ? "active" : ""}`}>Umumiy
-                    ma'lumotlar
+                <div onClick={() => setPageNumber(1)} className={`item-menu ${pageNumber === 1 ? "active" : ""}`}>
+                    {t("all_info")}
                 </div>
                 <div onClick={() => setPageNumber(2)}
-                     className={`item-menu ${pageNumber === 2 ? "active" : ""}`}>Xizmatlar
+                     className={`item-menu ${pageNumber === 2 ? "active" : ""}`}>
+                    {t("nav4")}
                 </div>
             </div>
+
             {pageNumber === 1 &&
             <>
                 <div className="register-page-one">
@@ -560,9 +562,8 @@ const ProfileHospital = () => {
                                 <img className="logo-camera" src="./images/Exclude.png" alt=""/>
                             }
                         </div>
-
                         <div className="label">
-                            Rasmni o'zgartirish
+                            {t("change_image")}
                             <input onChange={getInputPhoto} type="file"/>
                         </div>
                     </div>
@@ -586,31 +587,31 @@ const ProfileHospital = () => {
                     </div>
 
                     <div className="des-input">
-                        Iltimos, shifoxona nomini rus tili va o'zbek tilida kiritng
+                        {t("name_des")}
                     </div>
 
                     <div className="select-box">
                         <div className="select-sides">
                             <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
                                          className="selectMui">
-                                <InputLabel id="demo-select-large-label">Shifoxona</InputLabel>
+                                <InputLabel id="demo-select-large-label">{t("clinic")}</InputLabel>
                                 <Select
                                     error={formOne.errors.type === "Required"}
                                     name="type"
                                     labelId="demo-select-small-label"
                                     id="demo-select-small"
                                     value={hospital}
-                                    label="Shifoxona"
+                                    label={t("clinic")}
                                     onChange={(e) => {
                                         formOne.handleChange(e);
                                         setHospital(e.target.value)
                                     }}
                                 >
                                     <MenuItem value={1}>
-                                        Davlat
+                                        {t("hospital_type1")}
                                     </MenuItem>
                                     <MenuItem value={2}>
-                                        Xususiy
+                                        {t("hospital_type2")}
                                     </MenuItem>
                                 </Select>
                             </FormControl>
@@ -622,21 +623,21 @@ const ProfileHospital = () => {
 
                     <div className="label-text">
                         <div className="sides"></div>
-                        <div className="sides"> Nogironlar uchun imkoniyatlar</div>
+                        <div className="sides">{t("disable")}</div>
                     </div>
 
                     <div className="select-box">
                         <div className="select-sides">
                             <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
                                          className="selectMui">
-                                <InputLabel id="demo-select-large-label">Shifoxona turi</InputLabel>
+                                <InputLabel id="demo-select-large-label">{t("hospital_type")}</InputLabel>
                                 <Select
                                     error={formOne.errors.hospital_type === "Required"}
                                     name="hospital_type"
                                     labelId="demo-select-small-label"
                                     id="demo-select-small"
                                     value={hospitalType}
-                                    label="Shifoxona turi"
+                                    label={t("hospital_type")}
                                     onChange={(e) => {
                                         formOne.handleChange(e);
                                         setHospitalType(e.target.value)
@@ -668,7 +669,7 @@ const ProfileHospital = () => {
 
                     <div className="label-text">
                         <div className="sides">
-                            <div className="label-bold">Ish vaqti</div>
+                            <div className="label-bold">{t("working-time")}</div>
                         </div>
                         <div className="sides"></div>
                     </div>
@@ -676,7 +677,7 @@ const ProfileHospital = () => {
                     <div className="select-box">
                         <div className="select-sides">
                             <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
-                                <InputLabel id="demo-multiple-checkbox-label">Ish kunlarini belgilang</InputLabel>
+                                <InputLabel id="demo-multiple-checkbox-label">{t("working_days")}</InputLabel>
                                 <Select
                                     error={formOne.errors.working_days === "Required"}
                                     name="working_days"
@@ -685,7 +686,7 @@ const ProfileHospital = () => {
                                     multiple
                                     value={weekend}
                                     onChange={handleChangeMore}
-                                    input={<OutlinedInput label="Ish kunlarini  belgilang"/>}
+                                    input={<OutlinedInput label={t("working_days")}/>}
                                     renderValue={(selected) => selected.join(', ')}
                                     MenuProps={MenuProps}
                                 >
@@ -712,7 +713,7 @@ const ProfileHospital = () => {
                                     />
                                 </div>
                                 <label htmlFor="c1-13">
-                                    Ish faoliyati 24 soat yuritiladi
+                                    {t("open24_register")}
                                 </label>
                             </div>
                         </div>
@@ -720,14 +721,14 @@ const ProfileHospital = () => {
 
                     {workingTime24 ? "" : <div className="select-box-working-time">
                         <div className="select-sides">
-                            <label htmlFor="">Ish vaqti boshlanishi</label>
+                            <label htmlFor="">{t("start_time")}</label>
                             <input
                                 className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
                                 name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
                                 type="time"/>
                         </div>
                         <div className="select-sides">
-                            <label htmlFor="">Ish vaqti boshlanishi</label>
+                            <label htmlFor="">{t("end_time")}</label>
                             <input
                                 className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
                                 name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
@@ -737,7 +738,7 @@ const ProfileHospital = () => {
 
                     <div className="label-text">
                         <div className="sides">
-                            <div className="label-bold">Shifoxona bilan bog‘lanish</div>
+                            <div className="label-bold">{t("contact_des")}</div>
                         </div>
                         <div className="sides"></div>
                     </div>
@@ -750,14 +751,14 @@ const ProfileHospital = () => {
                                 onChange={formOne.handleChange}
                                 name="phone1"
                                 sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                                label="Telefon raqam 1" variant="outlined" className="textField"/>
+                                label={t("phone1")} variant="outlined" className="textField"/>
                         </div>
                         <div className="select-sides">
                             <TextField
                                 error={formOne.errors.phone2 === "Required"}
                                 value={formOne.values.phone2}
                                 onChange={formOne.handleChange}
-                                name="phone2"
+                                name={t("phone2")}
                                 sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
                                 label="Telefon raqam 2" variant="outlined" className="textField"/>
                         </div>
@@ -770,18 +771,18 @@ const ProfileHospital = () => {
                                 onChange={formOne.handleChange}
                                 name="emergency_number"
                                 sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                                label="Tez yordam raqami" variant="outlined" className="textField"/>
+                                label={t("phone3")} variant="outlined" className="textField"/>
                         </div>
                         <div className="select-sides">
                         </div>
                     </div>
                     <div className="des-input">
-                        Agar tez yordam xizmati mavjud bolsa tez yordam raqamini kiriting.
+                        {t("phone3_des")}
                     </div>
 
                     <div className="label-text">
                         <div className="sides">
-                            Ijtimoiy tarmoq sahifasi yoki veb sayt havolasi
+                            {t("social_media")}
                         </div>
                         <div className="sides"></div>
                     </div>
@@ -812,7 +813,7 @@ const ProfileHospital = () => {
                                     src="./images/del-icon.png" alt=""/></div>}
                             </div>
                         })}
-                        <div className="des">Ijtimoiy tarmoq sahifalarni kirtish majburiy emas!</div>
+                        <div className="des">{t("social_des")}</div>
                         <div className="add-social-media">
                             {!tg && <div onClick={() => addSocialMedia("telegram")} className="social-mdeia-icon">
                                 <div className="sloy">
@@ -850,8 +851,7 @@ const ProfileHospital = () => {
                             </div>}
                         </div>
                         <div className="des">
-                            Quyidagi ijtimoiy tarmoq sahifalaringizni qo‘shish orqali bemorlarni bog‘lanishini
-                            osonlashtiring.
+                            {t("social_des")}
                         </div>
                     </div>
                 </div>
@@ -859,13 +859,13 @@ const ProfileHospital = () => {
                     <div className="select-box">
                         <div className="select-sides">
                             <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                                <InputLabel id="demo-select-large-label">Viloyatni tanlang</InputLabel>
+                                <InputLabel id="demo-select-large-label">{t("region_register")}</InputLabel>
                                 <Select
                                     error={region_validate}
                                     labelId="demo-select-small-label"
                                     id="demo-select-small"
                                     value={region}
-                                    label="Viloyatni tanlang"
+                                    label={t("region_register")}
                                     onChange={(e) => setRegion(e.target.value)}
                                 >
 
@@ -880,11 +880,11 @@ const ProfileHospital = () => {
                             </FormControl>
                         </div>
                     </div>
-                    <div className="label-address">Manzil:</div>
+                    <div className="label-address">{t("location")}</div>
                     <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
                         {i18next.language === "uz" && addressLocation ? addressLocation : ""}
                         {i18next.language === "ru" && addressLocationRu ? addressLocationRu : ""}
-                        {!addressLocation && !addressLocationRu && <p>Manzilni xaritadan belgilang</p>}
+                        {!addressLocation && !addressLocationRu && <p>{t("map_des")}</p>}
                     </div>
                     <div className="address-container">
                         <GoogleMap
@@ -916,12 +916,12 @@ const ProfileHospital = () => {
                         <div className="select-box">
                             <div className="select-sides">
                                 <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                                    <InputLabel id="demo-select-large-label"> Xizmat turi</InputLabel>
+                                    <InputLabel id="demo-select-large-label">{t("service_type")}</InputLabel>
                                     <Select
                                         labelId="demo-select-small-label"
                                         id="demo-select-small"
                                         value={item.service}
-                                        label="Xizmat turi"
+                                        label={t("service_type")}
                                         onChange={(e) => {
                                             item.service = e.target.value;
                                             item.options = serviceList.filter((item) => item.id === e.target.value)[0].options;
@@ -948,12 +948,12 @@ const ProfileHospital = () => {
                             return <div key={indexService} className="select-box">
                                 <div className="select-sides">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                                        <InputLabel id="demo-select-large-label">Xizmat nomi</InputLabel>
+                                        <InputLabel id="demo-select-large-label">{t("service_name")}</InputLabel>
                                         <Select
                                             labelId="demo-select-small-label"
                                             id="demo-select-small"
                                             value={itemService.sub_service}
-                                            label="Xizmat nomi"
+                                            label={t("service_name")}
                                             onChange={(e) => {
                                                 let change = [...service];
                                                 setService(change);
@@ -977,7 +977,7 @@ const ProfileHospital = () => {
                                                sx={{m: 1, minWidth: "80%"}}
                                                size="small" id="outlined-basic"
                                                value={itemService.price}
-                                               label="Xizmat narxi " variant="outlined" className="textField"/>
+                                               label={t("service_price")} variant="outlined" className="textField"/>
 
                                     {item.sub_services_list.length > 1 && indexService !== 0 && <img onClick={() => {
                                         item.sub_services_list = item.sub_services_list.filter((item, index) => index !== indexService);
@@ -993,28 +993,28 @@ const ProfileHospital = () => {
                             let change = [...service];
                             setService(change);
                         }} className="add-social-media">
-                            Xizmat qo'shish
+                            {t("add_service")}
                         </div>
                         <div className="des-btn">
-                            Ushbu tugmachani bosish orqali yangi tibbiy xizmat qo‘shishingiz mumkin
+                            {t("add_service_des")}
                         </div>
                     </div>
                 })}
                 <div onClick={addService} className="add-social-media">
-                    Xizmat yaratish
+                    {t("create_service")}
                 </div>
                 <div className="des-btn">
-                    Ushbu tugmachani bosish orqali yangi turdagi tibbiy xizmat yaratishingiz mumkin
+                    {t("create_service_des")}
                 </div>
             </div>}
 
             <div className="btn-box">
                 <div onClick={() => navigate("/")} className="prev-btn">
-                    Bekor qilish
+                    {t("cancel")}
                 </div>
 
                 <div onClick={sendAllInfo} className="next-page-btn">
-                    O'zgarishlarni tasdiqlash
+                    {t("save_edit")}
                 </div>
             </div>
 

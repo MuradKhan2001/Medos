@@ -112,7 +112,7 @@ const AboutPharma = () => {
                             <div className="close">{t("close")}</div>}
                         <span></span>
                         <div className="name">
-                            {pharmacy.open_24 ? "24 soat ochiq" : <>
+                            {pharmacy.open_24 ? t("open24") : <>
                                 {pharmacy.start_time} {t("from")}
                                 &nbsp;
                                 {pharmacy.end_time} {t("to")}
@@ -121,7 +121,7 @@ const AboutPharma = () => {
                     </div>
                     <div onClick={() => NavigateButton(pharmacy.location)}
                          className="navigator">
-                        Navigator
+                        {t("navigator")}
                         <img src="./images/compass.png" alt=""/>
                     </div>
                 </div>

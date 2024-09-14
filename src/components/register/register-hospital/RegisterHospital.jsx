@@ -389,7 +389,7 @@ const RegisterHospital = () => {
                     onChange={(e) => setValue(e.target.value)}
                     disabled={!ready}
                     className="combobox-input"
-                    placeholder="Manzilni kiriting..."
+                    placeholder={t("address_input")}
                 />
 
                 <div className="address-wrapper">
@@ -531,7 +531,7 @@ const RegisterHospital = () => {
                         className={`num ${pageNumber === 1 || pageNumber === 2 || pageNumber === 3 ? "num-active" : ""}`}>
                         1
                         <div className={`name ${pageNumber === 1 || pageNumber === 2 ? "active-name" : ""}`}>
-                            Shifoxona haqida
+                            {t("about_clinic")}
                         </div>
                     </div>
 
@@ -539,7 +539,7 @@ const RegisterHospital = () => {
                     <div className={`num ${pageNumber === 2 || pageNumber === 3 ? "num-active" : ""}`}>
                         2
                         <div className={`name ${pageNumber === 2 ? "active-name" : ""}`}>
-                            Shifoxona manzili
+                            {t("address_clinic")}
                         </div>
                     </div>
 
@@ -547,7 +547,7 @@ const RegisterHospital = () => {
                     <div className={`num ${pageNumber === 3 ? "num-active" : ""}`}>
                         3
                         <div className="name">
-                            Xizmatlar
+                            {t("nav4")}
                         </div>
                     </div>
 
@@ -558,13 +558,14 @@ const RegisterHospital = () => {
                 </div>
             </div>
 
-            {pageNumber === 1 && <div className="register-page-one">
+            {pageNumber === 1 &&
+            <div className="register-page-one">
 
                 <div ref={ref2} className="title">
-                    Shifoxona haqida aytib bering
+                    {t("clinic_des")}
                 </div>
                 <div className="des">
-                    Shifoxona akkountingizni ro‘yxatdan o‘tkazish uchun bu juda muhim
+                    {t("clinic_des2")}
                 </div>
 
                 <div className="logo-hospital">
@@ -575,12 +576,12 @@ const RegisterHospital = () => {
                     </div>
 
                     {!logoHospital && <div className="label">
-                        Rasm qo‘shish
+                        {t("addImage")}
                         <input onChange={getInputPhoto} type="file"/>
                     </div>}
 
                     {logoHospital && <div onClick={() => setLogoHospital(null)} className="label">
-                        Rasmni ochirish
+                        {t("delImage")}
                         <img src="./images/cancel.png" alt=""/>
                     </div>}
                 </div>
@@ -604,21 +605,21 @@ const RegisterHospital = () => {
                 </div>
 
                 <div className="des-input">
-                    Iltimos, shifoxona nomini rus tili va o'zbek tilida kiritng
+                    {t("name_des")}
                 </div>
 
                 <div className="select-box">
                     <div className="select-sides">
                         <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
                                      className="selectMui">
-                            <InputLabel id="demo-select-large-label">Shifoxona</InputLabel>
+                            <InputLabel id="demo-select-large-label">{t("clinic")}</InputLabel>
                             <Select
                                 error={formOne.errors.type === "Required"}
                                 name="type"
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
                                 value={sessionStorage.getItem("hospital") || hospital}
-                                label="Shifoxona"
+                                label={t("clinic")}
                                 onChange={(e) => {
                                     formOne.handleChange(e);
                                     sessionStorage.setItem("hospital", e.target.value)
@@ -626,10 +627,10 @@ const RegisterHospital = () => {
                                 }}
                             >
                                 <MenuItem value={1}>
-                                    Davlat
+                                    {t("hospital_type1")}
                                 </MenuItem>
                                 <MenuItem value={2}>
-                                    Xususiy
+                                    {t("hospital_type2")}
                                 </MenuItem>
                             </Select>
                         </FormControl>
@@ -641,21 +642,21 @@ const RegisterHospital = () => {
 
                 <div className="label-text">
                     <div className="sides"></div>
-                    <div className="sides"> Nogironlar uchun imkoniyatlar</div>
+                    <div className="sides">{t("disable")}</div>
                 </div>
 
                 <div className="select-box">
                     <div className="select-sides">
                         <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
                                      className="selectMui">
-                            <InputLabel id="demo-select-large-label">Shifoxona turi</InputLabel>
+                            <InputLabel id="demo-select-large-label">{t("hospital_type")}</InputLabel>
                             <Select
                                 error={formOne.errors.hospital_type === "Required"}
                                 name="hospital_type"
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
                                 value={sessionStorage.getItem("hospitaltype") || hospitalType}
-                                label="Shifoxona turi"
+                                label={t("hospital_type")}
                                 onChange={(e) => {
                                     formOne.handleChange(e);
                                     sessionStorage.setItem("hospitaltype", e.target.value);
@@ -676,11 +677,11 @@ const RegisterHospital = () => {
                         <div className="on-of">
                             <div onClick={() => setInvalidService(true)}
                                  className={`of ${invalidService ? "on" : ""}`}>
-                                Mavjud
+                                {t("on")}
                             </div>
                             <div onClick={() => setInvalidService(false)}
                                  className={`of ${!invalidService ? "on" : ""}`}>
-                                Mavjud emas
+                                {t("of")}
                             </div>
                         </div>
                     </div>
@@ -688,7 +689,7 @@ const RegisterHospital = () => {
 
                 <div className="label-text">
                     <div className="sides">
-                        <div className="label-bold">Ish vaqti</div>
+                        <div className="label-bold">{t("working-time")}</div>
                     </div>
                     <div className="sides"></div>
                 </div>
@@ -696,7 +697,7 @@ const RegisterHospital = () => {
                 <div className="select-box">
                     <div className="select-sides">
                         <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
-                            <InputLabel id="demo-multiple-checkbox-label">Ish kunlarini belgilang</InputLabel>
+                            <InputLabel id="demo-multiple-checkbox-label">{t("working_days")}</InputLabel>
                             <Select
                                 error={formOne.errors.working_days === "Required"}
                                 name="working_days"
@@ -706,7 +707,7 @@ const RegisterHospital = () => {
                                 value={sessionStorage.getItem("weekendHospital") &&
                                 JSON.parse(sessionStorage.getItem("weekendHospital")) || weekend}
                                 onChange={handleChangeMore}
-                                input={<OutlinedInput label="Ish kunlarini  belgilang"/>}
+                                input={<OutlinedInput label={t("working_days")}/>}
                                 renderValue={(selected) => selected.join(', ')}
                                 MenuProps={MenuProps}
                             >
@@ -732,33 +733,37 @@ const RegisterHospital = () => {
                                 />
                             </div>
                             <label htmlFor="c1-13">
-                                Ish faoliyati 24 soat yuritiladi
+                                {t("open24_register")}
                             </label>
                         </div>
                     </div>
                 </div>
-                {workingTime24 ? "" : <div className="select-box-working-time">
+
+                {workingTime24 ? "" :
+                    <div className="select-box-working-time">
                     <div className="select-sides">
-                        <label htmlFor="">Ish vaqti boshlanishi</label>
+                        <label htmlFor="">{t("start_time")}</label>
                         <input
                             className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
                             name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
                             type="time"/>
                     </div>
                     <div className="select-sides">
-                        <label htmlFor="">Ish vaqti boshlanishi</label>
+                        <label htmlFor="">{t("end_time")}</label>
                         <input
                             className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
                             name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
                             type="time"/>
                     </div>
                 </div>}
+
                 <div className="label-text">
                     <div className="sides">
-                        <div className="label-bold">Shifoxona bilan bog‘lanish</div>
+                        <div className="label-bold">{t("contact_des")}</div>
                     </div>
                     <div className="sides"></div>
                 </div>
+
                 <div className="select-box">
                     <div className="select-sides">
                         <TextField
@@ -768,7 +773,7 @@ const RegisterHospital = () => {
                             name="phone1"
                             type="number"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                            label="Telefon raqam 1" variant="outlined" className="textField"/>
+                            label={t("phone1")} variant="outlined" className="textField"/>
                     </div>
                     <div className="select-sides">
                         <TextField
@@ -778,9 +783,10 @@ const RegisterHospital = () => {
                             name="phone2"
                             type="number"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                            label="Telefon raqam 2" variant="outlined" className="textField"/>
+                            label={t("phone2")} variant="outlined" className="textField"/>
                     </div>
                 </div>
+
                 <div className="select-box">
                     <div className="select-sides">
                         <TextField
@@ -788,21 +794,24 @@ const RegisterHospital = () => {
                             onChange={formOne.handleChange}
                             name="emergency_number"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                            label="Tez yordam raqami" variant="outlined" className="textField"/>
+                            label={t("phone3")} variant="outlined" className="textField"/>
 
                     </div>
                     <div className="select-sides">
                     </div>
                 </div>
+
                 <div className="des-input">
-                    Agar tez yordam xizmati mavjud bolsa tez yordam raqamini kiriting.
+                    {t("phone3_des")}
                 </div>
+
                 <div className="label-text">
                     <div className="sides">
-                        Ijtimoiy tarmoq sahifasi yoki veb sayt havolasi
+                        {t("social_media")}
                     </div>
                     <div className="sides"></div>
                 </div>
+
                 <div className="inputs-box-link">
                     {socialMedias.map((item, index) => {
                         return <div key={index} className="inputs-social-media">
@@ -824,9 +833,7 @@ const RegisterHospital = () => {
                                 src="./images/del-icon.png" alt=""/></div>}
                         </div>
                     })}
-                    <div className="des">Ijtimoiy tarmoq sahifalarni kirtish majburiy emas!</div>
-
-
+                    <div className="des">{t("social_des2")}</div>
                     <div className="add-social-media">
                         {!tg && <div onClick={() => addSocialMedia("telegram")} className="social-mdeia-icon">
                             <div className="sloy">
@@ -863,40 +870,38 @@ const RegisterHospital = () => {
                             <img src="./images/social-media/tiktok.png" alt=""/>
                         </div>}
                     </div>
-
                     <div className="des">
-                        Quyidagi ijtimoiy tarmoq sahifalaringizni qo‘shish orqali bemorlarni bog‘lanishini
-                        osonlashtiring.
+                        {t("social_des")}
                     </div>
                 </div>
+
                 <div className="btn-box">
                     <div onClick={() => formOne.handleSubmit()} className="next-page-btn">
-                        Tasdiqlash va davom etish
+                        {t("next_btn")}
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
                 </div>
             </div>}
 
-
             {pageNumber === 2 &&
             <div className="register-page-two">
                 <div className="title">
-                    Shifoxona qayerda joylashgan?
+                    {t("clinic_loc")}
                 </div>
                 <div className="des">
-                    Bemorlar sizni topishlari oson bo‘lishi uchun bu juda muhim
+                    {t("clinic_loc_des")}
                 </div>
 
                 <div className="select-box">
                     <div className="select-sides">
                         <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                            <InputLabel id="demo-select-large-label">Viloyatni tanlang</InputLabel>
+                            <InputLabel id="demo-select-large-label">{t("region_register")}</InputLabel>
                             <Select
                                 error={region_validate}
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
                                 value={region}
-                                label="Viloyatni tanlang"
+                                label={t("region_register")}
                                 onChange={(e) => setRegion(e.target.value)}
                             >
 
@@ -912,11 +917,11 @@ const RegisterHospital = () => {
                     </div>
                 </div>
 
-                <div className="label-address">Manzil:</div>
+                <div className="label-address">{t("location")}</div>
                 <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
                     {i18next.language === "uz" && addressLocation ? addressLocation : ""}
                     {i18next.language === "ru" && addressLocationRu ? addressLocationRu : ""}
-                    {!addressLocation && !addressLocationRu && <p>Manzilni xaritadan belgilang</p>}
+                    {!addressLocation && !addressLocationRu && <p>{t("map_des")}</p>}
                 </div>
                 <div className="address-container">
                     <GoogleMap
@@ -942,7 +947,7 @@ const RegisterHospital = () => {
                 <div className="btn-box">
                     <div onClick={() => setPageNumber(1)} className="prev-btn">
                         <img src="./images/prev-btn.png" alt=""/>
-                        Orqaga qaytish
+                        {t("prev_btn")}
                     </div>
                     <div onClick={() => {
                         if (addressLocation && region) {
@@ -952,7 +957,7 @@ const RegisterHospital = () => {
                             if (!region) setRegion_validate(true)
                         }
                     }} className="next-page-btn">
-                        Tasdiqlash va davom etish
+                        {t("next_btn")}
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
                 </div>
@@ -961,10 +966,10 @@ const RegisterHospital = () => {
             {pageNumber === 3 &&
             <div className="register-page-three">
                 <div className="title">
-                    Xizmatlar
+                    {t("nav4")}
                 </div>
                 <div className="des">
-                    Shifoxonangizda mavjud tibbiy xizmatlar va ularnig narxi haqida batafsil ma’lumot bering
+                    {t("service_des")}
                 </div>
 
                 {service.map((item, index) => {
@@ -972,12 +977,12 @@ const RegisterHospital = () => {
                         <div className="select-box">
                             <div className="select-sides">
                                 <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                                    <InputLabel id="demo-select-large-label"> Xizmat turi</InputLabel>
+                                    <InputLabel id="demo-select-large-label">{t("service_type")}</InputLabel>
                                     <Select
                                         labelId="demo-select-small-label"
                                         id="demo-select-small"
                                         value={item.service}
-                                        label="Xizmat turi"
+                                        label={t("service_type")}
                                         onChange={(e) => {
                                             item.service = e.target.value
                                             item.options = serviceList.filter((item) => item.id === e.target.value)[0].options;
@@ -1000,17 +1005,16 @@ const RegisterHospital = () => {
                             </div>
                         </div>
 
-
                         {item.sub_services_list.map((itemService, indexService) => {
                             return <div key={indexService} className="select-box">
                                 <div className="select-sides">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                                        <InputLabel id="demo-select-large-label">Xizmat nomi</InputLabel>
+                                        <InputLabel id="demo-select-large-label">{t("service_name")}</InputLabel>
                                         <Select
                                             labelId="demo-select-small-label"
                                             id="demo-select-small"
                                             value={itemService.sub_service}
-                                            label="Xizmat nomi"
+                                            label={t("service_name")}
                                             onChange={(e) => {
                                                 let change = [...service];
                                                 setService(change);
@@ -1030,7 +1034,7 @@ const RegisterHospital = () => {
                                     <TextField onChange={(e) => itemService.price = e.target.value}
                                                sx={{m: 1, minWidth: "80%"}}
                                                size="small" id="outlined-basic"
-                                               label="Xizmat narxi " variant="outlined" className="textField"/>
+                                               label={t("service_price")} variant="outlined" className="textField"/>
 
                                     {item.sub_services_list.length > 1 && indexService !== 0 && <img onClick={() => {
                                         item.sub_services_list = item.sub_services_list.filter((item, index) => index !== indexService);
@@ -1046,29 +1050,29 @@ const RegisterHospital = () => {
                             let change = [...service];
                             setService(change);
                         }} className="add-social-media">
-                            Xizmat qo'shish
+                            {t("add_service")}
                         </div>
                         <div className="des-btn">
-                            Ushbu tugmachani bosish orqali yangi tibbiy xizmat qo‘shishingiz mumkin
+                            {t("add_service_des")}
                         </div>
                     </div>
                 })}
 
                 <div onClick={addService} className="add-social-media">
-                    Xizmat yaratish
+                    {t("create_service")}
                 </div>
                 <div className="des-btn">
-                    Ushbu tugmachani bosish orqali yangi turdagi tibbiy xizmat yaratishingiz mumkin
+                    {t("create_service_des")}
                 </div>
 
                 <div className="btn-box">
                     <div onClick={() => setPageNumber(2)} className="prev-btn">
                         <img src="./images/prev-btn.png" alt=""/>
-                        Orqaga qaytish
+                        {t("prev_btn")}
                     </div>
 
                     <div onClick={sendAllInfo} className="next-page-btn">
-                        Tasdiqlash
+                        {t("success_btn")}
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
                 </div>

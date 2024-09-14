@@ -131,7 +131,7 @@ const Pharmacies = () => {
                 let idAlert = Date.now();
                 let alert = {
                     id: idAlert,
-                    text: "Siz izlagan dori topilmadi!",
+                    text: t("search_text_med"),
                     img: "./images/yellow.svg",
                     color: "#fff4e0",
                 };
@@ -166,7 +166,7 @@ const Pharmacies = () => {
                             <div>
                                 <div className="dropdown-filter-search">
                                     <input value={searchText} onChange={(e) => setSearchText(e.target.value)}
-                                           placeholder="Dori nomini kiriting" type="text"/>
+                                           placeholder={t("input_med")} type="text"/>
 
                                     <div className="cancel-box">
                                         {searchText && <img onClick={() => setSearchText("")} className="cancel"
@@ -174,7 +174,7 @@ const Pharmacies = () => {
                                     </div>
 
                                     <div onClick={filterPharmacy} className="btn-search">
-                                        Dori izlash
+                                        {t("search_med")}
                                     </div>
                                 </div>
                             </div>
@@ -259,7 +259,7 @@ const Pharmacies = () => {
                                                 {item.hasOwnProperty('medicine_cost') && item.hasOwnProperty('medicine_name') &&
                                                 <div className="pharma-list">
                                                     <div className="name">{item.medicine_name}</div>
-                                                    <div className="price">{item.medicine_cost} so'm</div>
+                                                    <div className="price">{item.medicine_cost} {t("sum")}</div>
                                                 </div>}
 
                                             </div>
@@ -295,7 +295,7 @@ const Pharmacies = () => {
                                                     </div>
                                                     <span></span>
                                                     <div className="time-open">
-                                                        {item.open_24 ? "24 soat ochiq" : <>
+                                                        {item.open_24 ? t("open24") : <>
                                                             {item.start_time} {t("from")}
                                                             &nbsp;
                                                             {item.end_time} {t("to")}
@@ -305,7 +305,7 @@ const Pharmacies = () => {
                                                 <div className="buttons">
                                                     <div onClick={() => NavigateButton(item.location)}
                                                          className="navigator">
-                                                        Navigator
+                                                        {t("navigator")}
                                                         <img src="./images/compass.png" alt=""/>
                                                     </div>
 

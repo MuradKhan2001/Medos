@@ -333,7 +333,7 @@ const RegisterPharmacies = () => {
                     onChange={(e) => setValue(e.target.value)}
                     disabled={!ready}
                     className="combobox-input"
-                    placeholder="Manzilni kiriting..."
+                    placeholder={t("address_input")}
                 />
 
                 <div className="address-wrapper">
@@ -406,7 +406,7 @@ const RegisterPharmacies = () => {
                         className={`num ${pageNumber === 1 || pageNumber === 2 ? "num-active" : ""}`}>
                         1
                         <div className={`name ${pageNumber === 1 || pageNumber === 2 ? "active-name" : ""}`}>
-                            Dorixona haqida
+                            {t("about_pharma")}
                         </div>
                     </div>
 
@@ -414,7 +414,7 @@ const RegisterPharmacies = () => {
                     <div className={`num ${pageNumber === 2 ? "num-active" : ""}`}>
                         2
                         <div className={`name ${pageNumber === 2 ? "active-name" : ""}`}>
-                            Dorixona manzili
+                            {t("location_pharma")}
                         </div>
                     </div>
                     <div className={`line ${pageNumber === 2 ? "line-active" : ""}`}></div>
@@ -427,10 +427,10 @@ const RegisterPharmacies = () => {
             {pageNumber === 1 &&
             <div className="register-page-one">
                 <div ref={ref2} className="title">
-                    Dorixona haqida ma'lumotlarni toldiring
+                    {t("pharma_title")}
                 </div>
                 <div className="des">
-                    Dorixona akkountingizni ro‘yxatdan o‘tkazish uchun bu juda muhim
+                    {t("pharma_des")}
                 </div>
                 <div className="logo-hospital">
                     <div className={`logo-image ${logoValidate ? "required-logo" : ""}`}>
@@ -440,12 +440,12 @@ const RegisterPharmacies = () => {
                     </div>
 
                     {!logoHospital && <div className="label">
-                        Rasm qo‘shish
+                        {t("addImage")}
                         <input onChange={getInputPhoto} type="file"/>
                     </div>}
 
                     {logoHospital && <div onClick={() => setLogoHospital(null)} className="label">
-                        Rasmni ochirish
+                        {t("delImage")}
                         <img src="./images/cancel.png" alt=""/>
                     </div>}
                 </div>
@@ -469,12 +469,12 @@ const RegisterPharmacies = () => {
                 </div>
 
                 <div className="des-input">
-                    Iltimos, dorixona nomini rus tili va o'zbek tilida kiritng
+                    {t("des_pharma")}
                 </div>
 
                 <div className="label-text">
                     <div className="sides">
-                        <div className="label-bold">Ish vaqti</div>
+                        <div className="label-bold">{t("working-time")}</div>
                     </div>
                     <div className="sides"></div>
                 </div>
@@ -482,7 +482,7 @@ const RegisterPharmacies = () => {
                 <div className="select-box">
                     <div className="select-sides">
                         <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
-                            <InputLabel id="demo-multiple-checkbox-label">Ish kunlarini belgilang</InputLabel>
+                            <InputLabel id="demo-multiple-checkbox-label">{t("working_days")}</InputLabel>
                             <Select
                                 error={formOne.errors.working_days === "Required"}
                                 name="working_days"
@@ -491,7 +491,7 @@ const RegisterPharmacies = () => {
                                 multiple
                                 value={weekend}
                                 onChange={handleChangeMore}
-                                input={<OutlinedInput label="Ish kunlarini  belgilang"/>}
+                                input={<OutlinedInput label={t("working_days")}/>}
                                 renderValue={(selected) => selected.join(', ')}
                                 MenuProps={MenuProps}
                             >
@@ -517,7 +517,7 @@ const RegisterPharmacies = () => {
                                 />
                             </div>
                             <label htmlFor="c1-13">
-                                Ish faoliyati 24 soat yuritiladi
+                                {t("open24_register")}
                             </label>
                         </div>
                     </div>
@@ -525,14 +525,14 @@ const RegisterPharmacies = () => {
 
                 {workingTime24 ? "" : <div className="select-box-working-time">
                     <div className="select-sides">
-                        <label htmlFor="">Ish vaqti boshlanishi</label>
+                        <label htmlFor="">{t("start_time")}</label>
                         <input
                             className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
                             name="start_time" onChange={formOne.handleChange} value={formOne.start_time}
                             type="time"/>
                     </div>
                     <div className="select-sides">
-                        <label htmlFor="">Ish vaqti boshlanishi</label>
+                        <label htmlFor="">{t("end_time")}</label>
                         <input
                             className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
                             name="end_time" onChange={formOne.handleChange} value={formOne.end_time} type="time"/>
@@ -541,7 +541,7 @@ const RegisterPharmacies = () => {
 
                 <div className="label-text">
                     <div className="sides">
-                        <div className="label-bold">Dorixona bilan bog‘lanish</div>
+                        <div className="label-bold">{t("contact_pharma")}</div>
                     </div>
                     <div className="sides"></div>
                 </div>
@@ -555,7 +555,7 @@ const RegisterPharmacies = () => {
                             name="phone1"
                             type="number"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                            label="Telefon raqam 1" variant="outlined" className="textField"/>
+                            label={t("phone1")} variant="outlined" className="textField"/>
                     </div>
                     <div className="select-sides">
                         <TextField
@@ -565,13 +565,13 @@ const RegisterPharmacies = () => {
                             name="phone2"
                             type="number"
                             sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                            label="Telefon raqam 2" variant="outlined" className="textField"/>
+                            label={t("phone2")} variant="outlined" className="textField"/>
                     </div>
                 </div>
 
                 <div className="btn-box">
                     <div onClick={() => formOne.handleSubmit()} className="next-page-btn">
-                        Tasdiqlash va davom etish
+                        {t("next_btn")}
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
                 </div>
@@ -581,22 +581,22 @@ const RegisterPharmacies = () => {
             {pageNumber === 2 &&
             <div className="register-page-two">
                 <div className="title">
-                    Dorixona qayerda joylashgan?
+                    {t("pharma_loc")}
                 </div>
                 <div className="des">
-                    Mijozlar sizni topishlari oson bo‘lishi uchun bu juda muhim
+                    {t("pharma_loc_des")}
                 </div>
 
                 <div className="select-box">
                     <div className="select-sides">
                         <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                            <InputLabel id="demo-select-large-label">Viloyatni tanlang</InputLabel>
+                            <InputLabel id="demo-select-large-label">{t("region_register")}</InputLabel>
                             <Select
                                 error={region_validate}
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
                                 value={region}
-                                label="Viloyatni tanlang"
+                                label={t("region_register")}
                                 onChange={(e) => setRegion(e.target.value)}
                             >
 
@@ -611,11 +611,11 @@ const RegisterPharmacies = () => {
                         </FormControl>
                     </div>
                 </div>
-                <div className="label-address">Manzil:</div>
+                <div className="label-address">{t("location")}</div>
                 <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
                     {i18next.language === "uz" && addressLocation ? addressLocation : ""}
                     {i18next.language === "ru" && addressLocationRu ? addressLocationRu : ""}
-                    {!addressLocation && !addressLocationRu && <p>Manzilni xaritadan belgilang</p>}
+                    {!addressLocation && !addressLocationRu && <p>{t("map_des")}</p>}
                 </div>
                 <div className="address-container">
                     <GoogleMap
@@ -640,10 +640,10 @@ const RegisterPharmacies = () => {
                 <div className="btn-box">
                     <div onClick={() => setPageNumber(1)} className="prev-btn">
                         <img src="./images/prev-btn.png" alt=""/>
-                        Orqaga qaytish
+                        {t("prev_btn")}
                     </div>
                     <div onClick={sendAllInfo} className="next-page-btn">
-                        Tasdiqlash
+                        {t("success_btn")}
                         <img src="./images/next-btn.png" alt=""/>
                     </div>
                 </div>

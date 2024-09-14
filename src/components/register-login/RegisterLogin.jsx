@@ -5,9 +5,11 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {addAlert, delAlert} from "../../redux/AlertsBox";
 import {TextField} from "@mui/material";
+import {useTranslation} from "react-i18next";
 import {useFormik} from "formik";
 
 const RegisterLogin = () => {
+    const {t} = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const baseUrl = useSelector((store) => store.baseUrl.data);
@@ -32,7 +34,7 @@ const RegisterLogin = () => {
                     let idAlert = Date.now();
                     let alert = {
                         id: idAlert,
-                        text: "Parollar mos kelmadi",
+                        text: t("error2"),
                         img: "./images/red.svg",
                         color: "#ffefe7",
                     };
@@ -45,7 +47,7 @@ const RegisterLogin = () => {
                     let idAlert = Date.now();
                     let alert = {
                         id: idAlert,
-                        text: "Bu login ro'yxatdan o'tgan!",
+                        text: t("error3"),
                         img: "./images/red.svg",
                         color: "#ffefe7",
                     };
@@ -55,10 +57,8 @@ const RegisterLogin = () => {
                     }, 5000);
                 }
 
-
             });
     };
-
 
     const validate = (values) => {
         const errors = {};
@@ -104,10 +104,10 @@ const RegisterLogin = () => {
                 <img onClick={() => navigate("/")} src="./images/cancel.png" alt=""/>
             </div>
             <div className="title-login">
-                Ro'yxatdan o'tish
+                {t("register")}
             </div>
             <div className="des-login">
-                Ro'yxatdan o'tish uchun login va parolni kiriting
+                {t("register_des")}
             </div>
 
             <div className="inputs">
@@ -117,7 +117,7 @@ const RegisterLogin = () => {
                     onChange={formOne.handleChange}
                     name="username"
                     sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                    label="Login" variant="outlined" className="textField"/>
+                    label={t("user_name")} variant="outlined" className="textField"/>
 
                 <TextField
                     error={formOne.errors.password === "Required"}
@@ -125,7 +125,7 @@ const RegisterLogin = () => {
                     onChange={formOne.handleChange}
                     name="password"
                     sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                    label="Parol" variant="outlined" className="textField"/>
+                    label={t("password")} variant="outlined" className="textField"/>
 
                 <TextField
                     error={formOne.errors.password2 === "Required"}
@@ -133,11 +133,11 @@ const RegisterLogin = () => {
                     onChange={formOne.handleChange}
                     name="password2"
                     sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                    label="Parolni takrorlang" variant="outlined" className="textField"/>
+                    label={t("password2")} variant="outlined" className="textField"/>
             </div>
 
             <div onClick={() => formOne.handleSubmit()} className="login-btn">
-                Ro'yxatdan o'tish
+                {t("register")}
             </div>
         </div>
 
