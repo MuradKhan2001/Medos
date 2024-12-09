@@ -202,5 +202,6 @@
   "alert_profile": "Malumotlar yangilandi!",
   "alert_register": "Xabar yuborildi!",
   "message_title": "Kelib tushgan murojaat va xabarlar",
-  "message_time": "Qabul vaqti:"
+  "message_time": "Qabul vaqti:",
+  "media_clinic": "Shifoxona videosi (youtube link): "
 }

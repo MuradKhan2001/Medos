@@ -681,7 +681,7 @@ const RegisterHospital = () => {
                             </div>
                             <div onClick={() => setInvalidService(false)}
                                  className={`of ${!invalidService ? "on" : ""}`}>
-                                {t("of")}
+                                {t("off")}
                             </div>
                         </div>
                     </div>

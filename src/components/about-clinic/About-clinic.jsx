@@ -11,6 +11,7 @@ import {useTranslation} from "react-i18next";
 import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
 import MapAbout from "../map/MapAbout";
+import ReactPlayer from 'react-player/youtube'
 
 
 const AboutClinic = () => {
@@ -158,8 +159,12 @@ const AboutClinic = () => {
                                 <img src={clinic.image} alt=""/>
                             </div>
                         </div>
-
-
+                        {clinic.about_video && <div className="video-box">
+                            <ReactPlayer
+                                width='100%'
+                                height='100%'
+                                url={clinic.about_video}/>
+                        </div>}
                         <div className="location-box">
                             <MapAbout/>
                         </div>

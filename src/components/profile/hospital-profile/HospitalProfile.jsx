@@ -150,6 +150,7 @@ const ProfileHospital = () => {
         initialValues: {
             nameUz: "",
             nameRu: "",
+            about_video: "",
             type: "",
             hospital_type: "",
             phone1: "",
@@ -177,6 +178,7 @@ const ProfileHospital = () => {
                 nameUz: response.data.translations["uz"].name,
                 nameRu: response.data.translations["ru"].name,
                 type: response.data.type,
+                about_video: response.data.about_video,
                 hospital_type: response.data.hospital_type,
                 phone1: response.data.phone1,
                 phone2: response.data.phone2,
@@ -415,9 +417,9 @@ const ProfileHospital = () => {
                 <div className="address-wrapper">
                     <div className="list-address">
                         {status === "OK" &&
-                        data.map(({place_id, description}) => (
-                            <ComboboxOption key={place_id} value={description}/>
-                        ))}
+                            data.map(({place_id, description}) => (
+                                <ComboboxOption key={place_id} value={description}/>
+                            ))}
                     </div>
                 </div>
             </Combobox>
@@ -502,7 +504,8 @@ const ProfileHospital = () => {
             working_days: formOne.values.working_days,
             services: service,
             socials: socialMedias,
-            region: region
+            region: region,
+            about_video: formOne.values.about_video,
         }
         axios.post(`${baseUrl}hospital-profile/`, allInfoHospital, {
             headers: {
@@ -554,382 +557,98 @@ const ProfileHospital = () => {
             </div>
 
             {pageNumber === 1 &&
-            <>
-                <div className="register-page-one">
-                    <div className="logo-hospital">
-                        <div className="logo-image">
-                            {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
-                                <img className="logo-camera" src="./images/Exclude.png" alt=""/>
-                            }
-                        </div>
-                        <div className="label">
-                            {t("change_image")}
-                            <input onChange={getInputPhoto} type="file"/>
-                        </div>
-                    </div>
-
-                    <div className="inputs-box">
-                        <TextField error={formOne.errors.nameUz === "Required"}
-                                   value={formOne.values.nameUz}
-                                   onChange={formOne.handleChange}
-                                   name="nameUz"
-                                   sx={{m: 1, minWidth: "100%"}} size="small"
-                                   id="outlined-basic"
-                                   label="Shifoxona nomini kiriting (uz) " variant="outlined" className="textField"/>
-                    </div>
-
-                    <div className="inputs-box">
-                        <TextField error={formOne.errors.nameRu === "Required"} value={formOne.values.nameRu}
-                                   onChange={formOne.handleChange}
-                                   name="nameRu" sx={{m: 1, minWidth: "100%"}} size="small"
-                                   id="outlined-basic"
-                                   label="Введите название больницы (ru) " variant="outlined" className="textField"/>
-                    </div>
-
-                    <div className="des-input">
-                        {t("name_des")}
-                    </div>
-
-                    <div className="select-box">
-                        <div className="select-sides">
-                            <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
-                                         className="selectMui">
-                                <InputLabel id="demo-select-large-label">{t("clinic")}</InputLabel>
-                                <Select
-                                    error={formOne.errors.type === "Required"}
-                                    name="type"
-                                    labelId="demo-select-small-label"
-                                    id="demo-select-small"
-                                    value={hospital}
-                                    label={t("clinic")}
-                                    onChange={(e) => {
-                                        formOne.handleChange(e);
-                                        setHospital(e.target.value)
-                                    }}
-                                >
-                                    <MenuItem value={1}>
-                                        {t("hospital_type1")}
-                                    </MenuItem>
-                                    <MenuItem value={2}>
-                                        {t("hospital_type2")}
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
-                        </div>
-
-                        <div className="select-sides">
-                        </div>
-                    </div>
-
-                    <div className="label-text">
-                        <div className="sides"></div>
-                        <div className="sides">{t("disable")}</div>
-                    </div>
-
-                    <div className="select-box">
-                        <div className="select-sides">
-                            <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
-                                         className="selectMui">
-                                <InputLabel id="demo-select-large-label">{t("hospital_type")}</InputLabel>
-                                <Select
-                                    error={formOne.errors.hospital_type === "Required"}
-                                    name="hospital_type"
-                                    labelId="demo-select-small-label"
-                                    id="demo-select-small"
-                                    value={hospitalType}
-                                    label={t("hospital_type")}
-                                    onChange={(e) => {
-                                        formOne.handleChange(e);
-                                        setHospitalType(e.target.value)
-                                    }}
-                                >
-                                    {hospitalList.map((item) => {
-                                        return <MenuItem key={item.id} value={item.id}>
-                                            {item.translations[i18next.language].name}
-                                        </MenuItem>
-                                    })}
-
-                                </Select>
-                            </FormControl>
-                        </div>
-
-                        <div className="select-sides">
-                            <div className="on-of">
-                                <div onClick={() => setInvalidService(true)}
-                                     className={`of ${invalidService ? "on" : ""}`}>
-                                    Mavjud
-                                </div>
-                                <div onClick={() => setInvalidService(false)}
-                                     className={`of ${!invalidService ? "on" : ""}`}>
-                                    Mavjud emas
-                                </div>
+                <>
+                    <div className="register-page-one">
+                        <div className="logo-hospital">
+                            <div className="logo-image">
+                                {logoHospital ? <img className="logo-clinic" src={logoHospital} alt=""/> :
+                                    <img className="logo-camera" src="./images/Exclude.png" alt=""/>
+                                }
+                            </div>
+                            <div className="label">
+                                {t("change_image")}
+                                <input onChange={getInputPhoto} type="file"/>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="label-text">
-                        <div className="sides">
-                            <div className="label-bold">{t("working-time")}</div>
+                        <div className="inputs-box">
+                            <TextField error={formOne.errors.nameUz === "Required"}
+                                       value={formOne.values.nameUz}
+                                       onChange={formOne.handleChange}
+                                       name="nameUz"
+                                       sx={{m: 1, minWidth: "100%"}} size="small"
+                                       id="outlined-basic"
+                                       label="Shifoxona nomini kiriting (uz) " variant="outlined"
+                                       className="textField"/>
                         </div>
-                        <div className="sides"></div>
-                    </div>
 
-                    <div className="select-box">
-                        <div className="select-sides">
-                            <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
-                                <InputLabel id="demo-multiple-checkbox-label">{t("working_days")}</InputLabel>
-                                <Select
-                                    error={formOne.errors.working_days === "Required"}
-                                    name="working_days"
-                                    labelId="demo-multiple-checkbox-label"
-                                    id="demo-multiple-checkbox"
-                                    multiple
-                                    value={weekend}
-                                    onChange={handleChangeMore}
-                                    input={<OutlinedInput label={t("working_days")}/>}
-                                    renderValue={(selected) => selected.join(', ')}
-                                    MenuProps={MenuProps}
-                                >
-                                    {daysList.map((item) => (
-                                        <MenuItem key={item.id} value={item.translations[i18next.language].day}>
-                                            <Checkbox
-                                                checked={weekend.indexOf(item.translations[i18next.language].day) > -1}/>
-                                            <ListItemText primary={item.translations[i18next.language].day}/>
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                        <div className="inputs-box">
+                            <TextField error={formOne.errors.nameRu === "Required"} value={formOne.values.nameRu}
+                                       onChange={formOne.handleChange}
+                                       name="nameRu" sx={{m: 1, minWidth: "100%"}} size="small"
+                                       id="outlined-basic"
+                                       label="Введите название больницы (ru) " variant="outlined"
+                                       className="textField"/>
                         </div>
-                        <div className="select-sides">
-                            <div className="check-box">
-                                <div className="checkbox-wrapper-13">
-                                    <input
-                                        onChange={(e) => {
-                                            setWorkingTime24((prevState) => !prevState);
-                                        }}
-                                        checked={workingTime24}
-                                        id="c1-13"
-                                        type="checkbox"
-                                    />
-                                </div>
-                                <label htmlFor="c1-13">
-                                    {t("open24_register")}
-                                </label>
-                            </div>
+
+                        <div className="des-input">
+                            {t("name_des")}
                         </div>
-                    </div>
 
-                    {workingTime24 ? "" : <div className="select-box-working-time">
-                        <div className="select-sides">
-                            <label htmlFor="">{t("start_time")}</label>
-                            <input
-                                className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
-                                name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
-                                type="time"/>
-                        </div>
-                        <div className="select-sides">
-                            <label htmlFor="">{t("end_time")}</label>
-                            <input
-                                className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
-                                name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
-                                type="time"/>
-                        </div>
-                    </div>}
-
-                    <div className="label-text">
-                        <div className="sides">
-                            <div className="label-bold">{t("contact_des")}</div>
-                        </div>
-                        <div className="sides"></div>
-                    </div>
-
-                    <div className="select-box">
-                        <div className="select-sides">
-                            <TextField
-                                error={formOne.errors.phone1 === "Required"}
-                                value={formOne.values.phone1}
-                                onChange={formOne.handleChange}
-                                name="phone1"
-                                sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                                label={t("phone1")} variant="outlined" className="textField"/>
-                        </div>
-                        <div className="select-sides">
-                            <TextField
-                                error={formOne.errors.phone2 === "Required"}
-                                value={formOne.values.phone2}
-                                onChange={formOne.handleChange}
-                                name={t("phone2")}
-                                sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                                label="Telefon raqam 2" variant="outlined" className="textField"/>
-                        </div>
-                    </div>
-
-                    <div className="select-box">
-                        <div className="select-sides">
-                            <TextField
-                                value={formOne.values.emergency_number}
-                                onChange={formOne.handleChange}
-                                name="emergency_number"
-                                sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
-                                label={t("phone3")} variant="outlined" className="textField"/>
-                        </div>
-                        <div className="select-sides">
-                        </div>
-                    </div>
-                    <div className="des-input">
-                        {t("phone3_des")}
-                    </div>
-
-                    <div className="label-text">
-                        <div className="sides">
-                            {t("social_media")}
-                        </div>
-                        <div className="sides"></div>
-                    </div>
-
-                    <div className="inputs-box-link">
-                        {socialMedias.map((item, index) => {
-                            return <div key={index} className="inputs-social-media">
-
-                                {item.key === "telegram" && <img src="./images/social-media/telegram.png" alt=""/>}
-                                {item.key === "web" && <img src="./images/social-media/web.png" alt=""/>}
-                                {item.key === "instagram" && <img src="./images/social-media/instagram.png" alt=""/>}
-                                {item.key === "facebook" && <img src="./images/social-media/facebook.png" alt=""/>}
-                                {item.key === "youtube" && <img src="./images/social-media/youtube.png" alt=""/>}
-                                {item.key === "tiktok" && <img src="./images/social-media/tiktok.png" alt=""/>}
-
-                                <TextField onChange={(e) => {
-                                    item.url = e.target.value
-                                    let newSocial = [...socialMedias]
-                                    setSocialMedias(newSocial)
-                                }} sx={{m: 1, minWidth: "43%"}}
-                                           value={item.url}
-                                           size="small"
-                                           id="outlined-basic"
-                                           label="https://" variant="outlined" className="textField"/>
-
-                                {socialMedias.length > 1 && index !== 0 &&
-                                <div onClick={() => delSocialMedia(index, item.key)} className="del-icon"><img
-                                    src="./images/del-icon.png" alt=""/></div>}
-                            </div>
-                        })}
-                        <div className="des">{t("social_des")}</div>
-                        <div className="add-social-media">
-                            {!tg && <div onClick={() => addSocialMedia("telegram")} className="social-mdeia-icon">
-                                <div className="sloy">
-                                    <img src="./images/add.png" alt=""/>
-                                </div>
-                                <img src="./images/social-media/telegram.png" alt=""/>
-                            </div>}
-
-                            {!ins && <div onClick={() => addSocialMedia("instagram")} className="social-mdeia-icon">
-                                <div className="sloy">
-                                    <img src="./images/add.png" alt=""/>
-                                </div>
-                                <img src="./images/social-media/instagram.png" alt=""/>
-                            </div>}
-
-                            {!face && <div onClick={() => addSocialMedia("facebook")} className="social-mdeia-icon">
-                                <div className="sloy">
-                                    <img src="./images/add.png" alt=""/>
-                                </div>
-                                <img src="./images/social-media/facebook.png" alt=""/>
-                            </div>}
-
-                            {!you && <div onClick={() => addSocialMedia("youtube")} className="social-mdeia-icon">
-                                <div className="sloy">
-                                    <img src="./images/add.png" alt=""/>
-                                </div>
-                                <img src="./images/social-media/youtube.png" alt=""/>
-                            </div>}
-
-                            {!tik && <div onClick={() => addSocialMedia("tiktok")} className="social-mdeia-icon">
-                                <div className="sloy">
-                                    <img src="./images/add.png" alt=""/>
-                                </div>
-                                <img src="./images/social-media/tiktok.png" alt=""/>
-                            </div>}
-                        </div>
-                        <div className="des">
-                            {t("social_des")}
-                        </div>
-                    </div>
-                </div>
-                <div className="register-page-two">
-                    <div className="select-box">
-                        <div className="select-sides">
-                            <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                                <InputLabel id="demo-select-large-label">{t("region_register")}</InputLabel>
-                                <Select
-                                    error={region_validate}
-                                    labelId="demo-select-small-label"
-                                    id="demo-select-small"
-                                    value={region}
-                                    label={t("region_register")}
-                                    onChange={(e) => setRegion(e.target.value)}
-                                >
-
-                                    {regions.map((item, index) => {
-                                        return <MenuItem key={index} onClick={() => {
-                                            setRegion_validate(false)
-                                            setCenter({lat: item.latitude, lng: item.longitude})
-                                        }} value={index + 1}>{item.name}</MenuItem>
-                                    })}
-
-                                </Select>
-                            </FormControl>
-                        </div>
-                    </div>
-                    <div className="label-address">{t("location")}</div>
-                    <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
-                        {i18next.language === "uz" && addressLocation ? addressLocation : ""}
-                        {i18next.language === "ru" && addressLocationRu ? addressLocationRu : ""}
-                        {!addressLocation && !addressLocationRu && <p>{t("map_des")}</p>}
-                    </div>
-                    <div className="address-container">
-                        <GoogleMap
-                            zoom={9}
-                            center={center}
-                            options={options}
-                            onClick={ClicklLocation}
-                            mapContainerClassName="map-box"
-                        >
-                            {selected && (
-                                <MarkerF icon={selectAddressIcon} position={selected}/>
-                            )}
-
-                            <div className="search-address">
-                                <div className="places-container">
-                                    <PlacesAutocomplete setSelected={setSelected}/>
-                                    <img src="./images/search.png" alt=""/>
-                                </div>
-                            </div>
-                        </GoogleMap>
-                    </div>
-                </div>
-            </>}
-
-            {pageNumber === 2 &&
-            <div className="register-page-three">
-                {service.map((item, index) => {
-                    return <div key={index} className="service">
                         <div className="select-box">
                             <div className="select-sides">
-                                <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                                    <InputLabel id="demo-select-large-label">{t("service_type")}</InputLabel>
+                                <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
+                                             className="selectMui">
+                                    <InputLabel id="demo-select-large-label">{t("clinic")}</InputLabel>
                                     <Select
+                                        error={formOne.errors.type === "Required"}
+                                        name="type"
                                         labelId="demo-select-small-label"
                                         id="demo-select-small"
-                                        value={item.service}
-                                        label={t("service_type")}
+                                        value={hospital}
+                                        label={t("clinic")}
                                         onChange={(e) => {
-                                            item.service = e.target.value;
-                                            item.options = serviceList.filter((item) => item.id === e.target.value)[0].options;
-                                            let change = [...service];
-                                            setService(change);
+                                            formOne.handleChange(e);
+                                            setHospital(e.target.value)
                                         }}
                                     >
-                                        {serviceList.map((item, index) => {
+                                        <MenuItem value={1}>
+                                            {t("hospital_type1")}
+                                        </MenuItem>
+                                        <MenuItem value={2}>
+                                            {t("hospital_type2")}
+                                        </MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+
+                            <div className="select-sides">
+                            </div>
+                        </div>
+
+                        <div className="label-text">
+                            <div className="sides"></div>
+                            <div className="sides">{t("disable")}</div>
+                        </div>
+
+                        <div className="select-box">
+                            <div className="select-sides">
+                                <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
+                                             className="selectMui">
+                                    <InputLabel id="demo-select-large-label">{t("hospital_type")}</InputLabel>
+                                    <Select
+                                        error={formOne.errors.hospital_type === "Required"}
+                                        name="hospital_type"
+                                        labelId="demo-select-small-label"
+                                        id="demo-select-small"
+                                        value={hospitalType}
+                                        label={t("hospital_type")}
+                                        onChange={(e) => {
+                                            formOne.handleChange(e);
+                                            setHospitalType(e.target.value)
+                                        }}
+                                    >
+                                        {hospitalList.map((item) => {
                                             return <MenuItem key={item.id} value={item.id}>
                                                 {item.translations[i18next.language].name}
                                             </MenuItem>
@@ -938,75 +657,384 @@ const ProfileHospital = () => {
                                     </Select>
                                 </FormControl>
                             </div>
+
                             <div className="select-sides">
-                                {service.length > 1 && index !== 0 &&
-                                <img onClick={() => delService(index)} src="./images/del-icon.png" alt=""/>}
+                                <div className="on-of">
+                                    <div onClick={() => setInvalidService(true)}
+                                         className={`of ${invalidService ? "on" : ""}`}>
+                                        Mavjud
+                                    </div>
+                                    <div onClick={() => setInvalidService(false)}
+                                         className={`of ${!invalidService ? "on" : ""}`}>
+                                        Mavjud emas
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        {item.sub_services_list.map((itemService, indexService) => {
-                            return <div key={indexService} className="select-box">
+                        <div className="label-text">
+                            <div className="sides">
+                                <div className="label-bold">{t("working-time")}</div>
+                            </div>
+                            <div className="sides"></div>
+                        </div>
+
+                        <div className="select-box">
+                            <div className="select-sides">
+                                <FormControl sx={{m: 1, width: "100%"}} className="selectMui" size="small">
+                                    <InputLabel id="demo-multiple-checkbox-label">{t("working_days")}</InputLabel>
+                                    <Select
+                                        error={formOne.errors.working_days === "Required"}
+                                        name="working_days"
+                                        labelId="demo-multiple-checkbox-label"
+                                        id="demo-multiple-checkbox"
+                                        multiple
+                                        value={weekend}
+                                        onChange={handleChangeMore}
+                                        input={<OutlinedInput label={t("working_days")}/>}
+                                        renderValue={(selected) => selected.join(', ')}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {daysList.map((item) => (
+                                            <MenuItem key={item.id} value={item.translations[i18next.language].day}>
+                                                <Checkbox
+                                                    checked={weekend.indexOf(item.translations[i18next.language].day) > -1}/>
+                                                <ListItemText primary={item.translations[i18next.language].day}/>
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div className="select-sides">
+                                <div className="check-box">
+                                    <div className="checkbox-wrapper-13">
+                                        <input
+                                            onChange={(e) => {
+                                                setWorkingTime24((prevState) => !prevState);
+                                            }}
+                                            checked={workingTime24}
+                                            id="c1-13"
+                                            type="checkbox"
+                                        />
+                                    </div>
+                                    <label htmlFor="c1-13">
+                                        {t("open24_register")}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {workingTime24 ? "" : <div className="select-box-working-time">
+                            <div className="select-sides">
+                                <label htmlFor="">{t("start_time")}</label>
+                                <input
+                                    className={`working_time ${formOne.errors.start_time === "Required" ? "working_time_required" : ""}`}
+                                    name="start_time" onChange={formOne.handleChange} value={formOne.values.start_time}
+                                    type="time"/>
+                            </div>
+                            <div className="select-sides">
+                                <label htmlFor="">{t("end_time")}</label>
+                                <input
+                                    className={`working_time ${formOne.errors.end_time === "Required" ? "working_time_required" : ""}`}
+                                    name="end_time" onChange={formOne.handleChange} value={formOne.values.end_time}
+                                    type="time"/>
+                            </div>
+                        </div>}
+
+                        <div className="label-text">
+                            <div className="sides">
+                                <div className="label-bold">{t("contact_des")}</div>
+                            </div>
+                            <div className="sides"></div>
+                        </div>
+
+                        <div className="select-box">
+                            <div className="select-sides">
+                                <TextField
+                                    error={formOne.errors.phone1 === "Required"}
+                                    value={formOne.values.phone1}
+                                    onChange={formOne.handleChange}
+                                    name="phone1"
+                                    sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
+                                    label={t("phone1")} variant="outlined" className="textField"/>
+                            </div>
+                            <div className="select-sides">
+                                <TextField
+                                    error={formOne.errors.phone2 === "Required"}
+                                    value={formOne.values.phone2}
+                                    onChange={formOne.handleChange}
+                                    name={t("phone2")}
+                                    sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
+                                    label="Telefon raqam 2" variant="outlined" className="textField"/>
+                            </div>
+                        </div>
+
+                        <div className="select-box">
+                            <div className="select-sides">
+                                <TextField
+                                    value={formOne.values.emergency_number}
+                                    onChange={formOne.handleChange}
+                                    name="emergency_number"
+                                    sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
+                                    label={t("phone3")} variant="outlined" className="textField"/>
+                            </div>
+                            <div className="select-sides">
+                            </div>
+                        </div>
+
+                        <div className="des-input">
+                            {t("phone3_des")}
+                        </div>
+
+                        <div className="label-text">
+                            <div className="sides">
+                                {t("social_media")}
+                            </div>
+                            <div className="sides"></div>
+                        </div>
+
+                        <div className="inputs-box-link">
+                            {socialMedias.map((item, index) => {
+                                return <div key={index} className="inputs-social-media">
+
+                                    {item.key === "telegram" && <img src="./images/social-media/telegram.png" alt=""/>}
+                                    {item.key === "web" && <img src="./images/social-media/web.png" alt=""/>}
+                                    {item.key === "instagram" && <img src="./images/social-media/instagram.png" alt=""/>}
+                                    {item.key === "facebook" && <img src="./images/social-media/facebook.png" alt=""/>}
+                                    {item.key === "youtube" && <img src="./images/social-media/youtube.png" alt=""/>}
+                                    {item.key === "tiktok" && <img src="./images/social-media/tiktok.png" alt=""/>}
+
+                                    <TextField onChange={(e) => {
+                                        item.url = e.target.value
+                                        let newSocial = [...socialMedias]
+                                        setSocialMedias(newSocial)
+                                    }} sx={{m: 1, minWidth: "43%"}}
+                                               value={item.url}
+                                               size="small"
+                                               id="outlined-basic"
+                                               label="https://" variant="outlined" className="textField"/>
+
+                                    {socialMedias.length > 1 && index !== 0 &&
+                                        <div onClick={() => delSocialMedia(index, item.key)} className="del-icon"><img
+                                            src="./images/del-icon.png" alt=""/></div>}
+                                </div>
+                            })}
+
+                            <div className="add-social-media">
+                                {!tg && <div onClick={() => addSocialMedia("telegram")} className="social-mdeia-icon">
+                                    <div className="sloy">
+                                        <img src="./images/add.png" alt=""/>
+                                    </div>
+                                    <img src="./images/social-media/telegram.png" alt=""/>
+                                </div>}
+
+                                {!ins && <div onClick={() => addSocialMedia("instagram")} className="social-mdeia-icon">
+                                    <div className="sloy">
+                                        <img src="./images/add.png" alt=""/>
+                                    </div>
+                                    <img src="./images/social-media/instagram.png" alt=""/>
+                                </div>}
+
+                                {!face && <div onClick={() => addSocialMedia("facebook")} className="social-mdeia-icon">
+                                    <div className="sloy">
+                                        <img src="./images/add.png" alt=""/>
+                                    </div>
+                                    <img src="./images/social-media/facebook.png" alt=""/>
+                                </div>}
+
+                                {!you && <div onClick={() => addSocialMedia("youtube")} className="social-mdeia-icon">
+                                    <div className="sloy">
+                                        <img src="./images/add.png" alt=""/>
+                                    </div>
+                                    <img src="./images/social-media/youtube.png" alt=""/>
+                                </div>}
+
+                                {!tik && <div onClick={() => addSocialMedia("tiktok")} className="social-mdeia-icon">
+                                    <div className="sloy">
+                                        <img src="./images/add.png" alt=""/>
+                                    </div>
+                                    <img src="./images/social-media/tiktok.png" alt=""/>
+                                </div>}
+                            </div>
+
+                            <div className="des">
+                                {t("social_des")}
+                            </div>
+                        </div>
+
+                        <br/>
+                        <div className="inputs-box-link">
+                            <div className="sides">
+                                {t("media_clinic")}
+                            </div>
+                            <div className="sides"></div>
+                        </div>
+
+                        <div className="select-box">
+                            <div className="select-sides">
+                                <TextField value={formOne.values.about_video}
+                                           onChange={formOne.handleChange}
+                                           name="about_video" sx={{m: 1, minWidth: "100%"}} size="small"
+                                           id="outlined-basic"
+                                           label="https:// " variant="outlined"
+                                           className="textField"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="register-page-two">
+                        <div className="select-box">
+                            <div className="select-sides">
+                                <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
+                                    <InputLabel id="demo-select-large-label">{t("region_register")}</InputLabel>
+                                    <Select
+                                        error={region_validate}
+                                        labelId="demo-select-small-label"
+                                        id="demo-select-small"
+                                        value={region}
+                                        label={t("region_register")}
+                                        onChange={(e) => setRegion(e.target.value)}
+                                    >
+
+                                        {regions.map((item, index) => {
+                                            return <MenuItem key={index} onClick={() => {
+                                                setRegion_validate(false)
+                                                setCenter({lat: item.latitude, lng: item.longitude})
+                                            }} value={index + 1}>{item.name}</MenuItem>
+                                        })}
+
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        </div>
+                        <div className="label-address">{t("location")}</div>
+                        <div className={`address-box ${address_validate ? "validate_location" : ""}`}>
+                            {i18next.language === "uz" && addressLocation ? addressLocation : ""}
+                            {i18next.language === "ru" && addressLocationRu ? addressLocationRu : ""}
+                            {!addressLocation && !addressLocationRu && <p>{t("map_des")}</p>}
+                        </div>
+                        <div className="address-container">
+                            <GoogleMap
+                                zoom={9}
+                                center={center}
+                                options={options}
+                                onClick={ClicklLocation}
+                                mapContainerClassName="map-box"
+                            >
+                                {selected && (
+                                    <MarkerF icon={selectAddressIcon} position={selected}/>
+                                )}
+
+                                <div className="search-address">
+                                    <div className="places-container">
+                                        <PlacesAutocomplete setSelected={setSelected}/>
+                                        <img src="./images/search.png" alt=""/>
+                                    </div>
+                                </div>
+                            </GoogleMap>
+                        </div>
+                    </div>
+                </>}
+
+            {pageNumber === 2 &&
+                <div className="register-page-three">
+                    {service.map((item, index) => {
+                        return <div key={index} className="service">
+                            <div className="select-box">
                                 <div className="select-sides">
                                     <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
-                                        <InputLabel id="demo-select-large-label">{t("service_name")}</InputLabel>
+                                        <InputLabel id="demo-select-large-label">{t("service_type")}</InputLabel>
                                         <Select
                                             labelId="demo-select-small-label"
                                             id="demo-select-small"
-                                            value={itemService.sub_service}
-                                            label={t("service_name")}
+                                            value={item.service}
+                                            label={t("service_type")}
                                             onChange={(e) => {
+                                                item.service = e.target.value;
+                                                item.options = serviceList.filter((item) => item.id === e.target.value)[0].options;
                                                 let change = [...service];
                                                 setService(change);
-                                                itemService.sub_service = e.target.value
                                             }}
                                         >
-                                            {item.options.map((item) => {
+                                            {serviceList.map((item, index) => {
                                                 return <MenuItem key={item.id} value={item.id}>
                                                     {item.translations[i18next.language].name}
                                                 </MenuItem>
                                             })}
+
                                         </Select>
                                     </FormControl>
                                 </div>
                                 <div className="select-sides">
-                                    <TextField onChange={(e) => {
-                                        itemService.price = e.target.value;
-                                        let change = [...service];
-                                        setService(change);
-                                    }}
-                                               sx={{m: 1, minWidth: "80%"}}
-                                               size="small" id="outlined-basic"
-                                               value={itemService.price}
-                                               label={t("service_price")} variant="outlined" className="textField"/>
-
-                                    {item.sub_services_list.length > 1 && indexService !== 0 && <img onClick={() => {
-                                        item.sub_services_list = item.sub_services_list.filter((item, index) => index !== indexService);
-                                        let change = [...service];
-                                        setService(change);
-                                    }} src="./images/del-icon.png" alt=""/>}
+                                    {service.length > 1 && index !== 0 &&
+                                        <img onClick={() => delService(index)} src="./images/del-icon.png" alt=""/>}
                                 </div>
                             </div>
-                        })}
 
-                        <div onClick={() => {
-                            item.sub_services_list = item.sub_services_list.concat({sub_service: "", price: ""});
-                            let change = [...service];
-                            setService(change);
-                        }} className="add-social-media">
-                            {t("add_service")}
+                            {item.sub_services_list.map((itemService, indexService) => {
+                                return <div key={indexService} className="select-box">
+                                    <div className="select-sides">
+                                        <FormControl sx={{m: 1, minWidth: "100%"}} size="small" className="selectMui">
+                                            <InputLabel id="demo-select-large-label">{t("service_name")}</InputLabel>
+                                            <Select
+                                                labelId="demo-select-small-label"
+                                                id="demo-select-small"
+                                                value={itemService.sub_service}
+                                                label={t("service_name")}
+                                                onChange={(e) => {
+                                                    let change = [...service];
+                                                    setService(change);
+                                                    itemService.sub_service = e.target.value
+                                                }}
+                                            >
+                                                {item.options.map((item) => {
+                                                    return <MenuItem key={item.id} value={item.id}>
+                                                        {item.translations[i18next.language].name}
+                                                    </MenuItem>
+                                                })}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                    <div className="select-sides">
+                                        <TextField onChange={(e) => {
+                                            itemService.price = e.target.value;
+                                            let change = [...service];
+                                            setService(change);
+                                        }}
+                                                   sx={{m: 1, minWidth: "80%"}}
+                                                   size="small" id="outlined-basic"
+                                                   value={itemService.price}
+                                                   label={t("service_price")} variant="outlined" className="textField"/>
+
+                                        {item.sub_services_list.length > 1 && indexService !== 0 &&
+                                            <img onClick={() => {
+                                                item.sub_services_list = item.sub_services_list.filter((item, index) => index !== indexService);
+                                                let change = [...service];
+                                                setService(change);
+                                            }} src="./images/del-icon.png" alt=""/>}
+                                    </div>
+                                </div>
+                            })}
+
+                            <div onClick={() => {
+                                item.sub_services_list = item.sub_services_list.concat({sub_service: "", price: ""});
+                                let change = [...service];
+                                setService(change);
+                            }} className="add-social-media">
+                                {t("add_service")}
+                            </div>
+                            <div className="des-btn">
+                                {t("add_service_des")}
+                            </div>
                         </div>
-                        <div className="des-btn">
-                            {t("add_service_des")}
-                        </div>
+                    })}
+                    <div onClick={addService} className="add-social-media">
+                        {t("create_service")}
                     </div>
-                })}
-                <div onClick={addService} className="add-social-media">
-                    {t("create_service")}
-                </div>
-                <div className="des-btn">
-                    {t("create_service_des")}
-                </div>
-            </div>}
+                    <div className="des-btn">
+                        {t("create_service_des")}
+                    </div>
+                </div>}
 
             <div className="btn-box">
                 <div onClick={() => navigate("/")} className="prev-btn">
