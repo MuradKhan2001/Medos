@@ -11,6 +11,7 @@ import {getClinics} from "../../redux/clinics";
 import {changeMenu} from "../../redux/menu";
 import {useNavigate} from "react-router-dom";
 import AdvertBox from "../adverts/AdvertBox";
+import Loader from "../loader/Loader";
 
 const Service = () => {
     const dispatch = useDispatch();
@@ -18,11 +19,16 @@ const Service = () => {
     const navigate = useNavigate();
     const baseUrl = useSelector((store) => store.baseUrl.data);
     const [services, setServices] = useState([]);
+    const [loader, setLoader] = useState(false);
 
     useEffect(() => {
+        setLoader(true)
         axios.get(`${baseUrl}services/`).then((response) => {
             setServices(response.data);
+        }).finally(() => {
+            setLoader(false);
         });
+        ;
     }, []);
 
     const filterHospital = (id) => {
@@ -40,37 +46,38 @@ const Service = () => {
             <div className="title">
                 {t("nav4")}
             </div>
-
-            <div className="services-tab">
-                {
-                    services.map((item, index) => {
-                        return <div key={index}>
-                            <div className="category-name">
-                                {item.translations[i18next.language].name} <span></span> {item.hospital_count}
+            {loader ? <Loader/> : <>
+                <div className="services-tab">
+                    {
+                        services.map((item, index) => {
+                            return <div key={index}>
+                                <div className="category-name">
+                                    {item.translations[i18next.language].name} <span></span> {item.hospital_count}
+                                </div>
                             </div>
-                        </div>
-                    })
-                }
-            </div>
-            {services.map((item, index) => {
-                return <div key={index} className="service-content">
-                    <div className="title-service">
-                        {item.translations[i18next.language].name} <span></span>
-                        <div className="num">
-                            {console.log(item)}
-                            {item.hospital_count}
-                        </div>
-                    </div>
-
-                    <div className="services">
-                        {item.sub_service_list.map((item, index) => {
-                            return <div onClick={() => filterHospital(item.id)} key={index} className="service">
-                                {item.translations[i18next.language].name}
-                            </div>
-                        })}
-                    </div>
+                        })
+                    }
                 </div>
-            })}
+                {services.map((item, index) => {
+                    return <div key={index} className="service-content">
+                        <div className="title-service">
+                            {item.translations[i18next.language].name} <span></span>
+                            <div className="num">
+                                {console.log(item)}
+                                {item.hospital_count}
+                            </div>
+                        </div>
+
+                        <div className="services">
+                            {item.sub_service_list.map((item, index) => {
+                                return <div onClick={() => filterHospital(item.id)} key={index} className="service">
+                                    {item.translations[i18next.language].name}
+                                </div>
+                            })}
+                        </div>
+                    </div>
+                })}
+            </>}
         </div>
         <div className="mobile-navbar-container">
             <MobileNavbar/>

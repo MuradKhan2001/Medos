@@ -492,85 +492,88 @@
             }
           }
 
-          .pagination-box {
-            display: flex;
-            width: max-content;
-            margin: 30px auto 60px auto;
+          .pagination {
+            margin-top: 70px;
 
-            .prev-btn {
-              width: 35px;
-              height: 35px;
-              border-radius: 50%;
-              display: flex;
+            .paginationBttns {
+              margin-top: 40px;
+              display: flex !important;
               align-items: center;
+              width: 100%;
+              list-style: none;
               justify-content: center;
-              border: 1px solid rgba(180, 192, 204, 0.28);
-              margin-right: 6px;
-              cursor: pointer;
-              transition: 0.3s;
 
-              &:hover {
-                border: 1px solid rgba(75, 81, 88, 0.28);
-
-                img {
-                  opacity: 1;
-                }
-              }
-
-              img {
+              li {
+                width: 36px !important;
+                height: 36px !important;
+                border-radius: 50%;
+                border: 1px solid rgba(180, 192, 204, 0.28);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 15px;
                 transition: 0.3s;
-                opacity: 0.5;
-                width: 70%;
-              }
-            }
+                box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
 
-            .pagination-items {
-              width: 35px;
-              height: 35px;
-              border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              border: 1px solid rgba(180, 192, 204, 0.28);
-              transition: 0.3s;
-              cursor: pointer;
+                &:hover {
+                  border: 1px solid #706f6f;
+                }
 
-              &:hover {
-                background-color: rgba(0, 173, 173, 1);
-                color: white;
-              }
-
-              margin-right: 6px;
-            }
-
-            .active {
-              background-color: rgba(0, 173, 173, 1);
-              color: white;
-            }
-
-            .next-btn {
-              width: 35px;
-              height: 35px;
-              border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              border: 1px solid rgba(180, 192, 204, 0.28);
-              cursor: pointer;
-
-              &:hover {
-                border: 1px solid rgba(75, 81, 88, 0.28);
-
-                img {
-                  opacity: 1;
+                a {
+                  width: 100%;
+                  height: 100%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 14px;
+                  color: rgba(38, 45, 51, 1);
+                  font-family: "Inter", sans-serif;
+                  font-weight: 400;
                 }
               }
 
-              img {
-                opacity: 0.5;
-                width: 70%;
-                transform: rotate(180deg);
+              .previous {
+                .previousBttn {
+                  width: 100%;
+                  height: 100%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+
+                  img {
+                    width: 20%;
+                    transform: rotate(180deg);
+                  }
+                }
               }
+
+              .next {
+                .nextBttn {
+                  width: 100%;
+                  height: 100%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+
+                  img {
+                    width: 20%;
+                  }
+                }
+              }
+
+              .disabled {
+                opacity: 0.2;
+              }
+
+              .paginationActive {
+                background-color: rgba(0, 173, 173, 1);
+
+                a {
+                  color: white;
+                }
+              }
+
             }
           }
         }

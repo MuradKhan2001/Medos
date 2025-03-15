@@ -1,6 +1,6 @@
 import "./style-clinics.scss";
 import Navbar from "../navbar/Navbar";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import {MenuItem, InputLabel, FormControl, Select} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import i18next from "i18next";
@@ -16,6 +16,8 @@ import {getAboutMarker} from "../../redux/markerAbout";
 import MobileNavbar from "../mobile-navbar/MobileNavbar";
 import {show} from "../../redux/show-map";
 import AdvertBox from "../adverts/AdvertBox";
+import Loader from "../loader/Loader";
+import ReactPaginate from "react-paginate";
 
 
 const Clinics = () => {
@@ -38,7 +40,7 @@ const Clinics = () => {
     const [disable, setDisable] = useState("");
     const [emergency_number, setEmergency_number] = useState("");
     const [savedPosts, setSavedPosts] = useState([]);
-
+    const [loader, setLoader] = useState(false);
     const regions = [
         {name: t("Andijan"), latitude: 40.813616, longitude: 72.283463},
         {name: t("Bukhara"), latitude: 39.767070, longitude: 64.455393},
@@ -54,6 +56,14 @@ const Clinics = () => {
         {name: t("Khorezm"), latitude: 41.522326, longitude: 60.623731},
         {name: t("Karakalpakstan"), latitude: 43.730521, longitude: 59.064533}
     ];
+
+    const worksPage = 10;
+    const [pageNumber, setPageNumber] = useState(0);
+    const pagesVisited = pageNumber * worksPage;
+    const pageCount = Math.ceil(clinics.length / worksPage);
+    const changePage = ({selected}) => {
+        setPageNumber(selected)
+    };
 
     useEffect(() => {
         axios.get(`${baseUrl}hospital-type/`, {
@@ -90,6 +100,7 @@ const Clinics = () => {
     };
 
     const filterHospital = (hospital_type_key, region_key, type_key, speciality_key, open_24_key, disabled_key, emergency_number_key) => {
+        setLoader(true)
         let filterBox = {
             hospital_type: hospital_type_key,
             region: region_key,
@@ -106,7 +117,9 @@ const Clinics = () => {
 
         axios.get(`${baseUrl}hospital/?${queryString}`).then((response) => {
             dispatch(getClinics(response.data));
-        })
+        }).finally(() => {
+            setLoader(false);
+        });
     };
 
     const changeRegion = (region, index) => {
@@ -140,6 +153,88 @@ const Clinics = () => {
         window.open(url, '_blank');
     };
 
+    const productList = clinics.slice(pagesVisited, pagesVisited + worksPage).map((item, index) => {
+        return <div key={index} className="clinic">
+            <div className="left-side">
+                <img src={item.image} alt=""/>
+                <div className="like">
+                    <img onClick={() => handleSaveClick(item.id)}
+                         src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
+                         alt=""/>
+                </div>
+            </div>
+            <div className="right-side">
+                <div className="header-clinic">
+                    <div className="name-clinic">
+                        {item.translations[i18next.language].name}
+                    </div>
+                    <div className="buttons">
+                        <div onClick={() => ShowModal("contact", item)}
+                             className="button-call">{t("call")}
+                        </div>
+                        <div onClick={() => ShowModal("sms", item.user)}
+                             className="button-send">{t("acceptance2")}
+                        </div>
+                    </div>
+                </div>
+                <div className="section-commit">
+                    <div className="raiting">
+                        {item.avg_rating}
+                    </div>
+                    <div className="commit-count">
+                        {item.comment_count} {t("comment")}
+                    </div>
+                </div>
+                <div className="section-location">
+                    <div className="location">
+                        <img src="./images/icon.png" alt=""/>
+                        {item.translations[i18next.language].address}
+                    </div>
+                    <div className="time-open">
+                        <img src="./images/clock.png" alt=""/>
+
+                        {item.open_24 ? t("open24") : <>
+                            {item.start_time} {t("from")}
+                            &nbsp;
+                            {item.end_time} {t("to")}
+                        </>}
+
+                    </div>
+                </div>
+                <div className="services">
+                    {item.hospital_services.map((item, index) => {
+                        return <div key={index} className="service">
+                            {item.service.translations[i18next.language].name}
+                        </div>
+                    })}
+                </div>
+                <div className="btns">
+                    <div onClick={() => {
+                        navigate("/about-clinic");
+                        localStorage.setItem("clinicId", item.id);
+                        dispatch(getAboutMarker(item.location))
+                    }} className="more-btn">
+                        {t("more")}
+                    </div>
+                    <div className="left-btn">
+                        {item.emergency_number &&
+                            <a href={`tel:${item.emergency_number}`} className="emergency">
+                                <img src="./images/phone-call.png" alt=""/>
+                                {item.emergency_number}
+                            </a>}
+
+                        <div onClick={() => NavigateButton(item.location)}
+                             className="navigator">
+                            {t("navigator")}
+                            <img src="./images/compass.png" alt=""/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    });
+
     return <>
         <div className="clinics-wrapper">
             <AdvertBox/>
@@ -160,7 +255,7 @@ const Clinics = () => {
                         })
                     }
                 </div>
-                <div className="bottom-content">
+                <div  className="bottom-content">
                     <div className={showMap ? "left-side-hide" : "left-side"}>
                         <div className="category-wrapper">
                             <div>
@@ -273,89 +368,29 @@ const Clinics = () => {
                                 </div>
                             </div>
                         </div>
+
                         {!showMap && <div className="clinics">
-                            {clinics.length > 0 && clinics.map((item, index) => {
-                                return <div key={index} className="clinic">
-                                    <div className="left-side">
-                                        <img src={item.image} alt=""/>
-                                        <div className="like">
-                                            <img onClick={() => handleSaveClick(item.id)}
-                                                 src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
-                                                 alt=""/>
-                                        </div>
-                                    </div>
-                                    <div className="right-side">
-                                        <div className="header-clinic">
-                                            <div className="name-clinic">
-                                                {item.translations[i18next.language].name}
-                                            </div>
-                                            <div className="buttons">
-                                                <div onClick={() => ShowModal("contact", item)}
-                                                     className="button-call">{t("call")}
-                                                </div>
-                                                <div onClick={() => ShowModal("sms", item.user)}
-                                                     className="button-send">{t("acceptance2")}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="section-commit">
-                                            <div className="raiting">
-                                                {item.avg_rating}
-                                            </div>
-                                            <div className="commit-count">
-                                                {item.comment_count} {t("comment")}
-                                            </div>
-                                        </div>
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/icon.png" alt=""/>
-                                                {item.translations[i18next.language].address}
-                                            </div>
-                                            <div className="time-open">
-                                                <img src="./images/clock.png" alt=""/>
 
-                                                {item.open_24 ? t("open24") : <>
-                                                    {item.start_time} {t("from")}
-                                                    &nbsp;
-                                                    {item.end_time} {t("to")}
-                                                </>}
+                            {loader || !location ? <Loader/> : <>
+                                {productList}
+                            </>}
 
-                                            </div>
-                                        </div>
-                                        <div className="services">
-                                            {item.hospital_services.map((item, index) => {
-                                                return <div key={index} className="service">
-                                                    {item.service.translations[i18next.language].name}
-                                                </div>
-                                            })}
-                                        </div>
 
-                                        <div className="btns">
-                                            <div onClick={() => {
-                                                navigate("/about-clinic");
-                                                localStorage.setItem("clinicId", item.id);
-                                                dispatch(getAboutMarker(item.location))
-                                            }} className="more-btn">
-                                                {t("more")}
-                                            </div>
-                                            <div className="left-btn">
-                                                {item.emergency_number &&
-                                                <a href={`tel:${item.emergency_number}`} className="emergency">
-                                                    <img src="./images/phone-call.png" alt=""/>
-                                                    {item.emergency_number}
-                                                </a>}
+                            <div className="pagination">
+                                {clinics.length > 10 ? <ReactPaginate
+                                    breakLabel="..."
+                                    previousLabel={<img src="./images/prev.png" alt=""/>}
+                                    nextLabel={<img src="./images/next.png" alt=""/>}
+                                    pageCount={pageCount}
+                                    onPageChange={changePage}
+                                    containerClassName={"paginationBttns"}
+                                    previousLinkClassName={"previousBttn"}
+                                    nextLinkClassName={"nextBttn"}
+                                    disabledCalassName={"paginationDisabled"}
+                                    activeClassName={"paginationActive"}
+                                /> : ""}
+                            </div>
 
-                                                <div onClick={() => NavigateButton(item.location)}
-                                                     className="navigator">
-                                                    {t("navigator")}
-                                                    <img src="./images/compass.png" alt=""/>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            })}
                             <Footer/>
                         </div>}
                     </div>

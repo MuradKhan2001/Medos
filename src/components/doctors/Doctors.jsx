@@ -9,13 +9,16 @@ import {showModals} from "../../redux/ModalContent";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import {getLocation} from "../../redux/locationUser";
 import {show} from "../../redux/show-map";
-import {getDoctor} from "../../redux/doctors";
+import doctors, {getDoctor} from "../../redux/doctors";
 import axios from "axios";
 import MobileNavbar from "../mobile-navbar/MobileNavbar";
 import i18next from "i18next";
 import {useTranslation} from "react-i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
 import AdvertBox from "../adverts/AdvertBox";
+import Loader from "../loader/Loader";
+import ReactPaginate from "react-paginate";
+
 
 const Doctors = () => {
     const {t} = useTranslation();
@@ -32,9 +35,8 @@ const Doctors = () => {
     const [cost, setCost] = useState("");
     const [speciality, setSpeciality] = useState("");
     const [savedPosts, setSavedPosts] = useState([]);
-
     const location = useSelector((store) => store.LocationUser.data);
-
+    const [loader, setLoader] = useState(false);
     const regions = [
         {name: t("Andijan"), latitude: 40.813616, longitude: 72.283463},
         {name: t("Bukhara"), latitude: 39.767070, longitude: 64.455393},
@@ -50,6 +52,14 @@ const Doctors = () => {
         {name: t("Khorezm"), latitude: 41.522326, longitude: 60.623731},
         {name: t("Karakalpakstan"), latitude: 43.730521, longitude: 59.064533}
     ];
+
+    const worksPage = 10;
+    const [pageNumber, setPageNumber] = useState(0);
+    const pagesVisited = pageNumber * worksPage;
+    const pageCount = Math.ceil(Doctors.length / worksPage);
+    const changePage = ({selected}) => {
+        setPageNumber(selected)
+    };
 
     useEffect(() => {
         axios.get(`${baseUrl}speciality/`, {
@@ -73,6 +83,7 @@ const Doctors = () => {
     }, [location]);
 
     const filterHospital = (region_key, gender_key, cost_key, speciality_key) => {
+        setLoader(true)
         let filterBox = {
             region: region_key,
             gender: gender_key,
@@ -86,7 +97,9 @@ const Doctors = () => {
 
         axios.get(`${baseUrl}doctor/?${queryString}`).then((response) => {
             dispatch(getDoctor(response.data));
-        })
+        }).finally(() => {
+            setLoader(false);
+        });
     };
 
     const changeRegion = (region, index) => {
@@ -123,6 +136,145 @@ const Doctors = () => {
         const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
         window.open(url, '_blank');
     };
+
+    const productList = Doctors.slice(pagesVisited, pagesVisited + worksPage).map((item, index) => {
+        return <div key={index} className="doctor">
+            <div className="left-side">
+                <img src={item.image} alt=""/>
+                <div className="like">
+                    <img onClick={() => handleSaveClick(item.id)}
+                         src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
+                         alt=""/>
+                </div>
+                <div onClick={() => NavigateButton(item.location)}
+                     className="navigator">
+                    {t("navigator")}
+                    <img src="./images/compass.png" alt=""/>
+                </div>
+            </div>
+            <div className="right-side">
+                <div className="header-clinic">
+                    <div className="name-clinic">
+                        {item.translations[i18next.language].first_name} &nbsp;
+                        {item.translations[i18next.language].last_name} &nbsp;
+                        {item.translations[i18next.language].middle_name}
+                    </div>
+
+                    <div className="section-commit">
+                        <div className="raiting">
+                            <img src="./images/star.png" alt=""/>
+                            {item.avg_rating}
+                        </div>
+                        <span></span>
+                        <div className="commit-count">
+                            {item.comment_count} {t("comment")}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="section-location">
+                    <div className="location">
+                        <img src="./images/job.png" alt=""/>
+                        {item.specialty.translations[i18next.language].name}
+                    </div>
+                    <span></span>
+                    <div className="time-open">
+                        {item.experience} {t("experience")}
+                    </div>
+                </div>
+
+                <div className="section-location">
+                    <div className="location">
+                        <img src="./images/icon.png" alt=""/>
+                        {item.hospital ? item.hospital.translations[i18next.language].address :
+                            item.translations[i18next.language].address}
+                    </div>
+
+                    {item.hospital ?
+                        <>
+                            <span></span>
+                            <div className="time-open">
+                                <b>
+                                    {item.hospital.translations[i18next.language].name}
+                                </b>
+                            </div>
+                        </> : ""}
+                </div>
+
+                <div className="section-location-working-days">
+                    <div className="location">
+                        <img src="./images/time.png" alt=""/>
+                        {item.working_days.map((itemWorkingdays, index) => {
+                            return <p key={index}>
+                                &nbsp;
+                                {itemWorkingdays.translations[i18next.language].day}
+                                {index !== item.working_days.length - 1 && ","}
+                            </p>
+                        })}
+                    </div>
+                    <br/>
+                    <div className="time-open">
+                        <img src="./images/clock.png" alt=""/>
+                        {item.start_time} {t("from")}
+                        &nbsp;
+                        {item.end_time} {t("to")}
+                    </div>
+                </div>
+
+                <div className="services">
+                    {item.sub_speciality.map((item, index) => {
+                        return <div key={index} className="service">
+                            {item.translations[i18next.language].name}
+                        </div>
+                    })}
+                </div>
+
+                <div onClick={() => NavigateButton(item.location)}
+                     className="navigator">
+                    {t("navigator")}
+                    <img src="./images/compass.png" alt=""/>
+                </div>
+
+                <div className="prices">
+                    <div className="item-price">
+                        <div className="title">{t("first-consultation")}</div>
+                        <div className="number">
+                            {item.consultation_fee ? <>{item.consultation_fee} {t("sum")} </> : t("agreement")}
+                        </div>
+                    </div>
+                    <div className="item-price">
+                        <div className="title">{t("second-consultation")}</div>
+                        <div className="number">
+                            {item.second_consultation_fee ?
+                                <>{item.second_consultation_fee} {t("sum")} </> :
+                                t("agreement")}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="buttons">
+                    <div className="left-btn">
+                        <div onClick={() => ShowModal("sms", item.user)}
+                             className="button-send">
+                            {t("acceptance")}
+                        </div>
+                        <div onClick={() => ShowModal("contact", item)}
+                             className="button-call">
+                            {t("call")}
+                        </div>
+                    </div>
+
+                    <div onClick={() => {
+                        localStorage.setItem("doctorId", item.id)
+                        navigate("/about-doctor")
+                        dispatch(getAboutMarker(item.location ? item.location : item.hospital.location))
+                    }} className="more-btn">
+                        {t("more")}
+                    </div>
+                </div>
+            </div>
+        </div>
+    });
 
     return <>
         <div className="doctors-wrapper">
@@ -228,171 +380,27 @@ const Doctors = () => {
                                 </div>
                             </div>
                         </div>
-
                         {!showMap && <div className="doctors">
 
-                            {Doctors.map((item, index) => {
-                                return <div key={index} className="doctor">
-                                    <div className="left-side">
-                                        <img src={item.image} alt=""/>
-                                        <div className="like">
-                                            <img onClick={() => handleSaveClick(item.id)}
-                                                 src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
-                                                 alt=""/>
-                                        </div>
-                                        <div onClick={() => NavigateButton(item.location)}
-                                             className="navigator">
-                                            {t("navigator")}
-                                            <img src="./images/compass.png" alt=""/>
-                                        </div>
-                                    </div>
-                                    <div className="right-side">
-                                        <div className="header-clinic">
-                                            <div className="name-clinic">
-                                                {item.translations[i18next.language].first_name} &nbsp;
-                                                {item.translations[i18next.language].last_name} &nbsp;
-                                                {item.translations[i18next.language].middle_name}
-                                            </div>
+                            {loader || !location ? <Loader/> : <>
+                                {productList}
+                            </>}
 
-                                            <div className="section-commit">
-                                                <div className="raiting">
-                                                    <img src="./images/star.png" alt=""/>
-                                                    {item.avg_rating}
-                                                </div>
-                                                <span></span>
-                                                <div className="commit-count">
-                                                    {item.comment_count} {t("comment")}
-                                                </div>
-                                            </div>
-                                        </div>
+                            <div className="pagination">
+                                {Doctors.length > 10 ? <ReactPaginate
+                                    breakLabel="..."
+                                    previousLabel={<img src="./images/prev.png" alt=""/>}
+                                    nextLabel={<img src="./images/next.png" alt=""/>}
+                                    pageCount={pageCount}
+                                    onPageChange={changePage}
+                                    containerClassName={"paginationBttns"}
+                                    previousLinkClassName={"previousBttn"}
+                                    nextLinkClassName={"nextBttn"}
+                                    disabledCalassName={"paginationDisabled"}
+                                    activeClassName={"paginationActive"}
+                                /> : ""}
+                            </div>
 
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/job.png" alt=""/>
-                                                {item.specialty.translations[i18next.language].name}
-                                            </div>
-                                            <span></span>
-                                            <div className="time-open">
-                                                {item.experience} {t("experience")}
-                                            </div>
-                                        </div>
-
-                                        <div className="section-location">
-                                            <div className="location">
-                                                <img src="./images/icon.png" alt=""/>
-                                                {item.hospital ? item.hospital.translations[i18next.language].address :
-                                                    item.translations[i18next.language].address}
-                                            </div>
-
-                                            {item.hospital ?
-                                                <>
-                                                    <span></span>
-                                                    <div className="time-open">
-                                                       <b>
-                                                           {item.hospital.translations[i18next.language].name}
-                                                       </b>
-                                                    </div>
-                                                </> : ""}
-                                        </div>
-
-                                        <div className="section-location-working-days">
-                                            <div className="location">
-                                                <img src="./images/time.png" alt=""/>
-                                                {item.working_days.map((itemWorkingdays, index) => {
-                                                    return <p key={index}>
-                                                        &nbsp;
-                                                        {itemWorkingdays.translations[i18next.language].day}
-                                                        {index !== item.working_days.length-1 && ","}
-                                                    </p>
-                                                })}
-                                            </div>
-                                            <br/>
-                                            <div className="time-open">
-                                                <img src="./images/clock.png" alt=""/>
-                                                {item.start_time} {t("from")}
-                                                &nbsp;
-                                                {item.end_time} {t("to")}
-                                            </div>
-                                        </div>
-
-                                        <div className="services">
-                                            {item.sub_speciality.map((item, index) => {
-                                                return <div key={index} className="service">
-                                                    {item.translations[i18next.language].name}
-                                                </div>
-                                            })}
-                                        </div>
-
-                                        <div onClick={() => NavigateButton(item.location)}
-                                             className="navigator">
-                                            {t("navigator")}
-                                            <img src="./images/compass.png" alt=""/>
-                                        </div>
-
-                                        <div className="prices">
-                                            <div className="item-price">
-                                                <div className="title">{t("first-consultation")}</div>
-                                                <div className="number">
-                                                    {item.consultation_fee ? <>{item.consultation_fee} {t("sum")} </> : t("agreement")}
-                                                </div>
-                                            </div>
-                                            <div className="item-price">
-                                                <div className="title">{t("second-consultation")}</div>
-                                                <div className="number">
-                                                    {item.second_consultation_fee ?
-                                                        <>{item.second_consultation_fee} {t("sum")} </> :
-                                                        t("agreement")}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="buttons">
-                                            <div className="left-btn">
-                                                <div onClick={() => ShowModal("sms", item.user)}
-                                                     className="button-send">
-                                                    {t("acceptance")}
-                                                </div>
-                                                <div onClick={() => ShowModal("contact", item)}
-                                                     className="button-call">
-                                                    {t("call")}
-                                                </div>
-                                            </div>
-
-                                            <div onClick={() => {
-                                                localStorage.setItem("doctorId", item.id)
-                                                navigate("/about-doctor")
-                                                dispatch(getAboutMarker(item.location ? item.location : item.hospital.location))
-                                            }} className="more-btn">
-                                                {t("more")}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            })}
-
-
-                            {/*<div className="pagination-box">*/}
-                            {/*    <div className="prev-btn">*/}
-                            {/*        <img src="./images/arrow.png" alt=""/>*/}
-                            {/*    </div>*/}
-
-                            {/*    <div className="pagination-items">*/}
-                            {/*        1*/}
-                            {/*    </div>*/}
-                            {/*    <div className="pagination-items">*/}
-                            {/*        2*/}
-                            {/*    </div>*/}
-                            {/*    <div className="pagination-items">*/}
-                            {/*        3*/}
-                            {/*    </div>*/}
-                            {/*    <div className="pagination-items">*/}
-                            {/*        4*/}
-                            {/*    </div>*/}
-
-                            {/*    <div className="next-btn">*/}
-                            {/*        <img src="./images/arrow.png" alt=""/>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
                             <Footer/>
                         </div>}
                     </div>
@@ -402,6 +410,7 @@ const Doctors = () => {
                     </div>
                 </div>
             </div>
+
             <div onClick={() => dispatch(show(!showMap))} className="map-mobile">
                 {showMap ? <img className="prev-to" src="./images/next-btn.png" alt=""/> :
                     <img src="./images/map-mobile.png" alt=""/>}

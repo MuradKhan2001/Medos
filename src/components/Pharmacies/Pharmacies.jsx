@@ -16,6 +16,8 @@ import i18next from "i18next";
 import {getAboutMarker} from "../../redux/markerAbout";
 import AdvertBox from "../adverts/AdvertBox";
 import {addAlert, delAlert} from "../../redux/AlertsBox";
+import Loader from "../loader/Loader";
+import ReactPaginate from "react-paginate";
 
 
 const Pharmacies = () => {
@@ -33,7 +35,7 @@ const Pharmacies = () => {
     const [savedPosts, setSavedPosts] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [cost, setCost] = useState(true);
-
+    const [loader, setLoader] = useState(false);
     const regions = [
         {name: t("Andijan"), latitude: 40.813616, longitude: 72.283463},
         {name: t("Bukhara"), latitude: 39.767070, longitude: 64.455393},
@@ -49,7 +51,6 @@ const Pharmacies = () => {
         {name: t("Khorezm"), latitude: 41.522326, longitude: 60.623731},
         {name: t("Karakalpakstan"), latitude: 43.730521, longitude: 59.064533}
     ];
-
     const isPlaceOpen = (startTime, endTime) => {
         const startParts = startTime.split(':');
         const endParts = endTime.split(':');
@@ -65,6 +66,15 @@ const Pharmacies = () => {
         return now >= startDate && now <= endDate;
     };
 
+    const worksPage = 10;
+    const [pageNumber, setPageNumber] = useState(0);
+    const pagesVisited = pageNumber * worksPage;
+    const pageCount = Math.ceil(Pharmacies.length / worksPage);
+    const changePage = ({selected}) => {
+        setPageNumber(selected)
+    };
+
+
     useEffect(() => {
         if (location.key + 1 && !filterService) {
             filterHospital(location.key + 1, working24);
@@ -78,6 +88,7 @@ const Pharmacies = () => {
     }, []);
 
     const filterHospital = (region_key, open_24_key) => {
+        setLoader(true)
         let filterBox = {
             region: region_key,
             open_24: open_24_key
@@ -89,7 +100,9 @@ const Pharmacies = () => {
 
         axios.get(`${baseUrl}pharmacy/?${queryString}`).then((response) => {
             dispatch(getPharmacies(response.data));
-        })
+        }).finally(() => {
+            setLoader(false);
+        });
     };
 
     const changeRegion = (region, index) => {
@@ -155,6 +168,85 @@ const Pharmacies = () => {
         }
     };
 
+    const productList = Pharmacies.slice(pagesVisited, pagesVisited + worksPage).map((item, index) => {
+        return <div key={index} className="pharma">
+            <div className="left-side">
+                <img src={item.image} alt=""/>
+                <div className="like">
+                    <img onClick={() => handleSaveClick(item.id)}
+                         src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
+                         alt=""/>
+                </div>
+
+                {item.hasOwnProperty('medicine_cost') && item.hasOwnProperty('medicine_name') &&
+                    <div className="pharma-list">
+                        <div className="name">{item.medicine_name}</div>
+                        <div className="price">{item.medicine_cost} {t("sum")}</div>
+                    </div>}
+
+            </div>
+            <div className="right-side">
+                <div className="header-clinic">
+                    <div className="name-clinic">
+                        {item.translations[i18next.language].name}
+                    </div>
+                    <div className="section-commit">
+                        <div className="raiting">
+                            <img src="./images/star2.png" alt=""/>
+                            {item.avg_rating}
+                        </div>
+                        <span></span>
+                        <div className="commit-count">
+                            ({item.comment_count})
+                        </div>
+                    </div>
+                </div>
+                <div className="section-location">
+                    <div className="location">
+                        <img src="./images/icon.png" alt=""/>
+                        {item.translations[i18next.language].address}
+                    </div>
+                </div>
+                <div className="section-location">
+                    <div className="location">
+                        <img src="./images/time.png" alt=""/>
+                        {item.open_24 ? <div
+                            className="open">{t("open")}</div> : isPlaceOpen(item.start_time, item.end_time) ?
+                            <div className="open">{t("open")}</div> :
+                            <div className="close">{t("close")}</div>}
+                    </div>
+                    <span></span>
+                    <div className="time-open">
+                        {item.open_24 ? t("open24") : <>
+                            {item.start_time} {t("from")}
+                            &nbsp;
+                            {item.end_time} {t("to")}
+                        </>}
+                    </div>
+                </div>
+                <div className="buttons">
+                    <div onClick={() => NavigateButton(item.location)}
+                         className="navigator">
+                        {t("navigator")}
+                        <img src="./images/compass.png" alt=""/>
+                    </div>
+
+                    <div onClick={() => {
+                        localStorage.setItem("pharmacyId", item.id);
+                        dispatch(getAboutMarker(item.location));
+                        navigate("/about-pharmacies")
+                    }}
+                         className="more-btn">
+                        {t("more")}
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    });
+
     return <>
         <div className="pharmacies-wrapper">
             <AdvertBox/>
@@ -207,27 +299,27 @@ const Pharmacies = () => {
                             </div>
 
                             {searchText &&
-                            <div>
-                                <div className="dropdown-filter">
-                                    <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
-                                                 className="price">
-                                        <InputLabel id="demo-select-large-label">{t("price")}</InputLabel>
-                                        <Select
-                                            labelId="demo-select-small-label"
-                                            id="demo-select-small"
-                                            value={cost}
-                                            label={"price"}
-                                            onChange={(e) => {
-                                                sortPharmacies(e.target.value)
-                                                setCost(e.target.value)
-                                            }}
-                                        >
-                                            <MenuItem value={true}>{t("cheap")}</MenuItem>
-                                            <MenuItem value={false}>{t("expensive")}</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                            </div>}
+                                <div>
+                                    <div className="dropdown-filter">
+                                        <FormControl sx={{m: 1, minWidth: "100%"}} size="small"
+                                                     className="price">
+                                            <InputLabel id="demo-select-large-label">{t("price")}</InputLabel>
+                                            <Select
+                                                labelId="demo-select-small-label"
+                                                id="demo-select-small"
+                                                value={cost}
+                                                label={"price"}
+                                                onChange={(e) => {
+                                                    sortPharmacies(e.target.value)
+                                                    setCost(e.target.value)
+                                                }}
+                                            >
+                                                <MenuItem value={true}>{t("cheap")}</MenuItem>
+                                                <MenuItem value={false}>{t("expensive")}</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                </div>}
 
                             <div>
                                 <div className="dropdown-filter">
@@ -244,87 +336,26 @@ const Pharmacies = () => {
                         </div>
 
                         {!showMap && <div className="pharmacies">
+
                             <div className="pharmacies-box">
-                                {
-                                    Pharmacies.map((item, index) => {
-                                        return <div key={index} className="pharma">
-                                            <div className="left-side">
-                                                <img src={item.image} alt=""/>
-                                                <div className="like">
-                                                    <img onClick={() => handleSaveClick(item.id)}
-                                                         src={savedPosts.includes(item.id) ? "./images/like.png" : "./images/no-like.png"}
-                                                         alt=""/>
-                                                </div>
+                                {loader || !location ? <Loader/> : <>
+                                    {productList}
+                                </>}
+                            </div>
 
-                                                {item.hasOwnProperty('medicine_cost') && item.hasOwnProperty('medicine_name') &&
-                                                <div className="pharma-list">
-                                                    <div className="name">{item.medicine_name}</div>
-                                                    <div className="price">{item.medicine_cost} {t("sum")}</div>
-                                                </div>}
-
-                                            </div>
-                                            <div className="right-side">
-                                                <div className="header-clinic">
-                                                    <div className="name-clinic">
-                                                        {item.translations[i18next.language].name}
-                                                    </div>
-                                                    <div className="section-commit">
-                                                        <div className="raiting">
-                                                            <img src="./images/star2.png" alt=""/>
-                                                            {item.avg_rating}
-                                                        </div>
-                                                        <span></span>
-                                                        <div className="commit-count">
-                                                            ({item.comment_count})
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="section-location">
-                                                    <div className="location">
-                                                        <img src="./images/icon.png" alt=""/>
-                                                        {item.translations[i18next.language].address}
-                                                    </div>
-                                                </div>
-                                                <div className="section-location">
-                                                    <div className="location">
-                                                        <img src="./images/time.png" alt=""/>
-                                                        {item.open_24 ? <div
-                                                            className="open">{t("open")}</div> : isPlaceOpen(item.start_time, item.end_time) ?
-                                                            <div className="open">{t("open")}</div> :
-                                                            <div className="close">{t("close")}</div>}
-                                                    </div>
-                                                    <span></span>
-                                                    <div className="time-open">
-                                                        {item.open_24 ? t("open24") : <>
-                                                            {item.start_time} {t("from")}
-                                                            &nbsp;
-                                                            {item.end_time} {t("to")}
-                                                        </>}
-                                                    </div>
-                                                </div>
-                                                <div className="buttons">
-                                                    <div onClick={() => NavigateButton(item.location)}
-                                                         className="navigator">
-                                                        {t("navigator")}
-                                                        <img src="./images/compass.png" alt=""/>
-                                                    </div>
-
-                                                    <div onClick={() => {
-                                                        localStorage.setItem("pharmacyId", item.id);
-                                                        dispatch(getAboutMarker(item.location));
-                                                        navigate("/about-pharmacies")
-                                                    }}
-                                                         className="more-btn">
-                                                        {t("more")}
-                                                    </div>
-
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    })
-                                }
+                            <div className="pagination">
+                                {Pharmacies.length > 10 ? <ReactPaginate
+                                    breakLabel="..."
+                                    previousLabel={<img src="./images/prev.png" alt=""/>}
+                                    nextLabel={<img src="./images/next.png" alt=""/>}
+                                    pageCount={pageCount}
+                                    onPageChange={changePage}
+                                    containerClassName={"paginationBttns"}
+                                    previousLinkClassName={"previousBttn"}
+                                    nextLinkClassName={"nextBttn"}
+                                    disabledCalassName={"paginationDisabled"}
+                                    activeClassName={"paginationActive"}
+                                /> : ""}
                             </div>
                             <Footer/>
                         </div>}

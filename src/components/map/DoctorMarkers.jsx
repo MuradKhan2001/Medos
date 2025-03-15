@@ -34,8 +34,8 @@ const DoctorMarkers = () => {
     };
 
     return <>
-        <MarkerClustererF gridSize={60}>
-            {(clusterer) => Doctors.map((item, index) => {
+        {
+            Doctors.map((item, index) => {
                 return <MarkerF
                     key={index}
                     position={
@@ -50,10 +50,9 @@ const DoctorMarkers = () => {
                         onMarkerClick(item);
                         setClinicActiveId(item.id)
                     }}
-                    clusterer={clusterer}
                 />
-            })}
-        </MarkerClustererF>
+            })
+        }
 
         {selectedLocation && (<InfoWindow
             position={
