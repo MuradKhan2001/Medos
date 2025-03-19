@@ -34,7 +34,6 @@ const ClinicMarkers = () => {
     };
 
     return <>
-
         <MarkerClustererF gridSize={60}>
             {(clusterer) => clinics.map((item, index) => {
                 return <MarkerF
@@ -47,9 +46,7 @@ const ClinicMarkers = () => {
                     }}
                     clusterer={clusterer}
                 />
-            })
-
-            }
+            })}
         </MarkerClustererF>
 
         {selectedLocation && (<InfoWindow

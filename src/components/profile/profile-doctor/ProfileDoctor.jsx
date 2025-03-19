@@ -556,7 +556,6 @@ const ProfileDoctor = () => {
             sub_speciality: formOne.values.sub_speciality,
             experience: formOne.values.experience
         };
-        console.log(allInfoHospital)
         axios.post(`${baseUrl}doctor-profile/`, allInfoHospital, {
             headers: {
                 "Authorization": `Token ${localStorage.getItem("token")}`

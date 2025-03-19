@@ -53,14 +53,6 @@ const Map = () => {
         []
     );
 
-    // useEffect(() => {
-    //     navigator.geolocation.getCurrentPosition((position) => {
-    //         const {latitude, longitude} = position.coords;
-    //         let locMy = {lat: Number(latitude), lng: Number(longitude)}
-    //         setCenter(locMy)
-    //     });
-    // }, []);
-
     useEffect(() => {
         if (isLoaded) {
             setOnloadMap(true);
@@ -68,8 +60,10 @@ const Map = () => {
     }, [isLoaded]);
 
     useEffect(() => {
-        let locMy = {lat: Number(location.latitude), lng: Number(location.longitude)};
-        setCenter(locMy)
+        if (location.latitude && location.longitude) {
+            let locMy = {lat: Number(location.latitude), lng: Number(location.longitude)};
+            setCenter(locMy)
+        }
     }, [location]);
 
     const myLocation = () => {

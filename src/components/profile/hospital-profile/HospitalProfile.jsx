@@ -763,7 +763,7 @@ const ProfileHospital = () => {
                                     error={formOne.errors.phone2 === "Required"}
                                     value={formOne.values.phone2}
                                     onChange={formOne.handleChange}
-                                    name={t("phone2")}
+                                    name="phone2"
                                     sx={{m: 1, minWidth: "100%"}} size="small" id="outlined-basic"
                                     label="Telefon raqam 2" variant="outlined" className="textField"/>
                             </div>

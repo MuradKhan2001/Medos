@@ -43,8 +43,6 @@ const RegisterPharmacies = () => {
     const ref2 = useRef(null);
     const [daysList, setDaysList] = useState([]);
     const dispatch = useDispatch();
-    const [loader, setLoader] = useState(false);
-
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -348,48 +346,91 @@ const RegisterPharmacies = () => {
         );
     };
 
-    const sendAllInfo = () => {
-        let loc = `${center.lat},${center.lng}`;
-        let allInfoHospital = {
-            translations: {
-                uz: {
-                    name: formOne.values.nameUz,
-                    address: addressLocation
+    // const sendAllInfo = () => {
+    //     let loc = `${center.lat},${center.lng}`;
+    //     let allInfoHospital = {
+    //         translations: {
+    //             uz: {
+    //                 name: formOne.values.nameUz,
+    //                 address: addressLocation
+    //             },
+    //             ru: {
+    //                 name: formOne.values.nameRu,
+    //                 address: addressLocationRu
+    //             }
+    //         },
+    //         base64_image: logoHospital,
+    //         phone1: formOne.values.phone1,
+    //         phone2: formOne.values.phone2,
+    //         start_time: formOne.values.start_time,
+    //         end_time: formOne.values.end_time,
+    //         open_24: workingTime24,
+    //         location: loc,
+    //         working_days: formOne.values.working_days,
+    //         region: region
+    //     };
+    //     setLoader(true);
+    //     axios.post(`${baseUrl}auth/register/pharmacy/`, allInfoHospital,
+    //         {
+    //             headers: {
+    //                 "Authorization": `Token ${localStorage.getItem("token")}`
+    //             }
+    //         }).then((response) => {
+    //         window.location.pathname = "/profile-pharmacy";
+    //         localStorage.setItem("profile", true);
+    //         setTimeout(() => {
+    //             setLoader(false)
+    //         }, 500);
+    //     }).catch((error) => {
+    //         setLoader(false);
+    //     });
+    // };
+
+    const sendAllInfo = async () => {
+        try {
+            const loc = `${center.lat},${center.lng}`;
+
+            const allInfoPharmacy = {
+                translations: {
+                    uz: {
+                        name: formOne.values.nameUz,
+                        address: addressLocation
+                    },
+                    ru: {
+                        name: formOne.values.nameRu,
+                        address: addressLocationRu
+                    }
                 },
-                ru: {
-                    name: formOne.values.nameRu,
-                    address: addressLocationRu
-                }
-            },
-            base64_image: logoHospital,
-            phone1: formOne.values.phone1,
-            phone2: formOne.values.phone2,
-            start_time: formOne.values.start_time,
-            end_time: formOne.values.end_time,
-            open_24: workingTime24,
-            location: loc,
-            working_days: formOne.values.working_days,
-            region: region
-        };
-        setLoader(true);
-        axios.post(`${baseUrl}auth/register/pharmacy/`, allInfoHospital,
-            {
+                base64_image: logoHospital,
+                phone1: formOne.values.phone1,
+                phone2: formOne.values.phone2,
+                start_time: formOne.values.start_time,
+                end_time: formOne.values.end_time,
+                open_24: workingTime24,
+                location: loc,
+                working_days: formOne.values.working_days,
+                region: region
+            };
+
+            const response = await axios.post(`${baseUrl}auth/register/pharmacy/`, allInfoPharmacy, {
                 headers: {
                     "Authorization": `Token ${localStorage.getItem("token")}`
                 }
-            }).then((response) => {
-            window.location.pathname = "/profile-pharmacy";
+            });
+
+            console.log("Muvaffaqiyatli yuborildi:", response.data);
+
             localStorage.setItem("profile", true);
-            setTimeout(() => {
-                setLoader(false)
-            }, 500);
-        }).catch((error) => {
-            setLoader(false);
-        });
+            window.location.pathname = "/profile-pharmacy";
+
+        } catch (error) {
+            console.error("Xatolik:", error.response ? error.response.data : error.message);
+            alert("Yuborishda xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring.");
+        }
     };
 
+
     if (!isLoaded) return <Loader/>;
-    if (loader) return <Loader/>;
     return <div className="register-pharmacies-container">
         <div className="logo">
             <img src="./images/logo.png" alt=""/>

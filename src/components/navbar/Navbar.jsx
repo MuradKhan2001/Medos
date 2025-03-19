@@ -382,6 +382,7 @@ const Navbar = () => {
                                         </div>}
 
                                         <div onClick={() => {
+                                            window.location.pathname = "/"
                                             localStorage.removeItem("token")
                                             localStorage.removeItem("userId")
                                             localStorage.removeItem("nameUz")
