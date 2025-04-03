@@ -188,7 +188,7 @@ const Pharmacies = () => {
             <div className="right-side">
                 <div className="header-clinic">
                     <div className="name-clinic">
-                        {item.translations[i18next.language].name}
+                        {item.translations[i18next.language] && item.translations[i18next.language].name}
                     </div>
                     <div className="section-commit">
                         <div className="raiting">
@@ -204,7 +204,7 @@ const Pharmacies = () => {
                 <div className="section-location">
                     <div className="location">
                         <img src="./images/icon.png" alt=""/>
-                        {item.translations[i18next.language].address}
+                        {item.translations[i18next.language] && item.translations[i18next.language].address}
                     </div>
                 </div>
                 <div className="section-location">
