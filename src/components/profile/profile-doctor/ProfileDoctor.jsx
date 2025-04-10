@@ -201,7 +201,6 @@ const ProfileDoctor = () => {
                 sub_speciality: response.data.sub_speciality,
                 experience: response.data.experience
             });
-
             localStorage.setItem("nameUz", response.data.translations["uz"].first_name + " "
                 + response.data.translations["uz"].last_name)
 
@@ -246,7 +245,7 @@ const ProfileDoctor = () => {
 
             setRegion(response.data.region)
 
-            setHospitalType(response.data.hospital ? response.data.hospital : "")
+            setHospitalType([response.data.hospital.id, response.data.hospital.translations[i18next.language].name]);
 
             setAddressLocation(response.data.translations[i18next.language].address)
 
@@ -269,19 +268,15 @@ const ProfileDoctor = () => {
         getInformation()
         axios.get(`${baseUrl}days/`).then((response) => {
             setDaysList(response.data)
-        }).catch((error) => {
-        });
+        })
 
         axios.get(`${baseUrl}hospital-short/`).then((response) => {
             setHospitalList(response.data)
-        }).catch((error) => {
-        });
+        })
 
         axios.get(`${baseUrl}speciality/`).then((response) => {
             setSpecialtyList(response.data)
-        }).catch((error) => {
-        });
-
+        })
     }, []);
 
     const getSubSpecialty = (id) => {
@@ -462,9 +457,9 @@ const ProfileDoctor = () => {
                 <div className="address-wrapper">
                     <div className="list-address">
                         {status === "OK" &&
-                        data.map(({place_id, description}) => (
-                            <ComboboxOption key={place_id} value={description}/>
-                        ))}
+                            data.map(({place_id, description}) => (
+                                <ComboboxOption key={place_id} value={description}/>
+                            ))}
                     </div>
                 </div>
             </Combobox>
@@ -517,8 +512,7 @@ const ProfileDoctor = () => {
         setRegion(e.target.value)
         axios.get(`${baseUrl}hospital-short/?region=${e.target.value}`).then((response) => {
             setHospitalList(response.data)
-        }).catch((error) => {
-        });
+        })
     };
 
     const sendAllInfo = () => {
@@ -763,8 +757,8 @@ const ProfileDoctor = () => {
                                        label="https://" variant="outlined" className="textField"/>
 
                             {socialMedias.length > 1 && index !== 0 &&
-                            <div onClick={() => delSocialMedia(index, item.key)} className="del-icon"><img
-                                src="./images/del-icon.png" alt=""/></div>}
+                                <div onClick={() => delSocialMedia(index, item.key)} className="del-icon"><img
+                                    src="./images/del-icon.png" alt=""/></div>}
                         </div>
                     })}
                     <div className="des">{t("social_des2")}</div>

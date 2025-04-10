@@ -91,7 +91,7 @@ const AboutClinic = () => {
             <div className="about-hospital">
                 <div className="header">
                     <div className="title">
-                        {clinic && clinic.translations[i18next.language].name}
+                        {clinic.translations && clinic.translations[i18next.language].name}
                     </div>
 
                     <div className="buttons">
@@ -118,7 +118,7 @@ const AboutClinic = () => {
                     </div>
                 </div>
                 <div className="social-medias-icons">
-                    {clinic.hospital_socials.map((item, index) => {
+                    {clinic.hospital_socials && clinic.hospital_socials.map((item, index) => {
                         return <a key={index} href={item.url} target="_blank">
                             <img src={`./images/social-media/${item.key}.png`} alt=""/>
                         </a>
@@ -136,7 +136,7 @@ const AboutClinic = () => {
                     <div className="section-location">
                         <div className="location">
                             <img src="./images/icon.png" alt=""/>
-                            {clinic && clinic.translations[i18next.language].address}
+                            {clinic.translations && clinic.translations[i18next.language].address}
                         </div>
                         <span></span>
                         <div className="time-open">
@@ -184,9 +184,9 @@ const AboutClinic = () => {
                                 {t("nav4")}
                             </div>
                             <div className="contents">
-                                {clinic && clinic.hospital_services.map((item, index) => {
+                                {clinic.hospital_services && clinic.hospital_services.map((item, index) => {
                                     return <div key={index} className="service">
-                                        {item.service.translations[i18next.language].name}
+                                        {item.service.translations && item.service.translations[i18next.language].name}
                                     </div>
                                 })}
                             </div>
@@ -245,7 +245,7 @@ const AboutClinic = () => {
                     {tabActive === 2 && <div className="doctors">
                         <div className="category-wrapper">
                             {
-                                doctors.services.map((item, index) => {
+                                doctors.services && doctors.services.map((item, index) => {
                                     return <div key={index}>
                                         <div
                                             className="category-name active">
@@ -258,7 +258,7 @@ const AboutClinic = () => {
 
                         <div className="doctors-warapper">
                             {
-                                doctors.doctors.map((item, index) => {
+                                doctors.doctors && doctors.doctors.map((item, index) => {
                                     return <div key={index} className="doctor">
                                         <div className="left-side">
                                             <img src={"https://api.medos.uz/" + item.image} alt=""/>
