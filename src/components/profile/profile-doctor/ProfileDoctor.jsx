@@ -197,7 +197,7 @@ const ProfileDoctor = () => {
                 consultation_fee: response.data.consultation_fee,
                 second_consultation_fee: response.data.second_consultation_fee,
                 specialty: response.data.specialty,
-                hospital: response.data.hospital,
+                hospital: response.data.hospital.id,
                 sub_speciality: response.data.sub_speciality,
                 experience: response.data.experience
             });
